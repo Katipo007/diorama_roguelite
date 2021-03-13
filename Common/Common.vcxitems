@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Label="Globals">
     <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
     <HasSharedItems>true</HasSharedItems>
-    <ItemsProjectGuid>{15dcc58f-0a23-4bf6-b6bb-11142decae54}</ItemsProjectGuid>
+    <ItemsProjectGuid>{8aa1adc8-8b60-4c14-ab84-80c97da7e806}</ItemsProjectGuid>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
@@ -12,5 +12,22 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CompileTime\PlatformDetection.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\Base.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Deployment\Deployment.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\Assert.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Utility\FileOps.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Utility\Hashing.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Utility\Literals.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\Logging.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Utility\Numbers.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Utility\OsAbstraction.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Utility\Signal.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Utility\FileOps.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Core\Logging.cpp" />
   </ItemGroup>
 </Project>
