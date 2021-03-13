@@ -66,7 +66,7 @@ int main( int argc, char** argv )
 
 	// initialise the logging system
 	Logging::Log::Init( Logging::Type::Client );
-	auto& logger = Logging::Log::GetClientLogger();
+	auto& logger = Logging::Log::GetClientLogger(); (void)logger;
 
 	LOG_INFO( "Client starting" );
 
