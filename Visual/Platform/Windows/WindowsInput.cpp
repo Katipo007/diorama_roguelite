@@ -7,9 +7,9 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_keyboard.h>
 #ifdef _WIN64
-#	pragma comment(lib, "Common/Vendor/SDL2/lib/x64/SDL2.lib")
+#	pragma comment(lib, "Visual/Vendor/SDL2/lib/x64/SDL2.lib")
 #else
-#	pragma comment(lib, "Common/Vendor/SDL2/lib/x86/SDL2.lib")
+#	pragma comment(lib, "Visual/Vendor/SDL2/lib/x86/SDL2.lib")
 #endif
 
 namespace

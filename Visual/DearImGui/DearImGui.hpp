@@ -5,7 +5,7 @@
 #define IMGUI_USER_CONFIG "DearImGui/config.hpp"
 
 #pragma warning(push, 0)
-#include "Vendor/imgui/imgui.h"
+#include "Visual/Vendor/dearimgui/imgui.h"
 #pragma warning(pop)
 
 namespace DearImGui

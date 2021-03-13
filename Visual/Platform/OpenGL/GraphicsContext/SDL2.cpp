@@ -11,8 +11,8 @@
 #ifdef DEARIMGUI_ENABLED
 #	include "DearImGui/DearImGui.hpp"
 #	define IMGUI_IMPL_OPENGL_LOADER_GLEW
-#	include "Vendor/imgui/backends/imgui_impl_opengl3.h"
-#	include "Vendor/imgui/backends/imgui_impl_sdl.h"
+#	include "Visual/Vendor/dearimgui/backends/imgui_impl_opengl3.h"
+#	include "Visual/Vendor/dearimgui/backends/imgui_impl_sdl.h"
 #endif
 
 // TODO: move this file to Platform/Windows since all these calls are specific to SDL2
@@ -92,8 +92,8 @@ namespace Visual::Device::OpenGL
 #		pragma warning(disable : 4996)
 #	endif
 
-#	include "Vendor/imgui/backends/imgui_impl_opengl3.cpp"
-#	include "Vendor/imgui/backends/imgui_impl_sdl.cpp"
+#	include "Visual/Vendor/dearimgui/backends/imgui_impl_opengl3.cpp"
+#	include "Visual/Vendor/dearimgui/backends/imgui_impl_sdl.cpp"
 
 #	pragma warning(pop)
 #endif // DEARIMGUI_ENABLED
