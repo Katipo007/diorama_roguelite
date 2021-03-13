@@ -91,9 +91,14 @@
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Level4</WarningLevel>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Level4</WarningLevel>
     </ClCompile>
+    <ClCompile Include="States\ClientState.cpp" />
+    <ClCompile Include="States\ClientStateManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precompiled\pch.hpp" />
+    <ClInclude Include="States\ClientStateManager.hpp" />
+    <ClInclude Include="States\ClientState.hpp" />
+    <ClInclude Include="States\ClientStates.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

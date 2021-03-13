@@ -13,7 +13,10 @@
 #include "Common/Utility/OsAbstraction.hpp"
 #include "Common/Utility/Timestep.hpp"
 
+#include "States/ClientStateManager.hpp"
+
 std::unique_ptr<Visual::Device::Window> main_window;
+std::unique_ptr<States::ClientStateManager> state_manager;
 
 bool running = true;
 bool user_wants_to_exit = false;
@@ -53,9 +56,6 @@ void WindowEventHandler( Visual::Device::Event& application_event )
 
 			return handled;
 		} );
-
-	//if (layer_manager)
-	//	layer_manager->OnEvent( application_event );
 }
 
 int main( int argc, char** argv )
@@ -64,14 +64,18 @@ int main( int argc, char** argv )
 	(void)argc;
 	(void)argv;
 
+	//
 	// initialise the logging system
+	//
 	Logging::Log::Init( Logging::Type::Client );
 	auto& logger = Logging::Log::GetClientLogger(); (void)logger;
 
 	LOG_INFO( "Client starting" );
 
 #ifdef DEARIMGUI_ENABLED
+	//
 	// setup imgui
+	//
 	ImGuiContext* imgui_context = NULL;
 	{
 		IMGUI_CHECKVERSION();
@@ -87,9 +91,11 @@ int main( int argc, char** argv )
 	}
 #endif
 
+	//
 	// Setup window
+	//
 	{
-		LOG_INFO( "Creating window" );
+		LOG_INFO( "Creating application window" );
 		Visual::Device::Window::WindowCreationProperties window_props;
 		window_props.title = "Client";
 		window_props.width = 640;
@@ -118,21 +124,17 @@ int main( int argc, char** argv )
 
 	VD::RendererCommand::SetActiveContext( *main_window );
 
+	//
 	// setup managers
+	//
 	InputManager::SetWindowHandle( main_window->GetNativeWindow() );
+	state_manager = std::make_unique<States::ClientStateManager>();
 
-	// create layers
-	{
-		//layer_manager = std::make_unique<ApplicationLayerManager>();
 
-		//layer_manager->AddLayer( std::make_unique<GameLayers::InGameLayer>() );
-#if DEVELOPER_TOOLS == 1
-		//layer_manager->AddLayer( std::make_unique<Development::Layers::DevUtilityLayer>() );
-#endif
-	}
-
+	// ============================================
+	// main loop
+	// ============================================
 	LOG_INFO( "Application setup complete, starting main loop" );
-
 	float last_frame_time = static_cast<float>(clock()) / CLOCKS_PER_SEC;
 	while (running)
 	{
@@ -149,7 +151,7 @@ int main( int argc, char** argv )
 
 		VD::RendererCommand::Clear();
 
-		//layer_manager->OnUpdate( timestep );
+		state_manager->OnFrame( timestep );
 
 #ifdef DEARIMGUI_ENABLED
 		if (DearImGui::IsEnabled())
@@ -163,16 +165,20 @@ int main( int argc, char** argv )
 
 	LOG_INFO( "Application loop finished, exiting" );
 
+	//
 	// clear
+	//
 	{
-		//layer_manager.reset();
+		state_manager.reset();
 		VD::RendererCommand::ClearActiveContext();
 		main_window.reset();
 		InputManager::SetWindowHandle( NULL );
 	}
 
 #ifdef DEARIMGUI_ENABLED
+	//
 	// shutdown imgui
+	//
 	if (imgui_context != NULL)
 	{
 		ImGui::DestroyContext( imgui_context );
