@@ -18,6 +18,8 @@
 #define EXPAND_MACRO(x) x
 #define STRINGIFY_MACRO(x) #x
 
+#define BIT(x) ( 1 << x )
+
 // these are at the bottom because these files reference this one
 #include "Common/Deployment/Deployment.hpp"
 #include "Common/Core/Logging.hpp"

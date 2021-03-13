@@ -19,4 +19,8 @@
 #include "Common/Core/Base.hpp"
 #include "Common/Core/Logging.hpp"
 
+#if defined(PLATFORM_WINDOWS) 
+#	define RENDERER_IMPLEMENTATION_OPENGL
+#endif
+
 #endif // DIORAMA_ROGUELITE_PCH_HPP

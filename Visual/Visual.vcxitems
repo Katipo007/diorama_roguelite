@@ -1,9 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Label="Globals">
     <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
     <HasSharedItems>true</HasSharedItems>
     <ItemsProjectGuid>{5415b36a-4eb4-44c2-988c-8ce4bd786134}</ItemsProjectGuid>
+    <ItemsRootNamespace>Visual</ItemsRootNamespace>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
@@ -12,5 +13,59 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)DearImGui\config.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)DearImGui\DearImGui.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Device\FrameBuffer.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Device\GraphicsBuffer.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Device\GraphicsContext.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Device\RendererAPI.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Device\RendererCapabilities.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Device\RendererCommand.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Device\Shader.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Device\Texture.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Device\VertexArray.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Events\ApplicationEvents.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Events\Event.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Events\KeyboardEvents.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Events\MouseEvents.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Colour.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Input\Input.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Input\Keycodes.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Input\MouseCodes.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Platform\OpenGL\BufferOpenGL.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Platform\OpenGL\FrameBufferOpenGL.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Platform\OpenGL\GraphicsContext\SDL2.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Platform\OpenGL\OpenGLHeader.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Platform\OpenGL\RendererAPIOpenGL.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Platform\OpenGL\ShaderOpenGL.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Platform\OpenGL\TextureOpenGL.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Platform\OpenGL\VertexArrayOpenGL.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Platform\Windows\WindowsHeader.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Platform\Windows\WindowsWindow.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)RendererAPIs.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Device\Window.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Utility\StbImage.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)DearImGui\DearImGui.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)DearImGui\DearImGuiCompile.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Device\GraphicsBuffer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Device\RendererCommand.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Device\Window.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Events\Event.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Platform\OpenGL\BufferOpenGL.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Platform\OpenGL\FrameBufferOpenGL.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Platform\OpenGL\GraphicsContext\SDL2.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Platform\OpenGL\OpenGLCompile.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Platform\OpenGL\RendererAPIOpenGL.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Platform\OpenGL\ShaderOpenGL.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Platform\OpenGL\TextureOpenGL.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Platform\OpenGL\VertexArrayOpenGL.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Platform\Windows\WindowsInput.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Platform\Windows\WindowsOsAbstraction.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Platform\Windows\WindowsWindow.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Utility\StbImage.cpp" />
   </ItemGroup>
 </Project>
