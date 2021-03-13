@@ -5,15 +5,28 @@ VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Client", "Client\Client.vcxproj", "{DE658D54-63F0-42A2-A6E7-341F3F51175D}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Common", "Common\Common.vcxitems", "{15DCC58F-0A23-4BF6-B6BB-11142DECAE54}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Server", "Server\Server.vcxitems", "{3F9D9425-73D6-4F11-B010-F3F5996DD679}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ClientServerCommon", "ClientServerCommon\ClientServerCommon.vcxitems", "{6D9F921A-CEC1-49DA-95C4-B154D8586A8E}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DedicatedServer", "DedicatedServer\DedicatedServer.vcxproj", "{BCBD1B81-8726-484C-B261-DFA08BF6BA6A}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Visual", "Visual\Visual.vcxitems", "{5415B36A-4EB4-44C2-988C-8CE4BD786134}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Common", "Common\Common.vcxitems", "{8AA1ADC8-8B60-4C14-AB84-80C97DA7E806}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Server\Server.vcxitems*{3f9d9425-73d6-4f11-b010-f3f5996dd679}*SharedItemsImports = 9
+		Visual\Visual.vcxitems*{5415b36a-4eb4-44c2-988c-8ce4bd786134}*SharedItemsImports = 9
+		ClientServerCommon\ClientServerCommon.vcxitems*{6d9f921a-cec1-49da-95c4-b154d8586a8e}*SharedItemsImports = 9
+		Common\Common.vcxitems*{8aa1adc8-8b60-4c14-ab84-80c97da7e806}*SharedItemsImports = 9
+		ClientServerCommon\ClientServerCommon.vcxitems*{bcbd1b81-8726-484c-b261-dfa08bf6ba6a}*SharedItemsImports = 4
+		Common\Common.vcxitems*{bcbd1b81-8726-484c-b261-dfa08bf6ba6a}*SharedItemsImports = 4
+		ClientServerCommon\ClientServerCommon.vcxitems*{de658d54-63f0-42a2-a6e7-341f3f51175d}*SharedItemsImports = 4
+		Common\Common.vcxitems*{de658d54-63f0-42a2-a6e7-341f3f51175d}*SharedItemsImports = 4
+		Visual\Visual.vcxitems*{de658d54-63f0-42a2-a6e7-341f3f51175d}*SharedItemsImports = 4
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
@@ -23,20 +36,16 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{DE658D54-63F0-42A2-A6E7-341F3F51175D}.Debug|x64.ActiveCfg = Debug|x64
 		{DE658D54-63F0-42A2-A6E7-341F3F51175D}.Debug|x64.Build.0 = Debug|x64
-		{DE658D54-63F0-42A2-A6E7-341F3F51175D}.Debug|x86.ActiveCfg = Debug|Win32
-		{DE658D54-63F0-42A2-A6E7-341F3F51175D}.Debug|x86.Build.0 = Debug|Win32
+		{DE658D54-63F0-42A2-A6E7-341F3F51175D}.Debug|x86.ActiveCfg = Debug|x64
 		{DE658D54-63F0-42A2-A6E7-341F3F51175D}.Release|x64.ActiveCfg = Release|x64
 		{DE658D54-63F0-42A2-A6E7-341F3F51175D}.Release|x64.Build.0 = Release|x64
-		{DE658D54-63F0-42A2-A6E7-341F3F51175D}.Release|x86.ActiveCfg = Release|Win32
-		{DE658D54-63F0-42A2-A6E7-341F3F51175D}.Release|x86.Build.0 = Release|Win32
+		{DE658D54-63F0-42A2-A6E7-341F3F51175D}.Release|x86.ActiveCfg = Release|x64
 		{BCBD1B81-8726-484C-B261-DFA08BF6BA6A}.Debug|x64.ActiveCfg = Debug|x64
 		{BCBD1B81-8726-484C-B261-DFA08BF6BA6A}.Debug|x64.Build.0 = Debug|x64
-		{BCBD1B81-8726-484C-B261-DFA08BF6BA6A}.Debug|x86.ActiveCfg = Debug|Win32
-		{BCBD1B81-8726-484C-B261-DFA08BF6BA6A}.Debug|x86.Build.0 = Debug|Win32
+		{BCBD1B81-8726-484C-B261-DFA08BF6BA6A}.Debug|x86.ActiveCfg = Debug|x64
 		{BCBD1B81-8726-484C-B261-DFA08BF6BA6A}.Release|x64.ActiveCfg = Release|x64
 		{BCBD1B81-8726-484C-B261-DFA08BF6BA6A}.Release|x64.Build.0 = Release|x64
-		{BCBD1B81-8726-484C-B261-DFA08BF6BA6A}.Release|x86.ActiveCfg = Release|Win32
-		{BCBD1B81-8726-484C-B261-DFA08BF6BA6A}.Release|x86.Build.0 = Release|Win32
+		{BCBD1B81-8726-484C-B261-DFA08BF6BA6A}.Release|x86.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
