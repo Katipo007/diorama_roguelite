@@ -25,6 +25,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Utility\Numbers.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Utility\OsAbstraction.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Utility\Signal.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Utility\Timestep.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\enumclassbitset\EnumClassBitset.hpp" />
   </ItemGroup>
   <ItemGroup>
