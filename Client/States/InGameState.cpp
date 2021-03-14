@@ -1,12 +1,16 @@
 #include "Precompiled/pch.hpp"
 #include "InGameState.hpp"
 
+#include "Client/Game/PlayerObject.hpp"
+
 namespace States
 {
 	InGameState::InGameState()
 		: ClientState( ClientStates::InGame )
 	{
 		LOG_TRACE( "InGameState created" );
+
+		player = std::make_unique<Game::PlayerObject>();
 	}
 
 	InGameState::~InGameState()
@@ -37,6 +41,8 @@ namespace States
 	void InGameState::OnFrame( const Timestep& timestep )
 	{
 		(void)timestep;
+		if (player)
+			player->Render();
 	}
 
 	void InGameState::OnDearImGuiRender()

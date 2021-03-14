@@ -1,6 +1,12 @@
 #pragma once
 
+#include <memory>
 #include "ClientState.hpp"
+
+namespace Game
+{
+	class PlayerObject;
+}
 
 namespace States
 {
@@ -24,5 +30,8 @@ namespace States
 
 		virtual void OnFrame( const Timestep& ) override;
 		virtual void OnDearImGuiRender() override;
+
+
+		std::unique_ptr<Game::PlayerObject> player;
 	};
 }
