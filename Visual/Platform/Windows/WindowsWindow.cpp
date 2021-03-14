@@ -58,13 +58,13 @@ namespace Visual::Device
 			switch (properties.renderer_api)
 			{
 #ifdef RENDERER_IMPLEMENTATION_NONE
-			case RendererAPIType::None:
+			case RendererAPIType::API::None:
 				// intentionally blank
 				break;
 #endif
 
 #ifdef RENDERER_IMPLEMENTATION_OPENGL
-			case RendererAPIs::OpenGL:
+			case RendererAPIs::API::OpenGL:
 				SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 4 );
 				SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 5 );
 				SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 ); // enable double buffering
@@ -93,13 +93,13 @@ namespace Visual::Device
 			switch (properties.renderer_api)
 			{
 #ifdef RENDERER_IMPLEMENTATION_NONE
-			case RendererAPIType::None:
+			case RendererAPIType::API::None:
 				// intentionally blank
 				break;
 #endif
 
 #ifdef RENDERER_IMPLEMENTATION_OPENGL
-			case RendererAPIs::OpenGL:
+			case RendererAPIs::API::OpenGL:
 				graphics_context = std::make_unique< OpenGL::GraphicsContextOpenGL_SDL2 >( window );
 				renderer_api = std::make_unique< OpenGL::RendererAPIOpenGL >();
 				break;

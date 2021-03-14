@@ -100,7 +100,7 @@ int main( int argc, char** argv )
 		window_props.title = "Client";
 		window_props.width = 640;
 		window_props.height = 480;
-		window_props.renderer_api = RendererAPIs::OpenGL; // TODO: determine this automatically and/or pull from configuration file
+		window_props.renderer_api = RendererAPIs::API::OpenGL; // TODO: determine this automatically and/or pull from configuration file
 
 #ifndef _DEBUG
 		window_props.fullscreen = true;

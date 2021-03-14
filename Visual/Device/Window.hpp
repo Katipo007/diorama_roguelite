@@ -27,7 +27,7 @@ namespace Visual::Device
 		{
 			std::string title = "";
 			uint32_t width = 0, height = 0;
-			RendererAPIs::API renderer_api = RendererAPIs::NumAPIs;
+			RendererAPIs::API renderer_api = RendererAPIs::API::NumAPIs;
 			bool fullscreen = false;
 		};
 

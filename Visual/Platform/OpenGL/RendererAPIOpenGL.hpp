@@ -25,7 +25,7 @@ namespace Visual::Device::OpenGL
 
 		virtual const RendererCapabilities& GetCapabilities() const override;
 
-		virtual RendererAPIs::API GetAPIType() const override { return RendererAPIs::OpenGL; }
+		virtual RendererAPIs::API GetAPIType() const override { return RendererAPIs::API::OpenGL; }
 
 		// Graphics object factories
 		_NODISCARD virtual std::shared_ptr<VertexBuffer> CreateVertexBuffer( uint32_t size ) const override;

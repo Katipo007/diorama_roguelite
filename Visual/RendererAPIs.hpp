@@ -2,7 +2,7 @@
 
 namespace RendererAPIs
 {
-	enum API
+	enum class API
 	{
 #ifdef RENDERER_IMPLEMENTATION_NONE
 		None,
@@ -19,5 +19,5 @@ namespace RendererAPIs
 		NumAPIs
 	};
 
-	static_assert(API::NumAPIs > 0, "Platform has no supported graphic APIs");
+	static_assert((size_t)API::NumAPIs > 0, "Platform has no supported graphic APIs");
 }
