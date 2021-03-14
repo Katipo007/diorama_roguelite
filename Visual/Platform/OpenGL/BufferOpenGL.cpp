@@ -47,14 +47,15 @@ namespace Visual::Device::OpenGL
 		layout = layout_;
 	}
 
-	IndexBufferOpenGL::IndexBufferOpenGL( uint32_t* indices, uint32_t count )
+	IndexBufferOpenGL::IndexBufferOpenGL( uint32_t* indices_, uint32_t count_ )
+		: count( count_ )
 	{
 		glCreateBuffers( 1, &opengl_ib_id );
 
 		// GL_ELEMENT_ARRAY_BUFFER is not valid without an actively bound VAO
 		// Binding with GL_ARRAY_BUFFER allows the data to be loaded regardless of VAO state. 
 		glBindBuffer( GL_ARRAY_BUFFER, opengl_ib_id );
-		glBufferData( GL_ARRAY_BUFFER, count * sizeof( uint32_t ), (void*)indices, GL_STATIC_DRAW );
+		glBufferData( GL_ARRAY_BUFFER, count * sizeof( uint32_t ), (void*)indices_, GL_STATIC_DRAW );
 	}
 
 	IndexBufferOpenGL::~IndexBufferOpenGL()
