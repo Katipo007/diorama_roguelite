@@ -105,6 +105,9 @@ namespace Visual::Device::OpenGL
 		glBindBuffer( GL_ARRAY_BUFFER, ibo );
 		glBufferData( GL_ARRAY_BUFFER, count * sizeof( uint32_t ), (void*)props.indices.data(), GL_STATIC_DRAW );
 
+		if (!name.empty())
+			glObjectLabel( GL_BUFFER, ibo, -1, props.name.c_str() );
+
 		PopBoundVbo(); // Vbo NOT Ibo to match above
 	}
 
