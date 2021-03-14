@@ -20,7 +20,7 @@ namespace States
 		explicit ClientState( const ClientStates type );
 		virtual ~ClientState();
 
-		virtual const std::string& GetName() const = 0;
+		virtual std::string_view GetName() const = 0;
 		ClientStates GetType() const { return type; }
 
 		bool IsEnabled() const;

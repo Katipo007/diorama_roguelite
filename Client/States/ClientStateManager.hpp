@@ -47,6 +47,12 @@ namespace States
 
 		void OnFrame( const Timestep& ts );
 
+	protected:
+		void AddState( std::unique_ptr<ClientState> state, const bool start_enabled = false );
+		void RemoveState( ClientState& state );
+		void EnableState( ClientState& state );
+		void DisableState( ClientState& state );
+
 	private:
 		StateCollection_T states;
 	};

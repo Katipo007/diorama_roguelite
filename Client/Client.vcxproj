@@ -93,12 +93,14 @@
     </ClCompile>
     <ClCompile Include="States\ClientState.cpp" />
     <ClCompile Include="States\ClientStateManager.cpp" />
+    <ClCompile Include="States\InGameState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precompiled\pch.hpp" />
     <ClInclude Include="States\ClientStateManager.hpp" />
     <ClInclude Include="States\ClientState.hpp" />
     <ClInclude Include="States\ClientStates.hpp" />
+    <ClInclude Include="States\InGameState.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
