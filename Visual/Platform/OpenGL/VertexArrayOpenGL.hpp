@@ -11,7 +11,7 @@ namespace Visual::Device::OpenGL
 		: public ::Visual::Device::VertexArray
 	{
 	public:
-		VertexArrayOpenGL();
+		VertexArrayOpenGL( const CreationProperties& props );
 		virtual ~VertexArrayOpenGL() override;
 
 		virtual void Bind() const override;
@@ -27,8 +27,9 @@ namespace Visual::Device::OpenGL
 		virtual const std::shared_ptr<IndexBuffer>& GetIndexBuffer() const override { return index_buffer; }
 
 	private:
-		GLuint opengl_vertexarray_id;
-		GLuint opengl_vertexbuffer_index;
+		std::string name;
+		GLuint vao;
+		GLuint vbi; // vertex buffer index
 
 		std::vector< std::shared_ptr< VertexBuffer > > vertex_buffers;
 		std::shared_ptr< IndexBuffer > index_buffer;
@@ -36,3 +37,4 @@ namespace Visual::Device::OpenGL
 }
 
 #endif
+

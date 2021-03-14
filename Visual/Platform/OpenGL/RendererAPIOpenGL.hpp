@@ -28,15 +28,14 @@ namespace Visual::Device::OpenGL
 		virtual RendererAPIs::API GetAPIType() const override { return RendererAPIs::API::OpenGL; }
 
 		// Graphics object factories
-		_NODISCARD virtual std::shared_ptr<VertexBuffer> CreateVertexBuffer( uint32_t size ) const override;
-		_NODISCARD virtual std::shared_ptr<VertexBuffer> CreateVertexBuffer( float * vertices, uint32_t size ) const override;
-		_NODISCARD virtual std::shared_ptr<IndexBuffer> CreateIndexBuffer( uint32_t * indices, uint32_t size ) const override;
+		_NODISCARD virtual std::shared_ptr<VertexBuffer> CreateVertexBuffer( const VertexBuffer::CreationProperties& props ) const override;
+		_NODISCARD virtual std::shared_ptr<IndexBuffer> CreateIndexBuffer( const IndexBuffer::CreationProperties& props ) const override;
 		_NODISCARD virtual std::shared_ptr<FrameBuffer> CreateFrameBuffer( const FrameBuffer::Specification & spec ) const override;
 		_NODISCARD virtual std::shared_ptr<Shader> CreateShader( std::string_view filepath ) const override;
 		_NODISCARD virtual std::shared_ptr<Shader> CreateShader( std::string_view name, std::string_view vertex_src, std::string_view fragment_src ) const override;
 		_NODISCARD virtual std::shared_ptr<Texture2D> CreateTexture2D( uint32_t width, uint32_t height, const Texture::CreationProperties & props = Texture::CreationProperties() ) const override;
 		_NODISCARD virtual std::shared_ptr<Texture2D> CreateTexture2D( std::string_view filepath, const Texture::LoadProperties & props = Texture::LoadProperties() ) const override;
-		_NODISCARD virtual std::shared_ptr<VertexArray> CreateVertexArray() const override;
+		_NODISCARD virtual std::shared_ptr<VertexArray> CreateVertexArray( const VertexArray::CreationProperties& props ) const override;
 
 	private:
 		RendererCapabilities cached_capabilities;

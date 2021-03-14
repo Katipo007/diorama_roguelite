@@ -5,30 +5,71 @@
 
 #include "OpenGLHeader.hpp"
 
-namespace Visual::Device::OpenGL
+#include <stack>
+
+namespace
 {
-	VertexBufferOpenGL::VertexBufferOpenGL( uint32_t size )
+	std::stack<GLuint> bound_vbo_stack;
+
+	void PushBoundVbo()
 	{
-		glCreateBuffers( 1, &opengl_vb_id );
-		glBindBuffer( GL_ARRAY_BUFFER, opengl_vb_id );
-		glBufferData( GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW );
+		GLint current = 0;
+		glGetIntegerv( GL_ARRAY_BUFFER_BINDING, &current );
+		bound_vbo_stack.push( current );
 	}
 
-	VertexBufferOpenGL::VertexBufferOpenGL( float* vertices, uint32_t size )
+	void PopBoundVbo()
 	{
-		glCreateBuffers( 1, &opengl_vb_id );
-		glBindBuffer( GL_ARRAY_BUFFER, opengl_vb_id );
-		glBufferData( GL_ARRAY_BUFFER, size, (void*)vertices, GL_DYNAMIC_DRAW );
+		ASSERT( !bound_vbo_stack.empty() );
+		glBindVertexArray( bound_vbo_stack.top() );
+		bound_vbo_stack.pop();
+	}
+
+
+	std::stack<GLuint> bound_ibo_stack;
+
+	void PushBoundIbo()
+	{
+		GLint current = 0;
+		glGetIntegerv( GL_ELEMENT_ARRAY_BUFFER_BINDING, &current );
+		bound_ibo_stack.push( current );
+	}
+
+	void PopBoundIbo()
+	{
+		ASSERT( !bound_ibo_stack.empty() );
+		glBindVertexArray( bound_ibo_stack.top() );
+		bound_ibo_stack.pop();
+	}
+}
+
+namespace Visual::Device::OpenGL
+{
+	VertexBufferOpenGL::VertexBufferOpenGL( const CreationProperties& props )
+		: name( props.name )
+		, layout( props.layout )
+	{
+		PushBoundVbo();
+
+		glCreateBuffers( 1, &vbo );
+		Bind();
+		glBufferData( GL_ARRAY_BUFFER, props.data.size(), (void*)props.data.data(), GL_DYNAMIC_DRAW );
+
+		if (!props.name.empty())
+			glObjectLabel( GL_BUFFER, vbo, -1, props.name.c_str() );
+
+		Unbind();
+		PopBoundVbo();
 	}
 
 	VertexBufferOpenGL::~VertexBufferOpenGL()
 	{
-		glDeleteBuffers( 1, &opengl_vb_id );
+		glDeleteBuffers( 1, &vbo );
 	}
 
 	void VertexBufferOpenGL::Bind() const
 	{
-		glBindBuffer( GL_ARRAY_BUFFER, opengl_vb_id );
+		glBindBuffer( GL_ARRAY_BUFFER, vbo );
 	}
 
 	void VertexBufferOpenGL::Unbind() const
@@ -38,8 +79,13 @@ namespace Visual::Device::OpenGL
 
 	void VertexBufferOpenGL::SetData( const void* data, uint32_t size )
 	{
-		glBindBuffer( GL_ARRAY_BUFFER, opengl_vb_id );
+		PushBoundVbo();
+
+		Bind();
 		glBufferSubData( GL_ARRAY_BUFFER, 0, size, data );
+		Unbind();
+
+		PopBoundVbo();
 	}
 
 	void VertexBufferOpenGL::SetLayout( const BufferLayout & layout_ )
@@ -47,25 +93,29 @@ namespace Visual::Device::OpenGL
 		layout = layout_;
 	}
 
-	IndexBufferOpenGL::IndexBufferOpenGL( uint32_t* indices_, uint32_t count_ )
-		: count( count_ )
+	IndexBufferOpenGL::IndexBufferOpenGL( const CreationProperties& props )
+		: name( props.name )
+		, count( (uint32_t)props.indices.size() )
 	{
-		glCreateBuffers( 1, &opengl_ib_id );
-
 		// GL_ELEMENT_ARRAY_BUFFER is not valid without an actively bound VAO
 		// Binding with GL_ARRAY_BUFFER allows the data to be loaded regardless of VAO state. 
-		glBindBuffer( GL_ARRAY_BUFFER, opengl_ib_id );
-		glBufferData( GL_ARRAY_BUFFER, count * sizeof( uint32_t ), (void*)indices_, GL_STATIC_DRAW );
+		PushBoundVbo(); // ^ Vbo NOT Ibo
+		glCreateBuffers( 1, &ibo );
+
+		glBindBuffer( GL_ARRAY_BUFFER, ibo );
+		glBufferData( GL_ARRAY_BUFFER, count * sizeof( uint32_t ), (void*)props.indices.data(), GL_STATIC_DRAW );
+
+		PopBoundVbo(); // Vbo NOT Ibo to match above
 	}
 
 	IndexBufferOpenGL::~IndexBufferOpenGL()
 	{
-		glDeleteBuffers( 1, &opengl_ib_id );
+		glDeleteBuffers( 1, &ibo );
 	}
 
 	void IndexBufferOpenGL::Bind() const
 	{
-		glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, opengl_ib_id );
+		glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, ibo );
 	}
 
 	void IndexBufferOpenGL::Unbind() const

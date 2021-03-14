@@ -68,6 +68,22 @@ namespace Visual::Device
 	class VertexBuffer
 	{
 	public:
+		struct CreationProperties
+		{
+			std::string name; ///< Optional
+			BufferLayout layout;
+			std::vector<unsigned char> data;
+
+			template<typename T>
+			void SetDataFromVector( const std::vector<T>& in_ )
+			{
+				const auto data_size = in_.size() * sizeof( T );
+				data.resize( data_size );
+				memcpy( data.data(), in_.data(), data_size );
+			}
+		};
+
+	public:
 		virtual ~VertexBuffer() = default;
 
 		virtual void Bind() const = 0;
@@ -81,6 +97,13 @@ namespace Visual::Device
 
 	class IndexBuffer
 	{
+	public:
+		struct CreationProperties
+		{
+			std::string name; ///< Optional
+			std::vector<uint32_t> indices;
+		};
+
 	public:
 		virtual ~IndexBuffer() = default;
 

@@ -10,8 +10,7 @@ namespace Visual::Device::OpenGL
 		: public ::Visual::Device::VertexBuffer
 	{
 	public:
-		VertexBufferOpenGL( uint32_t size );
-		VertexBufferOpenGL( float* vertices, uint32_t size );
+		VertexBufferOpenGL( const CreationProperties& props );
 		virtual ~VertexBufferOpenGL();
 
 		virtual void Bind() const override;
@@ -23,7 +22,8 @@ namespace Visual::Device::OpenGL
 		virtual void SetLayout( const BufferLayout& layout ) override;
 
 	private:
-		uint32_t opengl_vb_id;
+		std::string name;
+		uint32_t vbo;
 		BufferLayout layout;
 	};
 
@@ -31,7 +31,7 @@ namespace Visual::Device::OpenGL
 		: public ::Visual::Device::IndexBuffer
 	{
 	public:
-		IndexBufferOpenGL( uint32_t* indices, uint32_t count );
+		IndexBufferOpenGL( const CreationProperties& props );
 		virtual ~IndexBufferOpenGL();
 
 		virtual void Bind() const;
@@ -39,7 +39,8 @@ namespace Visual::Device::OpenGL
 
 		virtual uint32_t GetCount() const { return count; }
 	private:
-		uint32_t opengl_ib_id;
+		std::string name;
+		uint32_t ibo;
 		uint32_t count;
 	};
 }

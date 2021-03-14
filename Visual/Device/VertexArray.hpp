@@ -9,6 +9,14 @@ namespace Visual::Device
 	class VertexArray
 	{
 	public:
+		struct CreationProperties
+		{
+			std::string name; ///< Optional
+			std::vector<std::shared_ptr<VertexBuffer>> vertex_buffers;
+			std::shared_ptr<IndexBuffer> index_buffer;
+		};
+
+	public:
 		virtual ~VertexArray() {}
 
 		virtual void Bind() const = 0;

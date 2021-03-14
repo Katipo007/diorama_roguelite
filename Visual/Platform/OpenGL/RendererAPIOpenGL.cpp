@@ -160,7 +160,7 @@ namespace Visual::Device::OpenGL
 
 	void RendererAPIOpenGL::DrawIndexed( const std::shared_ptr<VertexArray>& vertex_array, uint32_t index_count )
 	{
-		uint32_t count = index_count ? index_count : vertex_array->GetIndexBuffer()->GetCount();
+		GLsizei count = index_count ? index_count : vertex_array->GetIndexBuffer()->GetCount();
 		glDrawElements( GL_TRIANGLES, count, GL_UNSIGNED_INT, NULL );
 	}
 
@@ -169,19 +169,14 @@ namespace Visual::Device::OpenGL
 		return cached_capabilities;
 	}
 
-	std::shared_ptr<VertexBuffer> RendererAPIOpenGL::CreateVertexBuffer( uint32_t size ) const
+	std::shared_ptr<VertexBuffer> RendererAPIOpenGL::CreateVertexBuffer( const VertexBuffer::CreationProperties& props ) const
 	{
-		return std::make_shared<VertexBufferOpenGL>( size );
+		return std::make_shared<VertexBufferOpenGL>( props );
 	}
 
-	std::shared_ptr<VertexBuffer> RendererAPIOpenGL::CreateVertexBuffer( float * vertices, uint32_t size ) const
+	std::shared_ptr<IndexBuffer> RendererAPIOpenGL::CreateIndexBuffer( const IndexBuffer::CreationProperties& props ) const
 	{
-		return std::make_shared<VertexBufferOpenGL>( vertices, size );
-	}
-
-	std::shared_ptr<IndexBuffer> RendererAPIOpenGL::CreateIndexBuffer( uint32_t * indices, uint32_t size ) const
-	{
-		return std::make_shared<IndexBufferOpenGL>( indices, size );
+		return std::make_shared<IndexBufferOpenGL>( props );
 	}
 
 	std::shared_ptr<FrameBuffer> RendererAPIOpenGL::CreateFrameBuffer( const FrameBuffer::Specification & spec ) const
@@ -209,9 +204,9 @@ namespace Visual::Device::OpenGL
 		return std::make_shared<Texture2DOpenGL>( filepath, props );
 	}
 
-	std::shared_ptr<VertexArray> RendererAPIOpenGL::CreateVertexArray() const
+	std::shared_ptr<VertexArray> RendererAPIOpenGL::CreateVertexArray( const VertexArray::CreationProperties& props ) const
 	{
-		return std::make_shared<VertexArrayOpenGL>();
+		return std::make_shared<VertexArrayOpenGL>( props );
 	}
 }
 
