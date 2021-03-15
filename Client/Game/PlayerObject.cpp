@@ -13,7 +13,11 @@ namespace Game
 	{
 		auto& renderer = Visual::Device::RendererCommand::GetRendererAPI();
 		shader = renderer.CreateShader( "Shaders/DefaultTexture.glsl" );
-		//texture = renderer.CreateTexture2D( "Art/Player.png" );
+
+		texture = renderer.CreateTexture2D( 1, 1 );
+		uint32_t white_texture_data = 0xffffffff;
+		texture->SetData( &white_texture_data, sizeof( uint32_t ) );
+
 		CreateModel();
 	}
 
@@ -65,7 +69,7 @@ namespace Game
 				Visual::Device::BufferElement( Visual::Device::ShaderDataType::Float3, "Position", false ),
 				Visual::Device::BufferElement( Visual::Device::ShaderDataType::Float4, "Colour", false ),
 				Visual::Device::BufferElement( Visual::Device::ShaderDataType::Float2, "TexCoord", false ),
-				Visual::Device::BufferElement( Visual::Device::ShaderDataType::Float, "TextureIndex", false ),
+				Visual::Device::BufferElement( Visual::Device::ShaderDataType::uInt, "TextureIndex", false ),
 			};
 			vb_props.SetDataFromVector( vertices );
 		}
