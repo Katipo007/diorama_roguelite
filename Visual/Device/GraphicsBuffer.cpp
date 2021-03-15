@@ -22,6 +22,11 @@ namespace Visual::Device
 		case ShaderDataType::Int3:		return 4 * 3;
 		case ShaderDataType::Int4:		return 4 * 4;
 
+		case ShaderDataType::uInt:		return 4;
+		case ShaderDataType::uInt2:		return 4 * 2;
+		case ShaderDataType::uInt3:		return 4 * 3;
+		case ShaderDataType::uInt4:		return 4 * 4;
+
 		case ShaderDataType::Bool:		return 1;
 
 		default:
@@ -56,6 +61,11 @@ namespace Visual::Device
 		case ShaderDataType::Int2:		return 2;
 		case ShaderDataType::Int3:		return 3;
 		case ShaderDataType::Int4:		return 4;
+
+		case ShaderDataType::uInt:		return 1;
+		case ShaderDataType::uInt2:		return 2;
+		case ShaderDataType::uInt3:		return 3;
+		case ShaderDataType::uInt4:		return 4;
 
 		case ShaderDataType::Bool:		return 1;
 

@@ -25,6 +25,12 @@ namespace
 			case ::Visual::Device::ShaderDataType::Int4:
 				return GL_INT;
 
+			case ::Visual::Device::ShaderDataType::uInt:
+			case ::Visual::Device::ShaderDataType::uInt2:
+			case ::Visual::Device::ShaderDataType::uInt3:
+			case ::Visual::Device::ShaderDataType::uInt4:
+				return GL_UNSIGNED_INT;
+
 			case ::Visual::Device::ShaderDataType::Bool:
 				return GL_BOOL;
 		}
@@ -117,11 +123,6 @@ namespace Visual::Device::OpenGL
 				case ::Visual::Device::ShaderDataType::Float2:
 				case ::Visual::Device::ShaderDataType::Float3:
 				case ::Visual::Device::ShaderDataType::Float4:
-				case ::Visual::Device::ShaderDataType::Int:
-				case ::Visual::Device::ShaderDataType::Int2:
-				case ::Visual::Device::ShaderDataType::Int3:
-				case ::Visual::Device::ShaderDataType::Int4:
-				case ::Visual::Device::ShaderDataType::Bool:
 				{
 					glEnableVertexAttribArray( vbi );
 					glVertexAttribPointer( vbi
@@ -130,6 +131,27 @@ namespace Visual::Device::OpenGL
 										   , element.normalised ? GL_TRUE : GL_FALSE
 										   , static_cast<GLsizei>( layout.GetStride() )
 										   , (const void*)element.offset
+					);
+					++vbi;
+					break;
+				}
+
+				case ::Visual::Device::ShaderDataType::Int:
+				case ::Visual::Device::ShaderDataType::Int2:
+				case ::Visual::Device::ShaderDataType::Int3:
+				case ::Visual::Device::ShaderDataType::Int4:
+				case ::Visual::Device::ShaderDataType::uInt:
+				case ::Visual::Device::ShaderDataType::uInt2:
+				case ::Visual::Device::ShaderDataType::uInt3:
+				case ::Visual::Device::ShaderDataType::uInt4:
+				case ::Visual::Device::ShaderDataType::Bool:
+				{
+					glEnableVertexAttribArray( vbi );
+					glVertexAttribIPointer( vbi
+						, static_cast<GLint>(element.GetComponentCount())
+						, GetShaderDataTypeToOpenGLBaseType( element.type )
+						, static_cast<GLsizei>(layout.GetStride())
+						, (const void*)element.offset
 					);
 					++vbi;
 					break;

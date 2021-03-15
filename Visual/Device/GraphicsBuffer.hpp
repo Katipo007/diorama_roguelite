@@ -22,6 +22,11 @@ namespace Visual::Device
 		Int3,
 		Int4,
 
+		uInt,
+		uInt2,
+		uInt3,
+		uInt4,
+
 		Bool
 	};
 
