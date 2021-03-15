@@ -48,6 +48,13 @@ namespace
 		glBindVertexArray( bound_vao_stack.top() );
 		bound_vao_stack.pop();
 	}
+
+	GLuint GetBoundVao()
+	{
+		GLint current = 0;
+		glGetIntegerv( GL_VERTEX_ARRAY_BINDING, &current );
+		return current;
+	}
 }
 
 namespace Visual::Device::OpenGL
@@ -72,6 +79,9 @@ namespace Visual::Device::OpenGL
 			SetIndexBuffer( props.index_buffer );
 
 		Unbind();
+		glBindBuffer( GL_ARRAY_BUFFER, 0 );
+		glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
+
 		PopBoundVao();
 	}
 
@@ -92,11 +102,11 @@ namespace Visual::Device::OpenGL
 
 	void VertexArrayOpenGL::AddVertexBuffer( const std::shared_ptr<VertexBuffer>& vertex_buffer )
 	{
-		PushBoundVao();
+		ASSERT( GetBoundVao() == vao );
 		ASSERT( vertex_buffer->GetLayout().GetElements().size(), "Vertex buffer has no layout!" );
 
-		Bind();
 		vertex_buffer->Bind();
+		vertex_buffers.push_back( vertex_buffer );
 
 		const auto& layout = vertex_buffer->GetLayout();
 		for( const auto& element : layout )
@@ -113,7 +123,7 @@ namespace Visual::Device::OpenGL
 				case ::Visual::Device::ShaderDataType::Int4:
 				case ::Visual::Device::ShaderDataType::Bool:
 				{
-					glEnableVertexAttribArray( vao );
+					glEnableVertexAttribArray( vbi );
 					glVertexAttribPointer( vbi
 										   , static_cast<GLint>( element.GetComponentCount() )
 										   , GetShaderDataTypeToOpenGLBaseType( element.type )
@@ -150,26 +160,15 @@ namespace Visual::Device::OpenGL
 					break;
 			}
 		}
-
-		vertex_buffers.push_back( vertex_buffer );
-		Unbind();
-		vertex_buffer->Unbind();
-		PopBoundVao();
 	}
 
 	void VertexArrayOpenGL::SetIndexBuffer( const std::shared_ptr<IndexBuffer>& new_index_buffer )
 	{
+		ASSERT( GetBoundVao() == vao );
 		ASSERT( !this->index_buffer );
-		PushBoundVao();
 
-		Bind();
 		new_index_buffer->Bind();
-		Unbind();
-		new_index_buffer->Unbind();
-
 		this->index_buffer = new_index_buffer;
-
-		PopBoundVao();
 	}
 
 	const std::shared_ptr<VertexBuffer>& VertexArrayOpenGL::GetVertexBuffer( size_t i ) const
