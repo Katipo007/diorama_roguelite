@@ -5,7 +5,7 @@
 #include <functional>
 #include <iostream>
 
-#include "Common/Vendor/glm/glm/vec4.hpp"
+#include "Common/Utility/Math/Mat4.hpp"
 
 namespace Colour::Interpolation
 {

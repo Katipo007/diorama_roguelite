@@ -3,9 +3,8 @@
 #include <string>
 #include <unordered_map>
 
-#include "Common/Vendor/glm/glm/vec3.hpp"
-#include "Common/Vendor/glm/glm/vec4.hpp"
-#include "Common/Vendor/glm/glm/mat4x4.hpp"
+#include "Common/Utility/Math/Vector.hpp"
+#include "Common/Utility/Math/Matrix.hpp"
 
 namespace Visual::Device
 {

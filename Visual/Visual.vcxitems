@@ -15,6 +15,7 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Camera.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)DearImGui\config.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)DearImGui\DearImGui.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Device\FrameBuffer.hpp" />
@@ -47,8 +48,10 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)RendererAPIs.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Device\Window.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Utility\StbImage.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)WorldSpace.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Camera.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)DearImGui\DearImGui.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)DearImGui\DearImGuiCompile.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Device\GraphicsBuffer.cpp" />

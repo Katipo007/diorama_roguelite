@@ -49,12 +49,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)Common\Vendor\spdlog\include\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Common\Vendor\;$(SolutionDir)Common\Vendor\glm\;$(SolutionDir)Common\Vendor\spdlog\include\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)Common\Vendor\spdlog\include\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Common\Vendor\;$(SolutionDir)Common\Vendor\glm\;$(SolutionDir)Common\Vendor\spdlog\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
