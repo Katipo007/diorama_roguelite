@@ -29,10 +29,10 @@ namespace Visual::Device::OpenGL
 
 		switch( severity )
 		{
-			case GL_DEBUG_SEVERITY_HIGH:         LOG_CRITICAL( message ); return;
-			case GL_DEBUG_SEVERITY_MEDIUM:       LOG_ERROR( message ); return;
-			case GL_DEBUG_SEVERITY_LOW:          LOG_WARN( message ); return;
-			case GL_DEBUG_SEVERITY_NOTIFICATION: LOG_TRACE( message ); return;
+			case GL_DEBUG_SEVERITY_HIGH:         LOG_CRITICAL( OpenGL, message ); return;
+			case GL_DEBUG_SEVERITY_MEDIUM:       LOG_ERROR( OpenGL, message ); return;
+			case GL_DEBUG_SEVERITY_LOW:          LOG_WARN( OpenGL, message ); return;
+			case GL_DEBUG_SEVERITY_NOTIFICATION: LOG_TRACE( OpenGL, message ); return;
 		}
 
 		ASSERT( false, "Unknown severity level!" );

@@ -32,10 +32,10 @@ namespace Visual::Device::OpenGL
 
 		gl_context = SDL_GL_CreateContext( window_handle );
 
-		LOG_INFO( "OpenGL Info:" );
-		LOG_INFO( "\tVendor: {0}", glGetString( GL_VENDOR ) );
-		LOG_INFO( "\tRenderer: {0}", glGetString( GL_RENDERER ) );
-		LOG_INFO( "\tVersion: {0}", glGetString( GL_VERSION ) );
+		LOG_INFO( OpenGL,"OpenGL Info:" );
+		LOG_INFO( OpenGL,"\tVendor: {0}", glGetString( GL_VENDOR ) );
+		LOG_INFO( OpenGL,"\tRenderer: {0}", glGetString( GL_RENDERER ) );
+		LOG_INFO( OpenGL,"\tVersion: {0}", glGetString( GL_VERSION ) );
 
 #ifdef DEARIMGUI_ENABLED
 		ImGui_ImplSDL2_InitForOpenGL( window_handle, NULL );

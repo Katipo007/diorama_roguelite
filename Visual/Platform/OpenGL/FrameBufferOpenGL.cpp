@@ -76,12 +76,12 @@ namespace Visual::Device::OpenGL
 	{
 		if( width == 0 || height == 0 )
 		{
-			LOG_WARN( "Attempting to resize framebuffer with a 0 dimension! ({0} x {1})", width, height );
+			LOG_WARN( OpenGL, "Attempting to resize framebuffer with a 0 dimension! ({0} x {1})", width, height );
 			return;
 		}
 		else if( width > max_framebuffer_size || height > max_framebuffer_size )
 		{
-			LOG_WARN( "Attempting to resize framebuffer beyond limits! ({0} x {1})", width, height );
+			LOG_WARN( OpenGL, "Attempting to resize framebuffer beyond limits! ({0} x {1})", width, height );
 			return;
 		}
 

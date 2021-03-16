@@ -164,7 +164,7 @@ namespace Visual::Device::OpenGL
 			}
 			else
 			{
-				LOG_ERROR( "Could not read from file '{0}'", filepath );
+				LOG_ERROR( OpenGL, "Could not read from file '{0}'", filepath );
 			}
 
 			return _result;
@@ -172,7 +172,7 @@ namespace Visual::Device::OpenGL
 		}
 		else
 		{
-			LOG_ERROR( "Could not open file '{0}' for reading", filepath );
+			LOG_ERROR( OpenGL, "Could not open file '{0}' for reading", filepath );
 		}
 
 		return std::string();
@@ -246,8 +246,8 @@ namespace Visual::Device::OpenGL
 					glDeleteShader( shader );
 
 					// report error
-					LOG_ERROR( "Error compiling OpenGL shader: {0}", msg.data() );
-					ASSERT( "Shader compilation failed" );
+					LOG_ERROR( OpenGL, "Error compiling OpenGL shader: {0}", msg.data() );
+					ASSERT_CHANNEL( OpenGL, false, "Shader compilation failed" );
 					break;
 				}
 			}
@@ -282,8 +282,8 @@ namespace Visual::Device::OpenGL
 					glDeleteShader( shader.second );
 
 				// report error
-				LOG_ERROR( "Error linking OpenGL shader program: {0}", msg.data() );
-				ASSERT( "Shader link failed" );
+				LOG_ERROR( OpenGL, "Error linking OpenGL shader program: {0}", msg.data() );
+				ASSERT_CHANNEL( OpenGL, false, "Shader link failed" );
 				return;
 			}
 		}

@@ -64,14 +64,10 @@ int main( int argc, char** argv )
 	(void)argc;
 	(void)argv;
 
-	//
-	// initialise the logging system
-	//
-	Logging::Log::Init( Logging::Type::Client );
-	auto& logger = Logging::Log::GetClientLogger(); (void)logger;
+	Logging::InitDefaultClientSinks();
 
-	LOG_INFO( "Client starting" );
-
+	LOG_INFO( Application, "Client starting" );
+	
 #ifdef DEARIMGUI_ENABLED
 	//
 	// setup imgui
@@ -95,7 +91,7 @@ int main( int argc, char** argv )
 	// Setup window
 	//
 	{
-		LOG_INFO( "Creating application window" );
+		LOG_INFO( Application, "Creating application window" );
 		Visual::Device::Window::WindowCreationProperties window_props;
 		window_props.title = "Client";
 		window_props.width = 640;
@@ -113,7 +109,7 @@ int main( int argc, char** argv )
 		}
 		catch (std::runtime_error& e)
 		{
-			LOG_CRITICAL( "Error creating window: {0}", e.what() );
+			LOG_CRITICAL( Application, "Error creating window: {0}", e.what() );
 			OS::ShowMessageBox( "Failed to create the application window", "Error", OS::MessageBoxTypes::Error );
 			main_window.reset();
 			return -1;
@@ -135,7 +131,7 @@ int main( int argc, char** argv )
 	// ============================================
 	// main loop
 	// ============================================
-	LOG_INFO( "Application setup complete, starting main loop" );
+	LOG_INFO( Application, "Application setup complete, starting main loop" );
 	float last_frame_time = static_cast<float>(clock()) / CLOCKS_PER_SEC;
 	while (running)
 	{
@@ -164,7 +160,7 @@ int main( int argc, char** argv )
 			running = false;
 	}
 
-	LOG_INFO( "Application loop finished, exiting" );
+	LOG_INFO( Application, "Application loop finished, exiting" );
 
 	//
 	// clear
@@ -187,6 +183,6 @@ int main( int argc, char** argv )
 	}
 #endif
 
-	LOG_INFO( "Client finished" );
+	LOG_INFO( Application, "Client finished" );
 	return 0;
 }

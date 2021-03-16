@@ -70,7 +70,7 @@ namespace States
 		const auto it = std::find_if( std::begin(states), std::end(states), [&state]( const decltype(states)::value_type& entry ) { return &state == entry.get(); } );
 		if (it == std::end( states ))
 		{
-			CLOG_ERROR( "Given state does not belong to this manager!" );
+			LOG_ERROR( Client, "Given state does not belong to this manager!" );
 			return;
 		}
 
@@ -83,7 +83,7 @@ namespace States
 		const auto it = std::find_if( std::begin( states ), std::end( states ), [&state]( const decltype(states)::value_type& entry ) { return &state == entry.get(); } );
 		if (it == std::end( states ))
 		{
-			CLOG_ERROR( "Given state does not belong to this manager!" );
+			LOG_ERROR( Client, "Given state does not belong to this manager!" );
 			return;
 		}
 
@@ -120,7 +120,7 @@ namespace States
 		const auto existing_state = Get( state->GetType() );
 		if (existing_state != nullptr)
 		{
-			CLOG_ERROR( "A state of this type already exists!" );
+			LOG_ERROR( Client, "A state of this type already exists!" );
 			return;
 		}
 
@@ -153,7 +153,7 @@ namespace States
 		const auto it = std::find_if( std::begin( states ), std::end( states ), [&state]( const decltype(states)::value_type& entry ) { return &state == entry.get(); } );
 		if (it == std::end( states ))
 		{
-			CLOG_ERROR( "Given state does not belong to this manager!" );
+			LOG_ERROR( Client, "Given state does not belong to this manager!" );
 			return;
 		}
 
@@ -166,7 +166,7 @@ namespace States
 		const auto it = std::find_if( std::begin( states ), std::end( states ), [&state]( const decltype(states)::value_type& entry ) { return &state == entry.get(); } );
 		if (it == std::end( states ))
 		{
-			CLOG_ERROR( "Given state does not belong to this manager!" );
+			LOG_ERROR( Client, "Given state does not belong to this manager!" );
 			return;
 		}
 

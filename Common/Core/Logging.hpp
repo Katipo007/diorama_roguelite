@@ -11,40 +11,38 @@
 
 namespace Logging
 {
-	enum class Type
+	using Logger = spdlog::logger;
+
+	enum class Channel
 	{
+		//
+		// Regular
+		//
+		Assert,
 		Client,
 		Server,
+		Application,
 
-		NumTypes
+		//
+		// Graphics pipelines
+		//
+		OpenGL,
+
+		NumChannels
 	};
 
-	class Log
-	{
-	public:
-		static void Init( const Type type );
+	void InitDefaultClientSinks();
+	void InitDefaultServerSinks();
 
-		static std::shared_ptr<spdlog::logger>& GetClientLogger();
-		static std::shared_ptr<spdlog::logger>& GetServerLogger();
-	};
+	std::shared_ptr<Logger> CreateStandardLogger( std::string_view name, const bool output_to_window, const spdlog::sink_ptr file_sink = spdlog::sink_ptr() );
+	std::shared_ptr<Logger> CreateAdvancedLogger( std::string_view name, std::string_view output_window_pattern, std::string_view file_output_pattern, const spdlog::sink_ptr file_sink = spdlog::sink_ptr() );
+
+	void RegisterLogger( const Channel chnl, std::shared_ptr<Logger> logger );
+	const std::shared_ptr<Logger>& GetLogger( const Channel chnl );
 }
 
-#define CLOG_TRACE(...)			::Logging::Log::GetClientLogger()->trace(__VA_ARGS__)
-#define CLOG_INFO(...)			::Logging::Log::GetClientLogger()->info(__VA_ARGS__)
-#define CLOG_WARN(...)			::Logging::Log::GetClientLogger()->warn(__VA_ARGS__)
-#define CLOG_ERROR(...)			::Logging::Log::GetClientLogger()->error(__VA_ARGS__)
-#define CLOG_CRITICAL(...)		::Logging::Log::GetClientLogger()->critical(__VA_ARGS__)
-
-#define SLOG_TRACE(...)			::Logging::Log::GetServerLogger()->trace(__VA_ARGS__)
-#define SLOG_INFO(...)			::Logging::Log::GetServerLogger()->info(__VA_ARGS__)
-#define SLOG_WARN(...)			::Logging::Log::GetServerLogger()->warn(__VA_ARGS__)
-#define SLOG_ERROR(...)			::Logging::Log::GetServerLogger()->error(__VA_ARGS__)
-#define SLOG_CRITICAL(...)		::Logging::Log::GetServerLogger()->critical(__VA_ARGS__)
-
-/// TODO: Swap default logger between server and client somehow
-
-#define LOG_TRACE(...)			CLOG_TRACE(__VA_ARGS__)
-#define LOG_INFO(...)			CLOG_INFO(__VA_ARGS__)
-#define LOG_WARN(...)			CLOG_WARN(__VA_ARGS__)
-#define LOG_ERROR(...)			CLOG_ERROR(__VA_ARGS__)
-#define LOG_CRITICAL(...)		CLOG_CRITICAL(__VA_ARGS__)
+#define LOG_TRACE(channel, ...)			SPDLOG_LOGGER_TRACE( ::Logging::GetLogger( Logging::Channel::channel ), __VA_ARGS__ )
+#define LOG_INFO(channel, ...)			SPDLOG_LOGGER_INFO( ::Logging::GetLogger( Logging::Channel::channel ), __VA_ARGS__ )
+#define LOG_WARN(channel, ...)			SPDLOG_LOGGER_WARN( ::Logging::GetLogger( Logging::Channel::channel ), __VA_ARGS__ )
+#define LOG_ERROR(channel, ...)			SPDLOG_LOGGER_ERROR( ::Logging::GetLogger( Logging::Channel::channel ), __VA_ARGS__ )
+#define LOG_CRITICAL(channel, ...)		SPDLOG_LOGGER_CRITICAL( ::Logging::GetLogger( Logging::Channel::channel ), __VA_ARGS__ )

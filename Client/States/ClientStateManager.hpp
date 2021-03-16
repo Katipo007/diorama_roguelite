@@ -22,6 +22,7 @@ namespace States
 	class ClientStateManager final
 		: public NonCopyable
 	{
+		friend Game::ClientGame;
 		using StateCollection_T = std::vector< std::unique_ptr<ClientState> >;
 
 	public:

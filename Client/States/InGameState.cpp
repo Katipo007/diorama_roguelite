@@ -8,34 +8,35 @@ namespace States
 	InGameState::InGameState()
 		: ClientState( ClientStates::InGame )
 	{
-		LOG_TRACE( "InGameState created" );
-
 		player = std::make_unique<Game::PlayerObject>();
+
+		LOG_TRACE( Client, "Test!" );
+		LOG_INFO( Client, "Test!" );
+		LOG_WARN( Client, "Test!" );
+		LOG_ERROR( Client, "Test!" );
+		ASSERT( false );
+		ASSERT_CHANNEL( Client, false, "Test!" );
+		LOG_CRITICAL( Client, "Test!" );
 	}
 
 	InGameState::~InGameState()
 	{
-		LOG_TRACE( "InGameState destroyed" );
 	}
 
 	void InGameState::OnAttached()
 	{
-		LOG_TRACE( "InGameState attached" );
 	}
 
 	void InGameState::OnDetached()
 	{
-		LOG_TRACE( "InGameState detatched" );
 	}
 
 	void InGameState::OnEnabled()
 	{
-		LOG_TRACE( "InGameState enabled" );
 	}
 
 	void InGameState::OnDisabled()
 	{
-		LOG_TRACE( "InGameState disabled" );
 	}
 
 	void InGameState::OnFrame( const Timestep& timestep )

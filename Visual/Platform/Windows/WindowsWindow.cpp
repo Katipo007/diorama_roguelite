@@ -75,7 +75,7 @@ namespace Visual::Device
 #endif
 
 			default:
-				LOG_CRITICAL( "Unsupported renderer type" );
+				LOG_CRITICAL( Client, "Unsupported renderer type" );
 				break;
 			}
 
@@ -106,7 +106,7 @@ namespace Visual::Device
 #endif
 
 			default:
-				LOG_CRITICAL( "Unsupported renderer type" );
+				LOG_CRITICAL( Client, "Unsupported renderer type" );
 				break;
 			}
 

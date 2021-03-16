@@ -14,7 +14,7 @@ namespace Visual::Device
 #if defined(PLATFORM_WINDOWS)
 		return std::make_unique<WindowsWindow>( properties );
 #else
-		ASSERT( "Window creation failed, Visual::Window::Create() couldn't determine a type of window to create" );
+		ASSERT( false, "Window creation failed, Visual::Window::Create() couldn't determine a type of window to create" );
 		return std::unique_ptr<Window>();
 #endif
 	}
