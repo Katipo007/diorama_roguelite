@@ -10,6 +10,11 @@
 
 #include "ClientStates.hpp"
 
+namespace Game
+{
+	class ClientGame;
+}
+
 namespace States
 {
 	class ClientState;

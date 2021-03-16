@@ -13,10 +13,10 @@
 #include "Common/Utility/OsAbstraction.hpp"
 #include "Common/Utility/Timestep.hpp"
 
-#include "States/ClientStateManager.hpp"
+#include "Client/ClientGame.hpp"
 
 std::unique_ptr<Visual::Device::Window> main_window;
-std::unique_ptr<States::ClientStateManager> state_manager;
+std::unique_ptr<Game::ClientGame> client_game;
 
 bool running = true;
 bool user_wants_to_exit = false;
@@ -128,7 +128,8 @@ int main( int argc, char** argv )
 	// setup managers
 	//
 	InputManager::SetWindowHandle( main_window->GetNativeWindow() );
-	state_manager = std::make_unique<States::ClientStateManager>();
+	
+	client_game.reset( new Game::ClientGame() );
 
 
 	// ============================================
@@ -151,7 +152,7 @@ int main( int argc, char** argv )
 
 		VD::RendererCommand::Clear();
 
-		state_manager->OnFrame( timestep );
+		client_game->OnFrame( timestep );
 
 #ifdef DEARIMGUI_ENABLED
 		if (DearImGui::IsEnabled())
@@ -169,7 +170,7 @@ int main( int argc, char** argv )
 	// clear
 	//
 	{
-		state_manager.reset();
+		client_game.reset();
 		VD::RendererCommand::ClearActiveContext();
 		main_window.reset();
 		InputManager::SetWindowHandle( NULL );

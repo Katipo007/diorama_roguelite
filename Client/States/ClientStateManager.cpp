@@ -4,14 +4,11 @@
 
 #include "Visual/DearImGui/DearImGui.hpp"
 
-#include "InGameState.hpp"
-
 namespace States
 {
 	ClientStateManager::ClientStateManager()
 	{
-		// TODO: create states
-		AddState( std::make_unique<InGameState>(), true );
+		
 	}
 
 	ClientStateManager::~ClientStateManager()

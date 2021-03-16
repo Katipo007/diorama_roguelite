@@ -86,6 +86,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ClientGame.cpp" />
     <ClCompile Include="ClientMain.cpp" />
     <ClCompile Include="Game\PlayerObject.cpp" />
     <ClCompile Include="Precompiled\pch.cpp">
@@ -98,6 +99,7 @@
     <ClCompile Include="States\InGameState.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ClientGame.hpp" />
     <ClInclude Include="Game\PlayerObject.hpp" />
     <ClInclude Include="Precompiled\pch.hpp" />
     <ClInclude Include="States\ClientStateManager.hpp" />
