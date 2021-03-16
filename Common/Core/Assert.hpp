@@ -29,5 +29,4 @@
 #	define UNREACHABLE { LOG_ERROR( Assert, "This line should be unreachable!" ); }
 #endif
 
-#define ENGINE_CORE_CRASH(msg) { LOG_CRITICAL( Assert, "Application crashed: {0}", msg ); DEBUGBREAK(); }
-#define ENGINE_CORE_CRASH_F(msg, ...) { LOG_CRITICAL( Assert, msg, __VA_ARGS__ ); DEBUGBREAK(); }
+#define FATAL(msg) { LOG_CRITICAL( Assert, "Application has encountered a fatal error and will abort. {0}", msg ); DEBUGBREAK(); abort(); }

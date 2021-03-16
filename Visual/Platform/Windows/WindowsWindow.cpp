@@ -28,7 +28,10 @@ namespace
 	void InitSDL()
 	{
 		if (SDL_Init( SDL_INIT_VIDEO ) != 0)
-			ENGINE_CORE_CRASH_F( "SDL2 could not initialize! SDL_Error: {0}", SDL_GetError() );
+		{
+			LOG_CRITICAL( Application, "SDL2 could not initialize! SDL_Error: '{0}'", SDL_GetError() );
+			FATAL( "SDL2 could not initialize!" );
+		}
 	}
 
 	void ShutdownSDL()
@@ -85,7 +88,10 @@ namespace Visual::Device
 				window_flags );
 
 			if (!window)
-				ENGINE_CORE_CRASH_F( "Window could not be created! SDL_Error: {0}", SDL_GetError() );
+			{
+				LOG_CRITICAL( Application, "Application window could not be created! SDL_Error: '{0}'", SDL_GetError() );
+				FATAL( "Application window could not be created!" );
+			}
 		}
 
 		// initialise the graphics context object
