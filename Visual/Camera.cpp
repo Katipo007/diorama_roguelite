@@ -1,4 +1,3 @@
-#include "Precompiled/pch.hpp"
 #include "Camera.hpp"
 
 #include <glm/gtc/matrix_access.hpp>

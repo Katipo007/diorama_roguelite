@@ -1,4 +1,3 @@
-#include "Precompiled/pch.hpp"
 #include "SDL2.hpp"
 
 #ifdef RENDERER_IMPLEMENTATION_OPENGL

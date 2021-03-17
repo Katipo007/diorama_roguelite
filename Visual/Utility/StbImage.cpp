@@ -1,4 +1,3 @@
-#include "Precompiled/pch.hpp"
 #include "StbImage.hpp"
 
 // we compile the .cpp ourselves here so we can ignore their errors

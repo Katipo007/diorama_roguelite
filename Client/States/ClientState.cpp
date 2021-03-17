@@ -1,4 +1,3 @@
-#include "Precompiled/pch.hpp"
 #include "ClientState.hpp"
 
 namespace States

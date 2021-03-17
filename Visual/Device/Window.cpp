@@ -1,4 +1,3 @@
-#include "Precompiled/pch.hpp"
 #include "Window.hpp"
 
 #if defined(PLATFORM_WINDOWS)

@@ -1,4 +1,3 @@
-#include "Precompiled/pch.hpp"
 #include "RendererCommand.hpp"
 
 #include "Window.hpp"

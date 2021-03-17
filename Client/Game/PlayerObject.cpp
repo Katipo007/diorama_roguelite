@@ -1,4 +1,3 @@
-#include "Precompiled/pch.hpp"
 #include "PlayerObject.hpp"
 
 #include "Visual/Device/RendererCommand.hpp"

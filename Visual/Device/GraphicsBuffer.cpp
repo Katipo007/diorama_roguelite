@@ -1,4 +1,3 @@
-#include "Precompiled/pch.hpp"
 #include "GraphicsBuffer.hpp"
 
 #include "Common/Core/Assert.hpp"

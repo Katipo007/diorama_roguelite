@@ -1,4 +1,3 @@
-#include "Precompiled/pch.hpp"
 #include "WindowsWindow.hpp"
 
 #ifdef PLATFORM_WINDOWS

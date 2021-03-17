@@ -1,4 +1,3 @@
-#include "Precompiled/pch.hpp"
 #include "DearImGui.hpp"
 
 #ifdef DEARIMGUI_ENABLED

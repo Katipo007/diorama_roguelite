@@ -1,4 +1,3 @@
-#include "Precompiled/pch.hpp"
 #include "ClientGame.hpp"
 
 #include "Client/States/ClientStateManager.hpp"

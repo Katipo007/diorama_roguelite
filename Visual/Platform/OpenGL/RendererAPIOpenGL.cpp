@@ -1,4 +1,3 @@
-#include "Precompiled/pch.hpp"
 #include "RendererAPIOpenGL.hpp"
 
 #ifdef RENDERER_IMPLEMENTATION_OPENGL

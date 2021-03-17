@@ -1,4 +1,3 @@
-#include "Precompiled/pch.hpp"
 #include "OpenGLHeader.hpp"
 
 #if defined(RENDERER_IMPLEMENTATION_OPENGL)

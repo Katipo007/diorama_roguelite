@@ -1,4 +1,3 @@
-#include "Precompiled/pch.hpp"
 #include "ShaderOpenGL.hpp"
 
 #ifdef RENDERER_IMPLEMENTATION_OPENGL

@@ -1,4 +1,3 @@
-#include "Precompiled/pch.hpp"
 #include "InGameState.hpp"
 
 #include "Client/Game/PlayerObject.hpp"

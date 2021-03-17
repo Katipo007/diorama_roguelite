@@ -1,4 +1,3 @@
-#include "Precompiled/pch.hpp"
 #include "VertexArrayOpenGL.hpp"
 
 #ifdef RENDERER_IMPLEMENTATION_OPENGL
