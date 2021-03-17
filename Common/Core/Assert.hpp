@@ -23,7 +23,6 @@
 #else
 #	define ASSERT(x, ...) (void)0
 #	define ASSERT_CHANNEL(channel, x, ...) (void)0
-#	define NOT_IMPLEMENTED (void)0
 
 #	define NOT_IMPLEMENTED { LOG_ERROR( Assert, "Function not implemented!" ); }
 #	define UNREACHABLE { LOG_ERROR( Assert, "This line should be unreachable!" ); }
