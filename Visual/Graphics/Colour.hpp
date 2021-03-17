@@ -19,7 +19,6 @@ namespace Colour::Interpolation
 // ColourRGBA
 // packed 4-byte colour
 //
-#pragma pack( push, 1 )
 struct ColourRGBA
 {
 	uint8_t r;
@@ -77,7 +76,6 @@ struct ColourRGBA
 		};
 	}
 };
-#pragma pack( pop )
 
 static_assert(sizeof( ColourRGBA ) == sizeof( uint32_t ));
 constexpr ColourRGBA operator"" _rgba( unsigned long long int v ) { return ColourRGBA( static_cast<uint32_t>(v) ); }
