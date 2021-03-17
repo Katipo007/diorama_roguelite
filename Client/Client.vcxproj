@@ -88,6 +88,7 @@
   <ItemGroup>
     <ClCompile Include="ClientGame.cpp" />
     <ClCompile Include="ClientMain.cpp" />
+    <ClCompile Include="Game\ClientGameWorld.cpp" />
     <ClCompile Include="Game\PlayerObject.cpp" />
     <ClCompile Include="Precompiled\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -100,6 +101,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ClientGame.hpp" />
+    <ClInclude Include="Game\ClientGameWorld.hpp" />
     <ClInclude Include="Game\PlayerObject.hpp" />
     <ClInclude Include="Precompiled\pch.hpp" />
     <ClInclude Include="States\ClientStateManager.hpp" />

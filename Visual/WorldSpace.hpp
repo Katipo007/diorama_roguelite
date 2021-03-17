@@ -6,9 +6,9 @@ namespace Worldspace
 {
 	namespace _constexpr
 	{
-		constexpr glm::vec3 Up3 = { 0.f, 0.f, 1.f };
-		constexpr glm::vec3 Forward3 = { 1.f, 0.f, 0.f };
-		constexpr glm::vec3 Right3 = { 0.f, 1.f, 0.f };
+		constexpr glm::vec3 Up3 = { 0.f, 0.f, -1.f };
+		constexpr glm::vec3 Forward3 = { 0.f, 1.f, 0.f };
+		constexpr glm::vec3 Right3 = { 1.f, 0.f, 0.f };
 
 		static_assert(glm::cross( Up3, Forward3 ) == Right3);
 	}

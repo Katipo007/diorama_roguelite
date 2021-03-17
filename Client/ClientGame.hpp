@@ -25,9 +25,9 @@ namespace Game
 		~ClientGame();
 
 	protected:
-		ClientGame(); // private constructor to only allow int main() to create us.
+		ClientGame(); // for entry point to call
 
-		void OnFrame( const Timestep& ts );
+		void OnFrame( const Timestep& ts ); // for entry point to call
 
 		std::unique_ptr<States::ClientStateManager> state_manager;
 	};

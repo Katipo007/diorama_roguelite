@@ -22,13 +22,15 @@ namespace Game
 		PlayerObject();
 		virtual ~PlayerObject();
 
-		void Render() const;
+		std::shared_ptr<Visual::Device::Shader> GetShader() const { return shader; }
+		std::shared_ptr<Visual::Device::Texture2D> GetTexture() const { return texture; }
+		std::shared_ptr<Visual::Device::VertexArray> GetModel() const { return model; }
 
 	protected:
 		void CreateModel();
 
 		std::shared_ptr<Visual::Device::Shader> shader;
 		std::shared_ptr<Visual::Device::Texture2D> texture;
-		std::shared_ptr<Visual::Device::VertexArray> va;
+		std::shared_ptr<Visual::Device::VertexArray> model;
 	};
 }

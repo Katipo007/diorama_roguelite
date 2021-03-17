@@ -57,6 +57,10 @@ namespace Visual::Device::OpenGL
 		glEnable( GL_DEPTH_TEST );
 		glDepthFunc( GL_LEQUAL );
 
+
+		// TEMP
+		glDisable( GL_CULL_FACE );
+
 		// fetch and store capabilities
 		{
 			// clear

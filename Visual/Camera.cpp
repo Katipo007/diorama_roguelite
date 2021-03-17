@@ -1,7 +1,10 @@
 #include "Camera.hpp"
 
+#pragma warning(push, 0)
 #include <glm/gtc/matrix_access.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/euler_angles.hpp>
+#pragma warning(pop)
 
 #include "Visual/Worldspace.hpp"
 
@@ -74,6 +77,11 @@ namespace Visual
 		dirty = true;
 	}
 
+	void SphericalCamera::SetRotationD( float theta_deg, float phi_deg )
+	{
+		SetRotation( glm::radians( theta_deg ), glm::radians( phi_deg ) );
+	}
+
 	void SphericalCamera::Rotate( float delta_theta, float delta_phi )
 	{
 		theta += delta_theta;
@@ -96,11 +104,18 @@ namespace Visual
 		if (!dirty)
 			return;
 
-		const auto identity_mat = glm::identity<glm::mat4>();
+		constexpr auto identity_mat = glm::identity<glm::mat4>();
 
 		auto* non_const_this = const_cast<SphericalCamera*>(this);
-		non_const_this->rotation = glm::rotate( identity_mat, theta, Worldspace::Right3 ) * glm::rotate( identity_mat, phi, Worldspace::Up3 );
-		non_const_this->mat_view = glm::translate( identity_mat, Worldspace::Forward3 * -radius ) * rotation * glm::translate( identity_mat, target_position );
+		non_const_this->phi = glm::radians( 0.f ); // sidey side
+		non_const_this->theta = glm::radians( 95.f ); // up down
+
+		//non_const_this->rotation = glm::rotate( identity_mat, theta, Worldspace::Right3 ) * glm::rotate( identity_mat, phi, Worldspace::Up3 );
+		//non_const_this->mat_view = glm::translate( identity_mat, Worldspace::Forward3 * -radius ) * rotation *glm::translate( identity_mat, target_position );
+		//non_const_this->mat_view = glm::translate( identity_mat, Worldspace::Forward3 * radius ) * rotation * glm::translate( identity_mat, target_position );
+		//non_const_this->mat_view = glm::lookAt( Worldspace::Forward3 * -5.f, { 0, 0, 0 }, Worldspace::Up3 ) * glm::rotate( identity_mat, glm::radians( 45.f ), Worldspace::Right3 );//glm::translate( identity_mat, Worldspace::Forward3 * -radius ) * rotation * glm::translate( identity_mat, target_position );
+		//non_const_this->mat_view = glm::lookAt( SphericalToCartesian( theta, phi, radius ) + target_position, target_position, Worldspace::Up3 );
+		non_const_this->mat_view = glm::translate( identity_mat, Worldspace::Up3 * radius ) * glm::eulerAngleXZ( theta, phi );
 		non_const_this->mat_view_projection = GetProjectionMatrix() * non_const_this->mat_view;
 		non_const_this->dirty = false;
 	}
@@ -124,6 +139,10 @@ namespace Visual
 		, clip_near( clip_near_ )
 		, clip_far( clip_far_ )
 		, projection_dirty( true )
+	{
+	}
+
+	PerspectiveCamera::~PerspectiveCamera()
 	{
 	}
 
@@ -161,7 +180,9 @@ namespace Visual
 			return;
 
 		auto* non_const_this = const_cast<PerspectiveCamera*>(this);
-		non_const_this->mat_projection = glm::perspective( fov, aspect, clip_near, clip_far );
+		non_const_this->mat_projection = glm::perspective( glm::radians( fov ), aspect, clip_near, clip_far );
+		//non_const_this->mat_projection = glm::mat4(1.f);
+		//non_const_this->mat_projection = glm::perspective( glm::radians( 75.f ), 4.0f / 3.0f, 0.1f, 100.0f );
 		non_const_this->projection_dirty = false;
 	}
 }

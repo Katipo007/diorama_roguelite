@@ -1,7 +1,5 @@
 #pragma once
 
-#include <memory>
-
 #include "CompileTime/PlatformDetection.hpp"
 
 #ifdef _DEBUG // TODO: replace with a custom define

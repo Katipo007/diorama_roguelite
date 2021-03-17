@@ -6,6 +6,8 @@
 #include "Visual/Device/Texture.hpp"
 #include "Visual/Device/VertexArray.hpp"
 
+#include "Visual/WorldSpace.hpp"
+
 namespace Game
 {
 	PlayerObject::PlayerObject()
@@ -24,32 +26,6 @@ namespace Game
 	{
 	}
 
-	void PlayerObject::Render() const
-	{
-		auto& renderer = Visual::Device::RendererCommand::GetRendererAPI();
-		renderer.SetClearColour( ColourRGBA( 40, 40, 40 ) );
-		renderer.Clear();
-
-		if (shader)
-		{
-			shader->Bind();
-			shader->SetMat4( "u_ViewProjection", glm::mat4( 1 ) );
-			shader->SetMat4( "u_Model", glm::mat4( 1 ) );
-		}
-
-		if (texture)
-			texture->Bind( 0 );
-
-		if (va)
-		{
-			va->Bind();
-			Visual::Device::RendererCommand::DrawIndexed( va );
-		}
-
-		if (shader)
-			shader->Unbind();
-	}
-
 	void PlayerObject::CreateModel()
 	{
 		auto& renderer = Visual::Device::RendererCommand::GetRendererAPI();
@@ -58,6 +34,13 @@ namespace Game
 				+0.f, -4.f, +0.f, 1, 0, 0, 1, 0, 0, 0,
 				-4.f, +4.f, +0.f, 0, 1, 0, 1, 0, 0, 0,
 				+4.f, +4.f, +0.f, 0, 0, 1, 1, 0, 0, 0,
+
+				+1.f, +0.f, +0.f, 1, 1, 1, 1, 0, 0, 0,
+				+0.f, +0.f, -2.f, 1, 1, 1, 1, 0, 0, 0,
+				-1.f, +0.f, +0.f, 1, 1, 1, 1, 0, 0, 0,
+				+0.f, +1.f, +0.f, 1, 0, 1, 1, 0, 0, 0,
+				+0.f, +0.f, -2.f, 1, 0, 1, 1, 0, 0, 0,
+				+0.f, -1.f, +0.f, 1, 0, 1, 1, 0, 0, 0,
 		};
 
 		// VBO
@@ -76,13 +59,13 @@ namespace Game
 		// IBO
 		Visual::Device::IndexBuffer::CreationProperties ib_props;
 		ib_props.name = "Player model IBO";
-		ib_props.indices = { 0, 1, 2 };
+		ib_props.indices = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
 
 		// VAO
 		Visual::Device::VertexArray::CreationProperties va_props;
 		va_props.name = "Player VAO";
 		va_props.vertex_buffers = { renderer.CreateVertexBuffer( vb_props ) };
 		va_props.index_buffer = renderer.CreateIndexBuffer( ib_props );
-		va = renderer.CreateVertexArray( va_props );
+		model = renderer.CreateVertexArray( va_props );
 	}
 }

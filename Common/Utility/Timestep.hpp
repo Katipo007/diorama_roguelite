@@ -1,33 +1,22 @@
 #pragma once
 
-class Timestep
+struct Timestep
 {
-public:
-	Timestep( float time_seconds = 0.0f )
-		: time_s( time_seconds ) {}
+	float time;
+	float delta;
 
-	operator float() const { return time_s; }
-
-	float GetSeconds() const { return time_s; }
-	float GetMilliseconds() const { return time_s * 0.001f; }
-
-private:
-	float time_s;
+	Timestep( float time_ = 0.f, float delta_time_ = 0.f )
+		: time( time_ ), delta( delta_time_ ) {}
 };
 
-class PresiceTimestep
+struct PresiceTimestep
 {
-public:
-	PresiceTimestep( double time_seconds = 0.0 )
-		: time_s( time_seconds ) {}
+	double time;
+	double delta;
 
-	operator double() const { return time_s; }
-	operator Timestep() const { return Timestep( static_cast<float>(time_s) ); }
+	PresiceTimestep( double time_ = 0.f, double delta_time_ = 0.f )
+		: time( time_ ), delta( delta_time_ ) {}
 
-	double GetSeconds() const { return time_s; }
-	double GetMilliseconds() const { return time_s * 0.001; }
-
-private:
-	double time_s;
+	operator Timestep() const { return Timestep( (float)time, (float)delta ); }
 };
 

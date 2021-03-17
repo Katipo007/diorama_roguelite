@@ -2,7 +2,7 @@
 #include <iostream>
 
 #include "Visual/Device/Window.hpp"
-#include "Visual/Device/RendererCommand.hpp"
+#include "Visual/Renderer.hpp"
 #include "Visual/Input/Input.hpp"
 #include "Visual/Events/ApplicationEvents.hpp"
 #include "Visual/Events/KeyboardEvents.hpp"
@@ -38,6 +38,8 @@ void WindowEventHandler( Visual::Device::Event& application_event )
 			ImGuiIO& io = ImGui::GetIO();
 			io.DisplaySize = ImVec2( (float)e.GetSender().GetWidth(), (float)e.GetSender().GetHeight() );
 #endif
+
+			Visual::Renderer::OnWindowResize( e.GetWidth(), e.GetHeight() );
 
 			return false;
 		} );
@@ -117,7 +119,8 @@ int main( int argc, char** argv )
 		ASSERT( main_window );
 	}
 
-	VD::RendererCommand::SetActiveContext( *main_window );
+	Visual::Renderer::Init();
+	Visual::Renderer::SetDevice( main_window.get() );
 
 	//
 	// setup managers
@@ -135,17 +138,14 @@ int main( int argc, char** argv )
 	while (running)
 	{
 		const float time = static_cast<float>(clock()) / CLOCKS_PER_SEC;
-		Timestep timestep = time - last_frame_time;
+		Timestep timestep( time,  time - last_frame_time );
 		last_frame_time = time;
-		ASSERT( timestep.GetSeconds() >= 0 );
 
 		main_window->OnUpdateBegin();
 #ifdef DEARIMGUI_ENABLED
 		if (DearImGui::IsEnabled())
 			ImGui::NewFrame();
 #endif
-
-		VD::RendererCommand::Clear();
 
 		client_game->OnFrame( timestep );
 
@@ -166,7 +166,7 @@ int main( int argc, char** argv )
 	//
 	{
 		client_game.reset();
-		VD::RendererCommand::ClearActiveContext();
+		Visual::Renderer::Shutdown();
 		main_window.reset();
 		InputManager::SetWindowHandle( NULL );
 	}

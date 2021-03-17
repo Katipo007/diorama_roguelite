@@ -23,4 +23,8 @@
 #	define RENDERER_IMPLEMENTATION_OPENGL
 #endif
 
+#define GLM_FORCE_SILENT_WARNINGS
+
+#pragma warning(disable: 4201)
+
 #endif // DIORAMA_ROGUELITE_PCH_HPP

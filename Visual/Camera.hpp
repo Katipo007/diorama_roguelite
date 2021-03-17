@@ -20,8 +20,6 @@ namespace Visual
 		};
 
 	public:
-		virtual ~Camera() = default;
-
 		virtual Type GetType() const = 0;
 
 		virtual const glm::mat4& GetProjectionMatrix() const = 0;
@@ -30,14 +28,13 @@ namespace Visual
 
 	protected:
 		Camera() {}
+		virtual ~Camera() = default;
 	};
 
 	class PerspectiveCamera
 		: public Camera
 	{
 	public:
-		virtual ~PerspectiveCamera() = default;
-
 		virtual const glm::mat4& GetProjectionMatrix() const override { RecalculatePerspective(); return mat_projection; }
 
 		float GetFOV() const { RecalculatePerspective(); return fov; }
@@ -45,15 +42,16 @@ namespace Visual
 		float GetClipNear() const { RecalculatePerspective(); return clip_near; }
 		float GetClipFar() const { RecalculatePerspective(); return clip_far; }
 
-		virtual void Reset( float fov, float aspect, float clip_near, float clip_far );
-		virtual void SetFOV( float fov );
+		virtual void Reset( float fov_deg, float aspect, float clip_near, float clip_far );
+		virtual void SetFOV( float fov_deg );
 		virtual void SetAspectRatio( float aspect );
 		virtual void SetAspectRatio( uint32_t width, uint32_t height ) { SetAspectRatio( (float)height / float( width ) ); }
 		virtual void SetClipSpace( float clip_near, float clip_far );
 
 	protected:
 		PerspectiveCamera();
-		PerspectiveCamera( float fov, float aspect, float clip_near, float clip_far );
+		PerspectiveCamera( float fov_deg, float aspect, float clip_near, float clip_far );
+		virtual ~PerspectiveCamera() override;
 
 	private:
 		void RecalculatePerspective() const; // not really const
@@ -61,7 +59,7 @@ namespace Visual
 		glm::mat4 mat_projection = glm::mat4( 1 );
 		bool projection_dirty = true;
 
-		float fov;
+		float fov; // degrees
 		float aspect;
 		float clip_near;
 		float clip_far;
@@ -74,14 +72,15 @@ namespace Visual
 	class SphericalCamera
 		: public PerspectiveCamera
 	{
+	public:
 		SphericalCamera();
-		virtual ~SphericalCamera();
+		virtual ~SphericalCamera() override;
 			
 		virtual Type GetType() const override { return Type::Spherical; }
 		static Type GetStaticType() { return Type::Spherical; }
 
-		virtual const glm::mat4& GetViewMatrix() const override { return mat_view; }
-		virtual const glm::mat4& GetViewProjectionMatrix() const override { return mat_view_projection; }
+		virtual const glm::mat4& GetViewMatrix() const override { Recalculate(); return mat_view; }
+		virtual const glm::mat4& GetViewProjectionMatrix() const override { Recalculate(); return mat_view_projection; }
 
 		const glm::vec3& GetPosition() const { return target_position; }
 		virtual void SetPosition( const glm::vec3& new_target_position );
@@ -97,8 +96,10 @@ namespace Visual
 		// +: in, -: out
 		virtual void Zoom( float distance ) { SetRadius( GetRadius() - distance ); }
 
-		// Theta is forward/back, Phi is side-to-side
-		virtual void SetRotation( float theta, float phi );
+		// Theta is forward/back, Phi is side-to-side, in radians
+		virtual void SetRotation( float theta_rad, float phi_rad );
+		// Theta is forward/back, Phi is side-to-side, in radians
+		virtual void SetRotationD( float theta_deg, float phi_deg );
 		// Theta is forward/back, Phi is side-to-side
 		virtual void Rotate( float delta_theta, float delta_phi );
 
@@ -112,7 +113,6 @@ namespace Visual
 		float theta = 0; // radians, forwards/backwards
 		float phi = 0; // radians, side-to-side
 		float radius = 1; // distance from target, worldspace
-		float up = 1; // current "up" direction scalar
 
 		glm::vec3 target_position = { 0, 0, 0 };
 
