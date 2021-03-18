@@ -70,10 +70,10 @@ namespace Visual
 		dirty = true;
 	}
 
-	void SphericalCamera::SetRotation( float theta_, float phi_ )
+	void SphericalCamera::SetRotation( float pitch_, float yaw_ )
 	{
-		theta = theta_;
-		phi = phi_;
+		pitch = pitch_;
+		yaw = yaw_;
 		dirty = true;
 	}
 
@@ -82,21 +82,21 @@ namespace Visual
 		SetRotation( glm::radians( theta_deg ), glm::radians( phi_deg ) );
 	}
 
-	void SphericalCamera::Rotate( float delta_theta, float delta_phi )
+	void SphericalCamera::Rotate( float delta_pitch_rad, float delta_yaw_rad )
 	{
-		theta += delta_theta;
-		phi += delta_phi;
+		pitch += delta_pitch_rad;
+		yaw += delta_yaw_rad;
 		dirty = true;
 	}
 
 	std::pair<float, float> SphericalCamera::GetSphericalRotation() const
 	{
-		return std::make_pair( theta, phi );
+		return std::make_pair( pitch, yaw );
 	}
 
 	glm::vec3 SphericalCamera::GetCartesianRotation() const
 	{
-		return glm::normalize( SphericalToCartesian( theta, phi, radius ) );
+		return glm::normalize( SphericalToCartesian( pitch, yaw, radius ) );
 	}
 
 	void SphericalCamera::Recalculate() const
@@ -107,7 +107,7 @@ namespace Visual
 		constexpr auto identity_mat = glm::identity<glm::mat4>();
 
 		auto* non_const_this = const_cast<SphericalCamera*>(this);
-		non_const_this->rotation = glm::eulerAngleXZ( theta, phi ); // equivalent: glm::rotate( identity_mat, theta, Worldspace::Right3 )* glm::rotate( identity_mat, phi, Worldspace::Up3 );
+		non_const_this->rotation = glm::eulerAngleXZ( pitch, yaw ); // equivalent: glm::rotate( identity_mat, pitch, Worldspace::Right3 )* glm::rotate( identity_mat, yaw, Worldspace::Up3 );
 		non_const_this->mat_view = glm::translate( identity_mat, Worldspace::Up3 * radius ) * rotation * glm::translate( identity_mat, target_position );
 		non_const_this->mat_view_projection = GetProjectionMatrix() * non_const_this->mat_view;
 		non_const_this->dirty = false;

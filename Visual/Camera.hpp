@@ -96,22 +96,19 @@ namespace Visual
 		// +: in, -: out
 		virtual void Zoom( float distance ) { SetRadius( GetRadius() - distance ); }
 
-		// Theta is forward/back, Phi is side-to-side, in radians
-		virtual void SetRotation( float theta_rad, float phi_rad );
-		// Theta is forward/back, Phi is side-to-side, in radians
-		virtual void SetRotationD( float theta_deg, float phi_deg );
-		// Theta is forward/back, Phi is side-to-side
-		virtual void Rotate( float delta_theta, float delta_phi );
+		virtual void SetRotation( float pitch_rad, float yaw_rad );
+		virtual void SetRotationD( float pitch_deg, float yaw_deg );
+		virtual void Rotate( float delta_pitch_rad, float delta_yaw_rad );
 
-		// [theta, phi], Theta is forward/back, Phi is side-to-side
+		// [pitch, yaw], radians
 		_NODISCARD virtual std::pair<float, float> GetSphericalRotation() const;
 		_NODISCARD virtual glm::vec3 GetCartesianRotation() const;
 
 	private:
 		void Recalculate() const;
 
-		float theta = 0; // radians, forwards/backwards
-		float phi = 0; // radians, side-to-side
+		float pitch = 0; // radians
+		float yaw = 0; // radians
 		float radius = 1; // distance from target, worldspace
 
 		glm::vec3 target_position = { 0, 0, 0 };

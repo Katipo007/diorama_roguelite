@@ -48,7 +48,7 @@ namespace States
 		(void)timestep;
 		//main_camera->SetRadius( 5.f + std::sin( timestep.time / 4.f ) * 2.f );
 		//main_camera->SetRotationD( 45.f, -45.f );
-		main_camera->SetRotationD( 90.f * std::cos( timestep.time ), 90.f * std::sin( timestep.time / 4 ) );
+		main_camera->SetRotationD( 95.f, 90.f * std::sin( timestep.time / 4 ) );
 
 		// TODO: separate to be called independantly of the update loop
 		Render();
