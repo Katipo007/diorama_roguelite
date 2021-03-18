@@ -107,15 +107,8 @@ namespace Visual
 		constexpr auto identity_mat = glm::identity<glm::mat4>();
 
 		auto* non_const_this = const_cast<SphericalCamera*>(this);
-		non_const_this->phi = glm::radians( 0.f ); // sidey side
-		non_const_this->theta = glm::radians( 95.f ); // up down
-
-		//non_const_this->rotation = glm::rotate( identity_mat, theta, Worldspace::Right3 ) * glm::rotate( identity_mat, phi, Worldspace::Up3 );
-		//non_const_this->mat_view = glm::translate( identity_mat, Worldspace::Forward3 * -radius ) * rotation *glm::translate( identity_mat, target_position );
-		//non_const_this->mat_view = glm::translate( identity_mat, Worldspace::Forward3 * radius ) * rotation * glm::translate( identity_mat, target_position );
-		//non_const_this->mat_view = glm::lookAt( Worldspace::Forward3 * -5.f, { 0, 0, 0 }, Worldspace::Up3 ) * glm::rotate( identity_mat, glm::radians( 45.f ), Worldspace::Right3 );//glm::translate( identity_mat, Worldspace::Forward3 * -radius ) * rotation * glm::translate( identity_mat, target_position );
-		//non_const_this->mat_view = glm::lookAt( SphericalToCartesian( theta, phi, radius ) + target_position, target_position, Worldspace::Up3 );
-		non_const_this->mat_view = glm::translate( identity_mat, Worldspace::Up3 * radius ) * glm::eulerAngleXZ( theta, phi );
+		non_const_this->rotation = glm::eulerAngleXZ( theta, phi ); // equivalent: glm::rotate( identity_mat, theta, Worldspace::Right3 )* glm::rotate( identity_mat, phi, Worldspace::Up3 );
+		non_const_this->mat_view = glm::translate( identity_mat, Worldspace::Up3 * radius ) * rotation * glm::translate( identity_mat, target_position );
 		non_const_this->mat_view_projection = GetProjectionMatrix() * non_const_this->mat_view;
 		non_const_this->dirty = false;
 	}
