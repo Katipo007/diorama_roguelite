@@ -28,6 +28,7 @@ namespace example
 	struct ClosedState;
 	struct OpenState;
 	class LockedState;
+	struct VoidState;
 
 	struct ClosedState
 		: public Will<
@@ -75,6 +76,12 @@ namespace example
 	};
 
 
+	struct VoidState
+		: public Will<DefaultAction<Actions::NoAction>>
+	{
+
+	};
+
 	using Door = Machine<
 		States<ClosedState, OpenState, LockedState>,
 		Events<OpenEvent, CloseEvent, LockEvent, UnlockEvent>>;
@@ -87,9 +94,14 @@ namespace example
 		door.Handle( LockEvent{ 123 } );
 		door.Handle( UnlockEvent{ 123 } );
 
+		auto& closed = door.GetState<ClosedState>(); (void)closed;
+		//auto& void_state = door.GetState<VoidState>(); (void)void_state;
+
+		auto top_state = door.GetActiveState();
+
 		//auto d2 = Door( door );
 		bool x = door.IsInState<LockedState>(); (void)x;
-		door.Handle( 123 ); // wont compile because of unknown type
+		//door.Handle( 123 ); // wont compile because of unknown type
 	}
 
 	/*struct X
