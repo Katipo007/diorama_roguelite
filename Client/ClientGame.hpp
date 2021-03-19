@@ -14,18 +14,18 @@ int main( int, char** );
 
 namespace ClientStates
 {
-	using CStates = StateMachine::States<
+	using States = StateMachine::States<
 		PreGameState,
 		InGameState
 	>;
 
-	using CEvents = StateMachine::Events<
+	using Events = StateMachine::Events<
 		FrameEvent,
 		RenderEvent,
 		DearImGuiFrameEvent
 	>;
 
-	using CStateMachine = StateMachine::Machine<CStates, CEvents>;
+	using Machine = StateMachine::Machine<States, Events>;
 }
 
 namespace Game
@@ -43,7 +43,7 @@ namespace Game
 
 		void OnFrame( const Timestep& ts ); // for entry point to call
 
-		ClientStates::CStateMachine client_state;
+		ClientStates::Machine state_machine;
 	};
 
 	ClientGame& GetClientGame();

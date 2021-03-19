@@ -1,7 +1,5 @@
 #include "ClientGame.hpp"
 
-#include "Client/States/InGameState.hpp"
-
 namespace
 {
     static Game::ClientGame* static_client_game_ptr = nullptr;
@@ -15,10 +13,10 @@ namespace Game
         return *static_client_game_ptr;
     }
 
-    ClientGame::~ClientGame()
-    {
-        static_client_game_ptr = nullptr;
-    }
+
+    ///
+    /// ClientGame
+    /// 
 
     ClientGame::ClientGame()
     {
@@ -26,9 +24,14 @@ namespace Game
         static_client_game_ptr = this;
     }
 
+    ClientGame::~ClientGame()
+    {
+        static_client_game_ptr = nullptr;
+    }
+
     void ClientGame::OnFrame( const Timestep& ts )
     {
-        client_state.Handle( ClientStates::FrameEvent( ts ) );
-        client_state.Handle( ClientStates::RenderEvent() );
+        state_machine.Handle( ClientStates::FrameEvent( ts ) );
+        state_machine.Handle( ClientStates::RenderEvent() );
     }
 }
