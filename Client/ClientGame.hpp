@@ -2,22 +2,36 @@
 
 #include <memory>
 
+#include "Common/Utility/NonCopyable.hpp"
+#include "Common/Utility/StateMachine/StateMachine.hpp"
 #include "Common/Utility/Timestep.hpp"
+
+#include "Client/States/Events.hpp"
+#include "Client/States/PreGameState.hpp"
+#include "Client/States/InGameState.hpp"
 
 int main( int, char** );
 
-namespace States
+namespace ClientStates
 {
-	class ClientStateManager;
+	using CStates = StateMachine::States<
+		PreGameState,
+		InGameState
+	>;
+
+	using CEvents = StateMachine::Events<
+		FrameEvent,
+		RenderEvent,
+		DearImGuiFrameEvent
+	>;
+
+	using CStateMachine = StateMachine::Machine<CStates, CEvents>;
 }
 
 namespace Game
 {
-	class ClientGame;
-
-	ClientGame& GetClientGame();
-
 	class ClientGame final
+		: NonCopyable
 	{
 		friend int ::main( int, char** );
 
@@ -29,6 +43,8 @@ namespace Game
 
 		void OnFrame( const Timestep& ts ); // for entry point to call
 
-		std::unique_ptr<States::ClientStateManager> state_manager;
+		ClientStates::CStateMachine client_state;
 	};
+
+	ClientGame& GetClientGame();
 }

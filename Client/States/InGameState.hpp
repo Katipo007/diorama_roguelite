@@ -1,7 +1,12 @@
 #pragma once
 
 #include <memory>
-#include "ClientState.hpp"
+
+#include "Client/States/Events.hpp"
+#include "Common/Utility/StateMachine/DefaultAction.hpp"
+#include "Common/Utility/StateMachine/Actions/Might.hpp"
+#include "Common/Utility/StateMachine/Actions/TransitionTo.hpp"
+#include "Common/Utility/NonCopyable.hpp"
 
 namespace Visual
 {
@@ -15,31 +20,27 @@ namespace Game
 	class ClientGameWorld;
 }
 
-namespace States
+namespace ClientStates
 {
 	class InGameState
-		: public ClientState
+		: public StateMachine::DefaultAction<StateMachine::Actions::NoAction>
+		, NonCopyable
 	{
 	public:
-		InGameState();
+		using StateMachine::DefaultAction<StateMachine::Actions::NoAction>::HandleEvent;
+
+		explicit InGameState();
 		virtual ~InGameState();
 
-		ClientStates GetStaticType() const { return ClientStates::InGame; };
+		StateMachine::Actions::NoAction HandleEvent( const FrameEvent& e );
+		StateMachine::Actions::NoAction HandleEvent( const RenderEvent& e );
+		StateMachine::Actions::NoAction HandleEvent( const DearImGuiFrameEvent& e );
+
+		//StateMachine::Actions::NoAction OnEnter();
+		//void OnLeave();
 
 	protected:
-		virtual std::string_view GetName() const override { return "InGameState"; }
-
-		virtual void OnAttached() override;
-		virtual void OnDetached() override;
-
-		virtual void OnEnabled() override;
-		virtual void OnDisabled() override;
-
-		virtual void OnFrame( const Timestep& ) override;
-		virtual void OnDearImGuiRender() override;
-
-		void Render() const;
-
+		void OnRender() const;
 
 		std::shared_ptr<Visual::SphericalCamera> main_camera;
 		std::unique_ptr<Game::ClientGameWorld> gameworld; // TODO: refactor into client session

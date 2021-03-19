@@ -7,26 +7,9 @@
 #include "Client/Game/ClientGameWorld.hpp"
 #include "Client/Game/PlayerObject.hpp"
 
-namespace States
+namespace ClientStates
 {
 	InGameState::InGameState()
-		: ClientState( ClientStates::InGame )
-	{
-	}
-
-	InGameState::~InGameState()
-	{
-	}
-
-	void InGameState::OnAttached()
-	{
-	}
-
-	void InGameState::OnDetached()
-	{
-	}
-
-	void InGameState::OnEnabled()
 	{
 		main_camera = std::make_shared<Visual::SphericalCamera>();
 		main_camera->SetPosition( { 0, 0, 0 } );
@@ -37,28 +20,48 @@ namespace States
 		gameworld = std::make_unique<Game::ClientGameWorld>();
 	}
 
-	void InGameState::OnDisabled()
+	InGameState::~InGameState()
 	{
-		main_camera.reset();
 		gameworld.reset();
+		main_camera.reset();
 	}
 
-	void InGameState::OnFrame( const Timestep& timestep )
+	StateMachine::Actions::NoAction ClientStates::InGameState::HandleEvent( const FrameEvent& e )
 	{
-		(void)timestep;
+		(void)e;
 		//main_camera->SetRadius( 5.f + std::sin( timestep.time / 4.f ) * 2.f );
 		//main_camera->SetRotationD( 45.f, -45.f );
-		main_camera->SetRotationD( 95.f, 90.f * std::sin( timestep.time / 4 ) );
+		main_camera->SetRotationD( 95.f, 90.f * std::sin( e.timestep.time / 4 ) );
 
-		// TODO: separate to be called independantly of the update loop
-		Render();
+		return StateMachine::Actions::NoAction{};
 	}
 
-	void InGameState::OnDearImGuiRender()
+	StateMachine::Actions::NoAction InGameState::HandleEvent( const RenderEvent& e )
 	{
+		(void)e;
+
+		OnRender();
+
+		return StateMachine::Actions::NoAction();
 	}
 
-	void InGameState::Render() const
+	StateMachine::Actions::NoAction ClientStates::InGameState::HandleEvent( const DearImGuiFrameEvent& e )
+	{
+		(void)e;
+
+		return StateMachine::Actions::NoAction{};
+	}
+
+	//StateMachine::Actions::NoAction ClientStates::InGameState::OnEnter()
+	//{
+	//	return StateMachine::Actions::NoAction{};
+	//}
+	//
+	//void ClientStates::InGameState::OnLeave()
+	//{
+	//}
+
+	void InGameState::OnRender() const
 	{
 		gameworld->Render( main_camera );
 	}
