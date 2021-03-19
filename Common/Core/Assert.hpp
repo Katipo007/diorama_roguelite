@@ -19,13 +19,11 @@
 #	define ASSERT_CHANNEL(channel, ...) EXPAND_MACRO( INTERNAL_ASSERT_GET_MACRO(__VA_ARGS__)(channel, __VA_ARGS__) )
 
 #	define NOT_IMPLEMENTED { LOG_ERROR( Assert, "Function not implemented!" ); DEBUGBREAK(); }
-#	define UNREACHABLE { LOG_ERROR( Assert, "This line should be unreachable!" ); DEBUGBREAK(); }
 #else
 #	define ASSERT(x, ...) (void)0
 #	define ASSERT_CHANNEL(channel, x, ...) (void)0
 
 #	define NOT_IMPLEMENTED { LOG_ERROR( Assert, "Function not implemented!" ); }
-#	define UNREACHABLE { LOG_ERROR( Assert, "This line should be unreachable!" ); }
 #endif
 
 #define FATAL(msg) { LOG_CRITICAL( Assert, "Application has encountered a fatal error and will abort. {0}", msg ); DEBUGBREAK(); abort(); }

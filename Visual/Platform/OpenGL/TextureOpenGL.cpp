@@ -1,5 +1,5 @@
 #include "TextureOpenGL.hpp"
-
+#include "Common/Utility/CompileTime/Unreachable.hpp"
 
 #ifdef RENDERER_IMPLEMENTATION_OPENGL
 
@@ -17,14 +17,11 @@ namespace Visual::Device::OpenGL
 				return GL_CLAMP_TO_EDGE;
 			case Texture::TextureWrapSetting::Repeat:
 				return  GL_REPEAT;
-				break;
 			case Texture::TextureWrapSetting::MirroredRepeat:
 				return GL_MIRRORED_REPEAT;
-				break;
 			}
 
-			UNREACHABLE;
-			return GL_REPEAT;
+			unreachable();
 		}
 	}
 
