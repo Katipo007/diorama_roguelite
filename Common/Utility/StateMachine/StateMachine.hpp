@@ -66,6 +66,12 @@ namespace StateMachine
 		struct contains : std::bool_constant < (std::is_same<T, Ts>{} || ...) > {};
 	}
 
+	/// <summary>
+	/// Compiletime enforced state machine.
+	/// States can also optionally provide OnEnter() and OnLeave() methods
+	/// </summary>
+	/// <typeparam name="..._States"></typeparam>
+	/// <typeparam name="..._Events"></typeparam>
 	template<typename... _States, typename... _Events>
 	class Machine<States<_States...>, Events<_Events...>>
 	{

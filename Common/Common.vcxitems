@@ -34,20 +34,20 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Utility\Numbers.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Utility\OsAbstraction.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Utility\Signal.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Utility\State Machine\Actions\Might.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Utility\State Machine\Actions\NoAction.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Utility\State Machine\Actions\OneOf.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Utility\State Machine\Actions\TransitionTo.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Utility\State Machine\DefaultAction.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Utility\State Machine\OnEvent.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Utility\State Machine\Will.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Utility\State Machine\StateMachine.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Utility\StateMachine\Actions\Might.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Utility\StateMachine\Actions\NoAction.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Utility\StateMachine\Actions\OneOf.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Utility\StateMachine\Actions\TransitionTo.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Utility\StateMachine\DefaultAction.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Utility\StateMachine\OnEvent.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Utility\StateMachine\Will.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Utility\StateMachine\StateMachine.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Utility\Timestep.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\enumclassbitset\EnumClassBitset.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)Utility\FileOps.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Core\Logging.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Utility\State Machine\example.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Utility\StateMachine\example.cpp" />
   </ItemGroup>
 </Project>

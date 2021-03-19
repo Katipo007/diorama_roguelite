@@ -15,10 +15,13 @@ namespace StateMachine::Actions
 		template<typename Machine, typename PreviousState, typename Event>
 		void Execute( Machine& machine, PreviousState& previous_state, const Event& event )
 		{
+#pragma warning(push)
+#pragma warning(disable:4839)
 			LeaveState( previous_state, event );
 			TargetState& new_state = machine.template TransitionTo<TargetState>();
 			auto enter_action = EnterState( new_state, event ); // we allow EnterState to return an action so we can have transient states
 			enter_action.Execute( machine, new_state, event );
+#pragma warning(pop)
 		}
 
 	private:
