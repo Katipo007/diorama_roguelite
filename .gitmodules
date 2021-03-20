@@ -7,3 +7,6 @@
 [submodule "dearimgui"]
 	path = Visual/Vendor/dearimgui
 	url = https://github.com/ocornut/imgui.git
+[submodule "entt"]
+	path = Common/Vendor/entt
+	url = https://github.com/skypjack/entt
