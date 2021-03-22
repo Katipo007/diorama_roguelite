@@ -17,6 +17,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\GameWorld.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\Systems\AbstractSystem.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\Zone.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Networking\ClientServerConfig.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Wrappers\entt.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Wrappers\Networking.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Networking\ClientServerConfig.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Vendor\Wrappers\Networking.cpp" />
   </ItemGroup>
 </Project>
