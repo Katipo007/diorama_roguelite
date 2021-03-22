@@ -15,12 +15,15 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Visual", "Visual\Visual.vcx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Common", "Common\Common.vcxitems", "{8AA1ADC8-8B60-4C14-AB84-80C97DA7E806}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameData", "GameData\GameData.vcxitems", "{9CCB72C7-2709-45CA-8AB4-284E9DDFE34F}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Server\Server.vcxitems*{3f9d9425-73d6-4f11-b010-f3f5996dd679}*SharedItemsImports = 9
 		Visual\Visual.vcxitems*{5415b36a-4eb4-44c2-988c-8ce4bd786134}*SharedItemsImports = 9
 		ClientServerCommon\ClientServerCommon.vcxitems*{6d9f921a-cec1-49da-95c4-b154d8586a8e}*SharedItemsImports = 9
 		Common\Common.vcxitems*{8aa1adc8-8b60-4c14-ab84-80c97da7e806}*SharedItemsImports = 9
+		GameData\GameData.vcxitems*{9ccb72c7-2709-45ca-8ab4-284e9ddfe34f}*SharedItemsImports = 9
 		ClientServerCommon\ClientServerCommon.vcxitems*{bcbd1b81-8726-484c-b261-dfa08bf6ba6a}*SharedItemsImports = 4
 		Common\Common.vcxitems*{bcbd1b81-8726-484c-b261-dfa08bf6ba6a}*SharedItemsImports = 4
 		ClientServerCommon\ClientServerCommon.vcxitems*{de658d54-63f0-42a2-a6e7-341f3f51175d}*SharedItemsImports = 4

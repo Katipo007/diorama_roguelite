@@ -1,0 +1,74 @@
+{
+	"sheets": [
+		{
+			"name": "ClientString",
+			"columns": [
+				{
+					"typeStr": "0",
+					"name": "Id"
+				},
+				{
+					"typeStr": "1",
+					"name": "Value",
+					"display": null
+				}
+			],
+			"lines": [
+				{
+					"Id": "GameName",
+					"Value": "Unnamed Diorama Roguelite"
+				}
+			],
+			"separators": [],
+			"props": {}
+		},
+		{
+			"name": "Biome",
+			"columns": [
+				{
+					"typeStr": "0",
+					"name": "Id"
+				},
+				{
+					"typeStr": "9:LocalisedString",
+					"name": "Display Name"
+				}
+			],
+			"lines": [
+				{
+					"Id": "Forest",
+					"Display Name": [
+						0,
+						"Forest"
+					]
+				},
+				{
+					"Id": "Marshes",
+					"Display Name": [
+						0,
+						"Marshes"
+					]
+				}
+			],
+			"separators": [],
+			"props": {}
+		}
+	],
+	"customTypes": [
+		{
+			"name": "LocalisedString",
+			"cases": [
+				{
+					"name": "LocString",
+					"args": [
+						{
+							"name": "english",
+							"typeStr": "1"
+						}
+					]
+				}
+			]
+		}
+	],
+	"compress": false
+}
