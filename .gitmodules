@@ -10,3 +10,6 @@
 [submodule "entt"]
 	path = Common/Vendor/entt
 	url = https://github.com/skypjack/entt
+[submodule "yojimbo"]
+	path = Common/Vendor/yojimbo
+	url = https://github.com/Katipo007/yojimbo
