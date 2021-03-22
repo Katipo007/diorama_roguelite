@@ -15,5 +15,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\GameWorld.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Systems\AbstractSystem.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Zone.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Wrappers\entt.hpp" />
   </ItemGroup>
 </Project>
