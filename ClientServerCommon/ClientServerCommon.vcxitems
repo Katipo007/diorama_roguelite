@@ -18,11 +18,16 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\Systems\AbstractSystem.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\Zone.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Networking\ClientServerConfig.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Networking\MessageFactory.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Networking\MessageId.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Networking\Messages.def" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Networking\Messages.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Wrappers\entt.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Wrappers\Networking.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)Networking\ClientServerConfig.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Networking\MessageFactory.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Vendor\Wrappers\Networking.cpp" />
   </ItemGroup>
 </Project>

@@ -1,0 +1,90 @@
+
+/// 
+/// IMPL GENERATOR MACROS
+/// 
+
+#ifdef GENERATE_MESSAGES_IMPL
+
+#define BASIC_MESSAGE_IMPL( message_name ) struct EXPAND_MACRO( message_name ) final : public yojimbo::Message { \
+	EXPAND_MACRO(message_name)() = default; ~EXPAND_MACRO(message_name)() = default; \
+	template<typename Stream> bool Serialize( Stream& ) { return true; } \
+	private: YOJIMBO_VIRTUAL_SERIALIZE_FUNCTIONS() };
+
+#define CUSTOM_MESSAGE_IMPL_BEGIN( message_name ) struct EXPAND_MACRO( message_name ) final : public yojimbo::Message {
+#define CUSTOM_MESSAGE_IMPL_END() private: YOJIMBO_VIRTUAL_SERIALIZE_FUNCTIONS() };
+#else
+
+#define BASIC_MESSAGE_IMPL( message_name )
+#define CUSTOM_MESSAGE_IMPL_BEGIN( message_name )
+#define CUSTOM_MESSAGE_IMPL_END()
+
+#endif
+
+/// 
+/// MESSAGE DEFINITION MACROS
+/// 
+
+#define BASIC_CLIENT_SERVER_MESSAGE( message_name, comment ) BASIC_MESSAGE_IMPL( EXPAND_MACRO( message_name )SB ) REGISTER_CLIENT_SERVER_MESSAGE( EXPAND_MACRO( message_name )SB, comment )
+#define CUSTOM_CLIENT_SERVER_MESSAGE_BEGIN( message_name, comment ) REGISTER_CLIENT_SERVER_MESSAGE( EXPAND_MACRO( message_name )SB, comment ) CUSTOM_MESSAGE_IMPL_BEGIN( EXPAND_MACRO( message_name )SB )
+
+#define BASIC_SERVER_CLIENT_MESSAGE( message_name, comment ) BASIC_MESSAGE_IMPL( EXPAND_MACRO( message_name )CB ) REGISTER_SERVER_CLIENT_MESSAGE( EXPAND_MACRO( message_name )CB, comment )
+#define CUSTOM_SERVER_CLIENT_MESSAGE_BEGIN( message_name, comment ) REGISTER_SERVER_CLIENT_MESSAGE( EXPAND_MACRO( message_name )CB, comment ) CUSTOM_MESSAGE_IMPL_BEGIN( EXPAND_MACRO( message_name )CB )
+
+
+#pragma warning(push)
+#pragma warning(disable: 4127)
+/// ====================================================
+///  START DEFINING MESSAGES HERE
+/// ====================================================
+/*
+	Can use BASIC_CLIENT_SERVER_MESSAGE and BASIC_SERVER_CLIENT_MESSAGE for empty messages (just an id)
+
+	Custom messages should be implemented like follows:
+
+		CUSTOM_CLIENT_SERVER_MESSAGE_BEGIN( <MESSAGE NAME>, <MESSAGE DESCRIPTION> )
+		#ifdef GENERATE_MESSAGES_IMPL
+			int value;
+
+			template<typename Stream>
+			bool Serialize( Stream& stream )
+			{
+				serialize_int(stream, value, <min>, <max>);
+				return true;
+			}
+		#endif
+		CUSTOM_MESSAGE_IMPL_END()
+*/
+
+BASIC_CLIENT_SERVER_MESSAGE( ChatMessage, "A chat message from the client to be sent to other players" )
+BASIC_SERVER_CLIENT_MESSAGE( ChatMessage, "A message to display in the client's chat window, not necessarly from another player" )
+
+CUSTOM_CLIENT_SERVER_MESSAGE_BEGIN( Test, "Test message" )
+#ifdef GENERATE_MESSAGES_IMPL
+	int value;
+	
+	template<typename Stream>
+	bool Serialize( Stream& stream )
+	{
+		serialize_int( stream, value, 0, 1000 );
+		return true;
+	}
+#endif
+CUSTOM_MESSAGE_IMPL_END()
+
+
+/// ====================================================
+///  STOP DEFINING MESSAGES HERE
+/// ====================================================
+#pragma warning(pop)
+
+#undef BASIC_CLIENT_SERVER_MESSAGE
+#undef CUSTOM_CLIENT_SERVER_MESSAGE_BEGIN
+#undef BASIC_SERVER_CLIENT_MESSAGE
+#undef CUSTOM_SERVER_CLIENT_MESSAGE_BEGIN
+
+///
+/// UNDEF GENERATOR MACROS
+/// 
+#undef BASIC_MESSAGE_IMPL
+#undef CUSTOM_MESSAGE_IMPL_BEGIN
+#undef CUSTOM_MESSAGE_IMPL_END
