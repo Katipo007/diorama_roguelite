@@ -56,16 +56,17 @@
 */
 
 BASIC_CLIENT_SERVER_MESSAGE( ChatMessage, "A chat message from the client to be sent to other players" )
-BASIC_SERVER_CLIENT_MESSAGE( ChatMessage, "A message to display in the client's chat window, not necessarly from another player" )
 
-CUSTOM_CLIENT_SERVER_MESSAGE_BEGIN( Test, "Test message" )
+CUSTOM_SERVER_CLIENT_MESSAGE_BEGIN( ChatMessage, "A message to display in the client's chat window, not necessarly from another player" )
 #ifdef GENERATE_MESSAGES_IMPL
-	int value;
+	char sender[Game::Constants::MaxUsernameLength] = "";
+	char message[ChatConstants::MaxMessageLength] = "";
 	
 	template<typename Stream>
 	bool Serialize( Stream& stream )
 	{
-		serialize_int( stream, value, 0, 1000 );
+		serialize_string( stream, sender, Game::Constants::MaxUsernameLength );
+		serialize_string( stream, message, ChatConstants::MaxMessageLength );
 		return true;
 	}
 #endif

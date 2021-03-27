@@ -1,6 +1,8 @@
 #pragma once
 
 #include "ClientServerCommon/Vendor/Wrappers/Networking.hpp"
+#include "ClientServerCommon/ChatConstants.hpp"
+#include "ClientServerCommon/Game/Constants.hpp"
 
 
 #define GENERATE_MESSAGES_IMPL
