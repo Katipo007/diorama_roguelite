@@ -59,6 +59,21 @@ static void WindowEventHandler( Visual::Device::Event& application_event )
 		} );
 }
 
+static int YojimboLoggingRoute( const char* fmt, ... )
+{
+	char buffer[4 * 1024];
+	va_list args;
+	va_start( args, fmt );
+	vsprintf_s( buffer, fmt, args );
+	va_end( args );
+	const size_t length = strlen( buffer );
+	if (buffer[length - 1] == '\n')
+		buffer[length - 1] = '\0';
+
+	LOG_INFO( Client, "[yojimbo] %s", buffer );
+	return 0;
+}
+
 int main( int argc, char** argv )
 {
 	// TODO: use application parameters
@@ -197,6 +212,11 @@ int main( int argc, char** argv )
 		main_window.reset();
 		InputManager::SetWindowHandle( NULL );
 	}
+
+	//
+	// Shutdown Yojimbo
+	//
+	ShutdownYojimbo();
 
 #ifdef DEARIMGUI_ENABLED
 	//
