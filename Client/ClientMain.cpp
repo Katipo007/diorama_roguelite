@@ -22,7 +22,7 @@ bool user_wants_to_exit = false;
 
 namespace VD = Visual::Device;
 
-void WindowEventHandler( Visual::Device::Event& application_event )
+static void WindowEventHandler( Visual::Device::Event& application_event )
 {
 	Visual::Device::EventDispatcher d( application_event );
 	d.Dispatch< VD::ApplicationEvents::WindowClose >( [&]( VD::ApplicationEvents::WindowClose& e ) -> bool
@@ -179,6 +179,8 @@ int main( int argc, char** argv )
 		}
 #endif
 		main_window->OnUpdateEnd();
+
+		user_wants_to_exit |= client_game->ShouldExit();
 
 		if (user_wants_to_exit) // TODO: any other pre-conditions here
 			running = false;

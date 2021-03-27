@@ -29,7 +29,12 @@ namespace Game
         static_client_game_ptr = nullptr;
     }
 
-    void ClientGame::OnFrame( const Timestep& ts )
+    void ClientGame::Exit()
+    {
+        user_requested_exit = true;
+    }
+
+    void ClientGame::OnFrame( const PreciseTimestep& ts )
     {
         state_machine.Handle( ClientStates::FrameEvent( ts ) );
         state_machine.Handle( ClientStates::RenderEvent() );

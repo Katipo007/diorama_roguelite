@@ -38,6 +38,8 @@ namespace Game
 	public:
 		~ClientGame();
 
+		bool ShouldExit() const { return user_requested_exit; }
+		void Exit();
 	protected:
 		ClientGame(); // for entry point to call
 
@@ -45,6 +47,7 @@ namespace Game
 		void OnDearImGuiFrame();
 
 		ClientStates::Machine state_machine;
+		bool user_requested_exit = false;
 	};
 
 	ClientGame& GetClientGame();
