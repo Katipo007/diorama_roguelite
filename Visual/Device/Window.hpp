@@ -39,6 +39,9 @@ namespace Visual::Device
 
 		virtual void SetEventCallback( const EventCallbackFunc_t& callback ) = 0;
 
+		// time since in seconds the application started
+		virtual double GetApplicationTime() const = 0;
+
 		virtual void* GetNativeWindow() const = 0;
 		virtual RendererAPIs::API GetRendererAPIType() const = 0;
 		virtual RendererAPI& GetRendererAPI() const = 0;

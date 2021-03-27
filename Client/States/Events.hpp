@@ -6,10 +6,12 @@ namespace ClientStates
 {
 	struct FrameEvent
 	{
-		explicit FrameEvent( Timestep step )
-			: timestep( step )
+		explicit FrameEvent( PreciseTimestep step )
+			: precise_timestep( step )
+			, timestep( step )
 		{}
 
+		PreciseTimestep precise_timestep;
 		Timestep timestep;
 	};
 

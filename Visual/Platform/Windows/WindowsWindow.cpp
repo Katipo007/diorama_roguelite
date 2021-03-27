@@ -163,6 +163,11 @@ namespace Visual::Device
 		return static_cast<uint32_t>(h);
 	}
 
+	double WindowsWindow::GetApplicationTime() const
+	{
+		return SDL_GetTicks() / 1000.0;
+	}
+
 	void WindowsWindow::SetEventCallback( const EventCallbackFunc_t& callback )
 	{
 		event_callback = callback;

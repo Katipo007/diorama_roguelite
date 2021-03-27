@@ -41,7 +41,7 @@ namespace Game
 	protected:
 		ClientGame(); // for entry point to call
 
-		void OnFrame( const Timestep& ts ); // for entry point to call
+		void OnFrame( const PreciseTimestep& ts ); // for entry point to call
 
 		ClientStates::Machine state_machine;
 	};

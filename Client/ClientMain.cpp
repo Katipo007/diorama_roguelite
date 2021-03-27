@@ -133,12 +133,14 @@ int main( int argc, char** argv )
 	// ============================================
 	// main loop
 	// ============================================
+	// TODO: refactor to use fixed timesteps
+
 	LOG_INFO( Application, "Application setup complete, starting main loop" );
-	float last_frame_time = static_cast<float>(clock()) / CLOCKS_PER_SEC;
+	auto last_frame_time = main_window->GetApplicationTime();
 	while (running)
 	{
-		const float time = static_cast<float>(clock()) / CLOCKS_PER_SEC;
-		Timestep timestep( time,  time - last_frame_time );
+		const auto time = last_frame_time = main_window->GetApplicationTime();
+		PreciseTimestep timestep( time,  time - last_frame_time );
 		last_frame_time = time;
 
 		main_window->OnUpdateBegin();

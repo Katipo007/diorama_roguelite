@@ -25,6 +25,8 @@ namespace Visual::Device
 		virtual uint32_t GetWidth() const override;
 		virtual uint32_t GetHeight() const override;
 
+		virtual double GetApplicationTime() const override;
+
 		virtual void SetEventCallback( const EventCallbackFunc_t& callback ) override;
 
 		virtual void* GetNativeWindow() const override;
