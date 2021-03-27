@@ -34,4 +34,11 @@ namespace Game
         state_machine.Handle( ClientStates::FrameEvent( ts ) );
         state_machine.Handle( ClientStates::RenderEvent() );
     }
+
+    void ClientGame::OnDearImGuiFrame()
+    {
+#ifdef DEARIMGUI_ENABLED
+        state_machine.Handle( ClientStates::DearImGuiFrameEvent() );
+#endif
+    }
 }

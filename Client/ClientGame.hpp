@@ -42,6 +42,7 @@ namespace Game
 		ClientGame(); // for entry point to call
 
 		void OnFrame( const PreciseTimestep& ts ); // for entry point to call
+		void OnDearImGuiFrame();
 
 		ClientStates::Machine state_machine;
 	};

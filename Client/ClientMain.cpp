@@ -85,8 +85,27 @@ int main( int argc, char** argv )
 
 		io.IniFilename = NULL; // don't save settings
 		ImGui::StyleColorsDark();
+
+		auto& style = ImGui::GetStyle();
+		style.ScaleAllSizes( 2.f );
 	}
 #endif
+
+	//
+	// Setup Yojimbo
+	//
+	{
+		if (!InitializeYojimbo())
+		{
+			LOG_CRITICAL( Client, "Critical Error: failed to initialize Yojimbo!" );
+			return 1;
+		}
+
+#ifdef _DEBUG
+		yojimbo_log_level( YOJIMBO_LOG_LEVEL_INFO );
+#endif
+		yojimbo_set_printf_function( YojimboLoggingRoute );
+	}
 
 	//
 	// Setup window
@@ -153,7 +172,11 @@ int main( int argc, char** argv )
 
 #ifdef DEARIMGUI_ENABLED
 		if (DearImGui::IsEnabled())
+		{
+			client_game->OnDearImGuiFrame();
+
 			ImGui::Render();
+		}
 #endif
 		main_window->OnUpdateEnd();
 
