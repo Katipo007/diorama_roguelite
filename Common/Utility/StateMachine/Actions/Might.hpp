@@ -9,10 +9,10 @@ namespace StateMachine::Actions
 	/// Helper mechanism to say we might perform an action, otherwise NoAction.
 	/// </summary>
 	/// <typeparam name="Action">Type of action we might perform</typeparam>
-	template<typename Action>
+	template<typename... Action>
 	struct Might
-		: public OneOf<Action, NoAction>
+		: public OneOf<Action..., NoAction>
 	{
-		using OneOf<Action, NoAction>::OneOf;
+		using OneOf<Action..., NoAction>::OneOf;
 	};
 }
