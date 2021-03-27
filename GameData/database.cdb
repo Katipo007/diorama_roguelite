@@ -52,6 +52,152 @@
 			],
 			"separators": [],
 			"props": {}
+		},
+		{
+			"name": "Moons",
+			"columns": [
+				{
+					"typeStr": "0",
+					"name": "Id"
+				},
+				{
+					"typeStr": "9:LocalisedString",
+					"name": "Display Name"
+				},
+				{
+					"typeStr": "8",
+					"name": "Granted Player Buffs"
+				},
+				{
+					"typeStr": "8",
+					"name": "Granted Monster Buffs"
+				},
+				{
+					"typeStr": "9:LocalisedString",
+					"name": "Description",
+					"display": null
+				}
+			],
+			"lines": [
+				{
+					"Id": "Regular",
+					"Display Name": [
+						0,
+						"Pale Moon"
+					],
+					"Description": [
+						0,
+						"A plain rocky surface which shines dimly in the night sky. Provides no effects."
+					],
+					"Granted Player Buffs": [],
+					"Granted Monster Buffs": []
+				},
+				{
+					"Id": "WaterMoon",
+					"Display Name": [
+						0,
+						"Water Moon"
+					],
+					"Description": [
+						0,
+						"Moon of the Merfolk, dew drops form on all surfaces under it's light. Causes you to be perpetually wet."
+					],
+					"Granted Player Buffs": [
+						{
+							"": "Wet"
+						},
+						{
+							"": "QuickWading"
+						}
+					],
+					"Granted Monster Buffs": []
+				}
+			],
+			"separators": [],
+			"props": {}
+		},
+		{
+			"name": "Moons@Granted Player Buffs",
+			"props": {
+				"hide": true
+			},
+			"separators": [],
+			"lines": [],
+			"columns": [
+				{
+					"typeStr": "6:Buffs",
+					"name": "",
+					"display": null
+				}
+			]
+		},
+		{
+			"name": "Buffs",
+			"columns": [
+				{
+					"typeStr": "0",
+					"name": "Id",
+					"display": null
+				},
+				{
+					"typeStr": "2",
+					"name": "Is Debuff",
+					"display": null
+				},
+				{
+					"typeStr": "9:LocalisedString",
+					"name": "Display Name",
+					"display": null
+				},
+				{
+					"typeStr": "9:LocalisedString",
+					"name": "Description",
+					"display": null
+				}
+			],
+			"lines": [
+				{
+					"Id": "Wet",
+					"Display Name": [
+						0,
+						"Wet"
+					],
+					"Description": [
+						0,
+						"Water sticks to your body"
+					],
+					"Is Debuff": true
+				},
+				{
+					"Id": "QuickWading",
+					"Display Name": [
+						0,
+						"Quick Wading"
+					],
+					"Description": [
+						0,
+						"You can move quickly through water"
+					],
+					"Is Debuff": false
+				}
+			],
+			"separators": [],
+			"props": {}
+		},
+		{
+			"name": "Moons@Granted Monster Buffs",
+			"props": {
+				"hide": true
+			},
+			"separators": [],
+			"lines": [],
+			"columns": [
+				{
+					"typeStr": "6:Buffs",
+					"name": "",
+					"display": null
+				}
+			]
 		}
 	],
 	"customTypes": [
