@@ -8,22 +8,27 @@
 
 namespace ClientStates
 {
-	class MainMenuState;
+	class JoinMultiplayerState;
 
 	/// <summary>
-	/// Start-up loading screen
+	/// Main menu
 	/// </summary>
-	class PreGameState final
+	class MainMenuState
 		: public StateMachine::DefaultAction<StateMachine::Actions::NoAction>
 		, NonCopyable
 	{
+		using OutTransitionActions = StateMachine::Actions::Might<
+			StateMachine::Actions::TransitionTo<JoinMultiplayerState>
+		>;
+
 	public:
 		using StateMachine::DefaultAction<StateMachine::Actions::NoAction>::HandleEvent;
 
-		explicit PreGameState();
-		~PreGameState();
+		explicit MainMenuState();
+		virtual ~MainMenuState();
 
-		StateMachine::Actions::Might<StateMachine::Actions::TransitionTo<MainMenuState>> HandleEvent( const FrameEvent& e );
+		StateMachine::Actions::NoAction HandleEvent( const FrameEvent& e );
+		OutTransitionActions HandleEvent( const DearImGuiFrameEvent& e );
 
 	protected:
 	};

@@ -81,6 +81,8 @@ namespace StateMachine
 
 		using Events_T = std::tuple<_Events...>;
 	public:
+		using EventsVariant_T = std::variant<_Events...>;
+
 		Machine() : states(), current_state( &std::get<0>( states ) ) {}
 		virtual ~Machine() noexcept {}
 

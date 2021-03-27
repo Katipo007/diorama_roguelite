@@ -9,21 +9,25 @@
 namespace ClientStates
 {
 	class MainMenuState;
+	class InGameState;
 
 	/// <summary>
-	/// Start-up loading screen
+	/// Loading screen going from menu to in-game
 	/// </summary>
-	class PreGameState final
+	class LoadingState
 		: public StateMachine::DefaultAction<StateMachine::Actions::NoAction>
 		, NonCopyable
 	{
 	public:
 		using StateMachine::DefaultAction<StateMachine::Actions::NoAction>::HandleEvent;
 
-		explicit PreGameState();
-		~PreGameState();
+		explicit LoadingState();
+		virtual ~LoadingState();
 
-		StateMachine::Actions::Might<StateMachine::Actions::TransitionTo<MainMenuState>> HandleEvent( const FrameEvent& e );
+		StateMachine::Actions::Might<
+			StateMachine::Actions::TransitionTo<MainMenuState>, // could return to menu if something fails to load or the connection was severed
+			StateMachine::Actions::TransitionTo<InGameState> // transition into in-game
+		> HandleEvent( const FrameEvent& e );
 
 	protected:
 	};
