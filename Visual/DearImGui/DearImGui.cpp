@@ -4,7 +4,7 @@
 
 namespace
 {
-	bool s_dearimgui_enabled = false;
+	static bool s_dearimgui_enabled = true; // TODO: disabled by default once we aren't using DearImGui for all our UI
 }
 
 namespace DearImGui
