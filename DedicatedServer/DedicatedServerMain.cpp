@@ -23,7 +23,7 @@ static int YojimboLoggingRoute( const char* fmt, ... )
 	if (buffer[length - 1] == '\n')
 		buffer[length - 1] = '\0';
 
-	LOG_INFO( Client, "[yojimbo] %s", buffer );
+	LOG_INFO( Server, "[yojimbo] {}", buffer );
 	return 0;
 }
 
