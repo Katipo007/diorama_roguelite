@@ -302,6 +302,7 @@ namespace Server
 			auto& session = *client_it->second;
 			const auto client_index = session.GetClientIndex();
 			const auto client_id = session.GetClientId();
+			++client_it; // iterate now so if the current session disappears we can still continue
 
 			// if connected
 			if (server.IsClientConnected( client_index ) && !session.IsMarkedForDisconnect())
