@@ -15,7 +15,7 @@
 #include <utility>
 #include <variant>
 
-namespace StateMachine
+namespace fsm
 {
 	template<typename... _States>
 	class States;
@@ -155,7 +155,7 @@ namespace StateMachine
 		template<typename Event>
 		void HandleBy( const Event& event, Machine& machine )
 		{
-			auto PassEventToState = [&machine, &event]( auto state )
+			auto PassEventToState = [&machine, &event]( auto* state )
 			{
 				auto action = state->HandleEvent( event );
 				action.Execute( machine, *state, event );

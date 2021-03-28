@@ -1,6 +1,6 @@
 #pragma once
 
-namespace StateMachine
+namespace fsm
 {
 	/// <summary>
 	/// Helper mechanism to save writing out handlers for every type of event

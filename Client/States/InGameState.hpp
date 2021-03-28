@@ -20,24 +20,32 @@ namespace Game
 	class ClientGameWorld;
 }
 
+namespace Sessions
+{
+	class ClientServerSession;
+}
+
 namespace ClientStates
 {
+	class MainMenuState;
+
 	class InGameState
-		: public StateMachine::DefaultAction<StateMachine::Actions::NoAction>
+		: public fsm::DefaultAction<fsm::Actions::NoAction>
 		, NonCopyable
 	{
 	public:
-		using StateMachine::DefaultAction<StateMachine::Actions::NoAction>::HandleEvent;
+		using fsm::DefaultAction<fsm::Actions::NoAction>::HandleEvent;
 
 		explicit InGameState();
 		virtual ~InGameState();
 
-		StateMachine::Actions::NoAction HandleEvent( const FrameEvent& e );
-		StateMachine::Actions::NoAction HandleEvent( const RenderEvent& e );
-		StateMachine::Actions::NoAction HandleEvent( const DearImGuiFrameEvent& e );
+		fsm::Actions::NoAction OnEnter( const ClientStates::ConnectedToServerEvent& e );
+		fsm::Actions::TransitionTo<MainMenuState> OnLeave( const ClientStates::DisconnectedFromServerEvent& e );
 
-		//StateMachine::Actions::NoAction OnEnter();
-		//void OnLeave();
+		fsm::Actions::NoAction HandleEvent( const FrameEvent& e );
+		fsm::Actions::NoAction HandleEvent( const RenderEvent& e );
+		fsm::Actions::NoAction HandleEvent( const DearImGuiFrameEvent& e );
+		fsm::Actions::TransitionTo<MainMenuState> HandleEvent( const DisconnectedFromServerEvent& e );
 
 	protected:
 		void OnRender() const;

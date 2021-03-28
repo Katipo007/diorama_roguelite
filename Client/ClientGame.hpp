@@ -17,25 +17,30 @@
 
 int main( int, char** );
 
+namespace Sessions
+{
+	class ClientServerSession;
+}
+
 namespace ClientStates
 {
-	using States = StateMachine::States<
-		PreGameState,
-		MainMenuState,
-		JoinMultiplayerState,
-		LoadingState,
-		InGameState
+	using States = fsm::States<
+		  PreGameState
+		, MainMenuState
+		, JoinMultiplayerState
+		, LoadingState
+		, InGameState
 	>;
 
-	using Events = StateMachine::Events<
-		FrameEvent,
-		RenderEvent,
-		DearImGuiFrameEvent,
-		ConnectedToServerEvent,
-		DisconnectedFromServerEvent
+	using Events = fsm::Events<
+		  FrameEvent
+		, RenderEvent
+		, DearImGuiFrameEvent
+		, ConnectedToServerEvent
+		, DisconnectedFromServerEvent
 	>;
 
-	using Machine = StateMachine::Machine<States, Events>;
+	using Machine = fsm::Machine<States, Events>;
 }
 
 namespace Game
@@ -51,7 +56,13 @@ namespace Game
 		bool ShouldExit() const { return user_requested_exit; }
 		void Exit();
 
-		void QueueEvent( ClientStates::Machine::EventsVariant_T event );
+		//
+		// Client server session management
+		//
+		Sessions::ClientServerSession* GetClientServerSession() { return client_server_session.get(); }
+		const Sessions::ClientServerSession* GetClientServerSession() const { return client_server_session.get(); }
+		void ConnectToServer( const yojimbo::Address& address );
+		void DisconnectFromServer();
 
 	protected:
 		ClientGame(); // for entry point to call
@@ -59,7 +70,9 @@ namespace Game
 		void OnFrame( const PreciseTimestep& ts ); // for entry point to call
 		void OnDearImGuiFrame();
 
-		std::queue<ClientStates::Machine::EventsVariant_T> state_machine_events_queue;
+	protected:
+		std::unique_ptr<Sessions::ClientServerSession> client_server_session;
+
 		ClientStates::Machine state_machine;
 		bool user_requested_exit = false;
 	};

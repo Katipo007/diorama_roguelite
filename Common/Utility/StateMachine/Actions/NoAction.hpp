@@ -1,6 +1,6 @@
 #pragma once
 
-namespace StateMachine::Actions
+namespace fsm::Actions
 {
 	/// <summary>
 	/// Informs that the state machine does not change from the event

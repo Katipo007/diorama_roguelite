@@ -6,7 +6,7 @@
 #include "OnEvent.hpp"
 #include "Will.hpp"
 
-using namespace StateMachine;
+using namespace fsm;
 
 namespace example
 {

@@ -15,29 +15,29 @@ namespace ClientStates
 	/// Screen to join an existing multi-player game
 	/// </summary>
 	class JoinMultiplayerState
-		: public StateMachine::DefaultAction<StateMachine::Actions::NoAction>
+		: public fsm::DefaultAction<fsm::Actions::NoAction>
 		, NonCopyable
 	{
-		using ExitActions = StateMachine::Actions::OneOf< StateMachine::Actions::NoAction,
-			StateMachine::Actions::TransitionTo<MainMenuState>,
-			StateMachine::Actions::TransitionTo<LoadingState>
+		using ExitActions = fsm::Actions::OneOf< fsm::Actions::NoAction,
+			fsm::Actions::TransitionTo<MainMenuState>,
+			fsm::Actions::TransitionTo<LoadingState>
 		>;
 
 	public:
-		using StateMachine::DefaultAction<StateMachine::Actions::NoAction>::HandleEvent;
+		using fsm::DefaultAction<fsm::Actions::NoAction>::HandleEvent;
 
 		explicit JoinMultiplayerState();
 		virtual ~JoinMultiplayerState();
 
 		ExitActions HandleEvent( const FrameEvent& e );
 		ExitActions HandleEvent( const DearImGuiFrameEvent& e );
+		fsm::Actions::TransitionTo<LoadingState> HandleEvent( const ConnectedToServerEvent& e );
 
 	protected:
 		void InitiateConnection( std::string address );
 		void CancelConnection();
 
 	protected:
-		std::unique_ptr<Sessions::ClientServerSession> server_connection;
 		std::string status_message;
 	};
 }

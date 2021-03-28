@@ -3,7 +3,7 @@
 #include <utility>
 #include <variant>
 
-namespace StateMachine::Actions
+namespace fsm::Actions
 {
 	/// <summary>
 	/// Helper mechanism to say we will perform one of these action types

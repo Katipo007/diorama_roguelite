@@ -36,11 +36,6 @@ namespace Game
         user_requested_exit = true;
     }
 
-    void ClientGame::QueueEvent( ClientStates::Machine::EventsVariant_T event )
-    {
-        state_machine_events_queue.push( std::move( event ) );
-    }
-
     void ClientGame::OnFrame( const PreciseTimestep& ts )
     {
         // TODO: Don't clear here, require individual states to clear the screen
@@ -48,16 +43,7 @@ namespace Game
         Visual::Device::RendererCommand::Clear();
 
         state_machine.Handle( ClientStates::FrameEvent( ts ) );
-        state_machine.Handle( ClientStates::RenderEvent() );
-
-        // process events queue
-        while (!state_machine_events_queue.empty())
-        {
-            auto top = std::move( state_machine_events_queue.front() );
-            state_machine_events_queue.pop();
-
-            std::visit( [ this ]( auto&& e ) -> void { state_machine.Handle( e ); }, top );
-        }
+        state_machine.Handle( ClientStates::RenderEvent() ); // TODO: separate rendering from steps
     }
 
     void ClientGame::OnDearImGuiFrame()
@@ -65,5 +51,38 @@ namespace Game
 #ifdef DEARIMGUI_ENABLED
         state_machine.Handle( ClientStates::DearImGuiFrameEvent() );
 #endif
+    }
+
+    void ClientGame::ConnectToServer( const yojimbo::Address& address )
+    {
+        if (client_server_session)
+        {
+            LOG_WARN( Client, "Already have an active server connection" );
+            return;
+        }
+
+        try
+        {
+            client_server_session = std::make_unique<Sessions::ClientServerSession>( address );
+        }
+        catch (std::exception& e)
+        {
+            char address_str[128];
+            address.ToString( address_str, sizeof( address_str ) );
+
+            LOG_ERROR( Client, "Failed to initalise the connection to '{}'. What: {}", address_str, e.what() );
+        }
+    }
+
+    void ClientGame::DisconnectFromServer()
+    {
+        ASSERT( client_server_session != nullptr );
+        if (client_server_session == nullptr)
+            return;
+
+        client_server_session->Disconnect();
+        auto e = ClientStates::DisconnectedFromServerEvent( client_server_session.get() );
+        state_machine.Handle( e );
+        client_server_session.reset();
     }
 }

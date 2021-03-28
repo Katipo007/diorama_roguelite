@@ -1,6 +1,6 @@
 #pragma once
 
-namespace StateMachine
+namespace fsm
 {
 	/// <summary>
 	/// Helper mechanism to save having to pull in handlers from base class mechanisms.

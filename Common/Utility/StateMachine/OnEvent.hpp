@@ -1,6 +1,6 @@
 #pragma once
 
-namespace StateMachine
+namespace fsm
 {
 	/// <summary>
 	/// Helper mechanism perform basic actions on a given event

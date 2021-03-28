@@ -6,6 +6,11 @@
 #include "Common/Utility/StateMachine/Actions/TransitionTo.hpp"
 #include "Common/Utility/NonCopyable.hpp"
 
+namespace Sessions
+{
+	class ClientServerSession;
+}
+
 namespace ClientStates
 {
 	class MainMenuState;
@@ -15,19 +20,23 @@ namespace ClientStates
 	/// Loading screen going from menu to in-game
 	/// </summary>
 	class LoadingState
-		: public StateMachine::DefaultAction<StateMachine::Actions::NoAction>
+		: public fsm::DefaultAction<fsm::Actions::NoAction>
 		, NonCopyable
 	{
 	public:
-		using StateMachine::DefaultAction<StateMachine::Actions::NoAction>::HandleEvent;
+		using fsm::DefaultAction<fsm::Actions::NoAction>::HandleEvent;
 
 		explicit LoadingState();
 		virtual ~LoadingState();
 
-		StateMachine::Actions::Might<
-			StateMachine::Actions::TransitionTo<MainMenuState>, // could return to menu if something fails to load or the connection was severed
-			StateMachine::Actions::TransitionTo<InGameState> // transition into in-game
+		fsm::Actions::NoAction OnEnter( const ConnectedToServerEvent& e );
+
+		fsm::Actions::Might<
+			  fsm::Actions::TransitionTo<MainMenuState>
+			, fsm::Actions::TransitionTo<InGameState>
 		> HandleEvent( const FrameEvent& e );
+
+		fsm::Actions::TransitionTo<MainMenuState> HandleEvent( const DisconnectedFromServerEvent& e );
 
 	protected:
 	};

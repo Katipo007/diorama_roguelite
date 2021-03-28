@@ -2,7 +2,7 @@
 
 #include "NoAction.hpp"
 
-namespace StateMachine::Actions
+namespace fsm::Actions
 {
 	/// <summary>
 	/// Have the state machine transition to the given state
@@ -15,6 +15,7 @@ namespace StateMachine::Actions
 		template<typename Machine, typename PreviousState, typename Event>
 		void Execute( Machine& machine, PreviousState& previous_state, const Event& event )
 		{
+			static_assert(std::is_trivially_copyable<Event>::value, "Events must be trivially copyable");
 #pragma warning(push)
 #pragma warning(disable:4839)
 			LeaveState( previous_state, event );

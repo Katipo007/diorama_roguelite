@@ -3,7 +3,7 @@
 #include "NoAction.hpp"
 #include "OneOf.hpp"
 
-namespace StateMachine::Actions
+namespace fsm::Actions
 {
 	/// <summary>
 	/// Helper mechanism to say we might perform an action, otherwise NoAction.

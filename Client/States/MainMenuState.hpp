@@ -14,20 +14,20 @@ namespace ClientStates
 	/// Main menu
 	/// </summary>
 	class MainMenuState
-		: public StateMachine::DefaultAction<StateMachine::Actions::NoAction>
+		: public fsm::DefaultAction<fsm::Actions::NoAction>
 		, NonCopyable
 	{
-		using OutTransitionActions = StateMachine::Actions::Might<
-			StateMachine::Actions::TransitionTo<JoinMultiplayerState>
+		using OutTransitionActions = fsm::Actions::Might<
+			fsm::Actions::TransitionTo<JoinMultiplayerState>
 		>;
 
 	public:
-		using StateMachine::DefaultAction<StateMachine::Actions::NoAction>::HandleEvent;
+		using fsm::DefaultAction<fsm::Actions::NoAction>::HandleEvent;
 
 		explicit MainMenuState();
 		virtual ~MainMenuState();
 
-		StateMachine::Actions::NoAction HandleEvent( const FrameEvent& e );
+		fsm::Actions::NoAction HandleEvent( const FrameEvent& e );
 		OutTransitionActions HandleEvent( const DearImGuiFrameEvent& e );
 
 	protected:

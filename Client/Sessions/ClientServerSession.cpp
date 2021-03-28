@@ -29,7 +29,7 @@ namespace Sessions
 
 	ClientServerSession::~ClientServerSession()
 	{
-		if (server_connection.IsConnected())
+		if (!server_connection.IsDisconnected())
 			server_connection.Disconnect();
 
 		ASSERT( !server_connection.IsConnected() );

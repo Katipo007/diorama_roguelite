@@ -19,11 +19,11 @@ namespace ClientStates
 	{
 	}
 
-	StateMachine::Actions::NoAction MainMenuState::HandleEvent( const FrameEvent& e )
+	fsm::Actions::NoAction MainMenuState::HandleEvent( const FrameEvent& e )
 	{
 		(void)e;
 
-		return StateMachine::Actions::NoAction{};
+		return fsm::Actions::NoAction{};
 	}
 
 	MainMenuState::OutTransitionActions MainMenuState::HandleEvent( const DearImGuiFrameEvent& e )
@@ -37,7 +37,7 @@ namespace ClientStates
 			if (ImGui::Button( "Join Server" ))
 			{
 				ImGui::End();
-				return StateMachine::Actions::TransitionTo<JoinMultiplayerState>{};
+				return fsm::Actions::TransitionTo<JoinMultiplayerState>{};
 			}
 
 			if (ImGui::Button( "Exit" ))
@@ -48,6 +48,6 @@ namespace ClientStates
 			ImGui::End();
 		}
 
-		return StateMachine::Actions::NoAction{};
+		return fsm::Actions::NoAction{};
 	}
 }

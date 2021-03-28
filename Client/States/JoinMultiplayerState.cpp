@@ -17,16 +17,14 @@ namespace ClientStates
 	{
 		(void)e;
 
-		if (server_connection)
+		if (const auto* client_server_session = Game::GetClientGame().GetClientServerSession())
 		{
-			server_connection->Update( e.precise_timestep );
-			const auto connection_state = server_connection->GetConnectionState();
+			const auto connection_state = client_server_session->GetConnectionState();
 			switch (connection_state)
 			{
 			case Sessions::ClientServerSession::ConnectionState::Connected:
-				Game::GetClientGame().QueueEvent( ClientStates::ConnectedToServerEvent( std::move( server_connection ) ) );
+				LOG_INFO( Client, "Connected to server" );
 				status_message = "";
-				server_connection.reset();
 				break;
 
 			case Sessions::ClientServerSession::ConnectionState::Connecting:
@@ -34,13 +32,13 @@ namespace ClientStates
 				break;
 
 			case Sessions::ClientServerSession::ConnectionState::Disconnected:
+				LOG_INFO( Client, "Failed to connect to server" );
 				status_message = "Connection failed.";
-				server_connection.reset();
 				break;
 			}
 		}
 
-		return StateMachine::Actions::NoAction{};
+		return fsm::Actions::NoAction{};
 	}
 
 	JoinMultiplayerState::ExitActions JoinMultiplayerState::HandleEvent( const DearImGuiFrameEvent& e )
@@ -51,7 +49,7 @@ namespace ClientStates
 		{
 			ImGui::Text( "Join Multiplayer" );
 
-			const bool is_connecting = server_connection != nullptr;
+			const bool is_connecting = Game::GetClientGame().GetClientServerSession() != nullptr;
 			if (is_connecting)
 				ImGui::PushStyleVar( ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f );
 
@@ -89,7 +87,7 @@ namespace ClientStates
 			if (ImGui::Button( "Back" ))
 			{
 				ImGui::End();
-				return StateMachine::Actions::TransitionTo<MainMenuState>{};
+				return fsm::Actions::TransitionTo<MainMenuState>{};
 			}
 
 			// current status message
@@ -98,22 +96,32 @@ namespace ClientStates
 			ImGui::End();
 		}
 
-		return StateMachine::Actions::NoAction{};
+		return fsm::Actions::NoAction{};
+	}
+
+	fsm::Actions::TransitionTo<LoadingState> JoinMultiplayerState::HandleEvent( const ConnectedToServerEvent& e )
+	{
+		(void)e;
+		return fsm::Actions::TransitionTo<LoadingState>{};
 	}
 
 	void JoinMultiplayerState::InitiateConnection( std::string address_str )
 	{
-		ASSERT( server_connection == nullptr );
-		if (server_connection != nullptr)
+		auto& game = Game::GetClientGame();
+		const auto* session = game.GetClientServerSession();
+		ASSERT( session == nullptr );
+		if (session != nullptr)
 			return;
 
 		auto address = yojimbo::Address( address_str.c_str() );
-		server_connection = std::make_unique<Sessions::ClientServerSession>( address );
+		game.ConnectToServer( address );
 	}
 
 	void JoinMultiplayerState::CancelConnection()
 	{
-		if (server_connection)
-			server_connection.reset();
+		auto& game = Game::GetClientGame();
+		const auto* session = game.GetClientServerSession();
+		if (session != nullptr)
+			game.DisconnectFromServer();
 	}
 }
