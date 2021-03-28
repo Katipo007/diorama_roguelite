@@ -65,6 +65,11 @@ namespace Server
 		LOG_INFO( Server, "Server stopped" );
 	}
 
+	bool GameServer::IsRunning() const
+	{
+		return server.IsRunning();
+	}
+
 	void GameServer::OnClientConnected( ClientIndex_T client_index )
 	{
 		try

@@ -39,6 +39,8 @@ namespace Server
 		GameServer( const yojimbo::Address& server_address, const uint16_t max_connected_clients = 6 );
 		virtual ~GameServer();
 
+		bool IsRunning() const;
+
 		virtual void OnClientConnected( ClientIndex_T client_index ); ///< called via the adapter
 		virtual void OnClientDisconnected( ClientIndex_T client_index ); ///< called via the adapter
 

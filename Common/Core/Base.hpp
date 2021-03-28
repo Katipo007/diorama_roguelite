@@ -1,6 +1,6 @@
 #pragma once
 
-#include "CompileTime/PlatformDetection.hpp"
+#include "Common/CompileTime/PlatformDetection.hpp"
 
 #ifdef _DEBUG // TODO: replace with a custom define
 #	if defined( PLATFORM_WINDOWS )
