@@ -24,7 +24,6 @@ namespace ClientStates
 			switch (connection_state)
 			{
 			case Sessions::ClientServerSession::ConnectionState::Connected:
-				LOG_INFO( Client, "Connected to server" );
 				status_message = "Connected";
 				break;
 
@@ -87,6 +86,7 @@ namespace ClientStates
 			// return to menu
 			if (ImGui::Button( "Back" ))
 			{
+				CancelConnection();
 				ImGui::End();
 				return fsm::Actions::TransitionTo<MainMenuState>{};
 			}
