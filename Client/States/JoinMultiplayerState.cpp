@@ -55,8 +55,19 @@ namespace ClientStates
 			if (is_connecting)
 				ImGui::PushStyleVar( ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f );
 
-			static char address_textbox_value[128] = "127.0.0.1";
-			if (ImGui::InputText( "IP Address", address_textbox_value, 128, ImGuiInputTextFlags_EnterReturnsTrue ) )
+			static char address_textbox_value[128] = "127.0.0.1:42777";
+			const auto address_textbox_handler = []( ImGuiInputTextCallbackData* data ) -> int
+			{
+				(void)data;
+				//switch (data->EventFlag)
+				//{
+				//default:
+				//	// nothing
+				//	break;
+				//}
+				return 0;
+			};
+			if (ImGui::InputText( "IP Address", address_textbox_value, 128, ImGuiInputTextFlags_EnterReturnsTrue, address_textbox_handler ))
 			{
 				if( !is_connecting )
 					InitiateConnection( address_textbox_value );

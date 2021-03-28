@@ -13,15 +13,26 @@ namespace Sessions
 	}
 
 
-	ClientServerSession::ClientServerSession( const yojimbo::Address& address )
+	ClientServerSession::ClientServerSession( const yojimbo::Address& connection_address )
 		: adaptor()
 		, connection_config()
-		, server_connection( yojimbo::GetDefaultAllocator(), address, connection_config, adaptor, 0.0 )
+		, server_connection( yojimbo::GetDefaultAllocator(), yojimbo::Address( "0.0.0.0" ), connection_config, adaptor, 0.0 )
 	{
+		char address_string[256];
+		connection_address.ToString( address_string, sizeof( address_string ) );
+
+		uint64_t client_id = 0;
+		yojimbo::random_bytes( (uint8_t*)&client_id, 8 );
+		LOG_INFO( Client, "Attempting connection to '{}' with client id {}", address_string, client_id );
+		server_connection.InsecureConnect( Networking::ClientServerGameConnectionConfig::DefaultPrivateKey, 0, connection_address );
 	}
 
 	ClientServerSession::~ClientServerSession()
 	{
+		if (server_connection.IsConnected())
+			server_connection.Disconnect();
+
+		ASSERT( !server_connection.IsConnected() );
 	}
 
 	ClientServerSession::ConnectionState ClientServerSession::GetConnectionState() const
