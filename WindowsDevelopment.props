@@ -20,7 +20,8 @@
       <ForcedIncludeFiles>Precompiled\pch.hpp</ForcedIncludeFiles>
     </ClCompile>
     <Link>
-      <AdditionalOptions>/ignore:4099 /verbose %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
+      <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup />
