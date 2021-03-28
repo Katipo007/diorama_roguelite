@@ -5,8 +5,12 @@
 #include <string>
 #include <type_traits>
 
-#include "Client/Sessions/ClientServerSession.hpp"
 #include "Utility/Timestep.hpp"
+
+namespace Sessions
+{
+	class ClientServerSession;
+}
 
 namespace ClientStates
 {
@@ -26,11 +30,11 @@ namespace ClientStates
 
 	struct ConnectedToServerEvent
 	{
-		explicit ConnectedToServerEvent( Sessions::ClientServerSession& session )
+		explicit ConnectedToServerEvent( Sessions::ClientServerSession* session )
 			: session( session )
 		{}
 
-		Sessions::ClientServerSession& session;
+		Sessions::ClientServerSession* session;
 	};
 
 	struct DisconnectedFromServerEvent
@@ -48,5 +52,4 @@ namespace ClientStates
 		Sessions::ClientServerSession* session;
 		char reason[MaxReasonLength];
 	};
-	static_assert(std::is_trivially_copyable<DisconnectedFromServerEvent>::value, "Events must be trivially copyable");
 }

@@ -1,6 +1,7 @@
 #include "JoinMultiplayerState.hpp"
 
 #include "Client/ClientGame.hpp"
+#include "Client/Sessions/ClientServerSession.hpp"
 #include "Visual/DearImGui/DearImGui.hpp"
 
 namespace ClientStates
@@ -24,7 +25,7 @@ namespace ClientStates
 			{
 			case Sessions::ClientServerSession::ConnectionState::Connected:
 				LOG_INFO( Client, "Connected to server" );
-				status_message = "";
+				status_message = "Connected";
 				break;
 
 			case Sessions::ClientServerSession::ConnectionState::Connecting:

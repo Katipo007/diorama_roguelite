@@ -123,6 +123,9 @@ namespace Server
 
 		// TODO: send game updates to clients
 
+		// send packets
+		server.SendPackets();
+
 		// gracefully disconnect marked clients
 		{
 			auto it = std::begin( connected_clients );

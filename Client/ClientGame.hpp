@@ -17,6 +17,11 @@
 
 int main( int, char** );
 
+namespace yojimbo
+{
+	class Address;
+}
+
 namespace Sessions
 {
 	class ClientServerSession;

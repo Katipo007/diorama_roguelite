@@ -1,5 +1,7 @@
 #include "ClientGame.hpp"
 
+#include "Client/Sessions/ClientServerSession.hpp"
+
 #include "Visual/Device/RendererCommand.hpp"
 
 namespace
@@ -38,6 +40,14 @@ namespace Game
 
     void ClientGame::OnFrame( const PreciseTimestep& ts )
     {
+        if (client_server_session)
+        {
+            client_server_session->Update( ts );
+
+            if (client_server_session->IsDisconnected())
+                DisconnectFromServer();
+        }
+
         // TODO: Don't clear here, require individual states to clear the screen
         Visual::Device::RendererCommand::SetClearColour( ColourRGBA( 0, 0, 0, 255 ) );
         Visual::Device::RendererCommand::Clear();
@@ -64,6 +74,7 @@ namespace Game
         try
         {
             client_server_session = std::make_unique<Sessions::ClientServerSession>( address );
+            // TODO: connect to signals
         }
         catch (std::exception& e)
         {
@@ -80,7 +91,9 @@ namespace Game
         if (client_server_session == nullptr)
             return;
 
-        client_server_session->Disconnect();
+        if (!client_server_session->IsDisconnected())
+            client_server_session->Disconnect();
+
         auto e = ClientStates::DisconnectedFromServerEvent( client_server_session.get() );
         state_machine.Handle( e );
         client_server_session.reset();

@@ -23,6 +23,9 @@ namespace Sessions
 		virtual ~ClientServerSession();
 
 		ConnectionState GetConnectionState() const;
+		bool IsConnected() const { return GetConnectionState() == ConnectionState::Connected; }
+		bool IsConnecting() const { return GetConnectionState() == ConnectionState::Connecting; }
+		bool IsDisconnected() const { return GetConnectionState() == ConnectionState::Disconnected; }
 
 		void Update( const PreciseTimestep& timestep );
 		void Disconnect();

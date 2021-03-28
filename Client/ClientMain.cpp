@@ -13,6 +13,7 @@
 #include "Common/Utility/Timestep.hpp"
 
 #include "Client/ClientGame.hpp"
+#include "ClientServerCommon/Vendor/Wrappers/Networking.hpp"
 
 std::unique_ptr<Visual::Device::Window> main_window;
 std::unique_ptr<Game::ClientGame> client_game;
