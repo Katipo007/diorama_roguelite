@@ -174,7 +174,7 @@ int main( int argc, char** argv )
 	auto last_frame_time = main_window->GetApplicationTime();
 	while (running)
 	{
-		const auto time = last_frame_time = main_window->GetApplicationTime();
+		const auto time = main_window->GetApplicationTime();
 		PreciseTimestep timestep( time,  time - last_frame_time );
 		last_frame_time = time;
 
