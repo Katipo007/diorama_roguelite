@@ -55,7 +55,18 @@
 		CUSTOM_MESSAGE_IMPL_END()
 */
 
-BASIC_CLIENT_SERVER_MESSAGE( ChatMessage, "A chat message from the client to be sent to other players" )
+CUSTOM_CLIENT_SERVER_MESSAGE_BEGIN( ChatMessage, "A chat message from the client to be sent to other players" )
+#ifdef GENERATE_MESSAGES_IMPL
+char message[ChatConstants::MaxMessageLength] = "";
+
+template<typename Stream>
+bool Serialize( Stream& stream )
+{
+	serialize_string( stream, message, ChatConstants::MaxMessageLength );
+	return true;
+}
+#endif
+CUSTOM_MESSAGE_IMPL_END()
 
 CUSTOM_SERVER_CLIENT_MESSAGE_BEGIN( ChatMessage, "A message to display in the client's chat window, not necessarly from another player" )
 #ifdef GENERATE_MESSAGES_IMPL

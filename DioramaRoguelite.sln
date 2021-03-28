@@ -26,6 +26,7 @@ Global
 		GameData\GameData.vcxitems*{9ccb72c7-2709-45ca-8ab4-284e9ddfe34f}*SharedItemsImports = 9
 		ClientServerCommon\ClientServerCommon.vcxitems*{bcbd1b81-8726-484c-b261-dfa08bf6ba6a}*SharedItemsImports = 4
 		Common\Common.vcxitems*{bcbd1b81-8726-484c-b261-dfa08bf6ba6a}*SharedItemsImports = 4
+		Server\Server.vcxitems*{bcbd1b81-8726-484c-b261-dfa08bf6ba6a}*SharedItemsImports = 4
 		ClientServerCommon\ClientServerCommon.vcxitems*{de658d54-63f0-42a2-a6e7-341f3f51175d}*SharedItemsImports = 4
 		Common\Common.vcxitems*{de658d54-63f0-42a2-a6e7-341f3f51175d}*SharedItemsImports = 4
 		Visual\Visual.vcxitems*{de658d54-63f0-42a2-a6e7-341f3f51175d}*SharedItemsImports = 4
