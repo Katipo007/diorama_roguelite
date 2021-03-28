@@ -3,6 +3,7 @@
 #include "ClientServerCommon/Vendor/Wrappers/Networking.hpp"
 #include "ClientServerCommon/Networking/ClientServerConfig.hpp"
 
+#include "Common/Utility/Signal.hpp"
 #include "Common/Utility/Timestep.hpp"
 
 namespace Sessions
@@ -30,6 +31,8 @@ namespace Sessions
 		void Update( const PreciseTimestep& timestep );
 		void Disconnect();
 
+		sigslot::signal<ClientServerSession&> ConnectionStateChanged;
+
 	protected:
 
 	private:
@@ -41,5 +44,6 @@ namespace Sessions
 		ConnectionAdapter adaptor;
 		Networking::ClientServerGameConnectionConfig connection_config;
 		yojimbo::Client server_connection;
+		yojimbo::ClientState previous_connection_state = yojimbo::ClientState::CLIENT_STATE_DISCONNECTED;
 	};
 }

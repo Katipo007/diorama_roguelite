@@ -75,6 +75,8 @@ namespace Game
 		void OnFrame( const PreciseTimestep& ts ); // for entry point to call
 		void OnDearImGuiFrame();
 
+		void ConnectionStateChangedHandler( Sessions::ClientServerSession& sender );
+
 	protected:
 		std::unique_ptr<Sessions::ClientServerSession> client_server_session;
 

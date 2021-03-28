@@ -11,12 +11,10 @@ namespace Server::Sessions
 		, client_id( client_id )
 		, SessionFlags( (Flags)0 )
 	{
-		LOG_INFO( Server, "Client {} connected", client_id );
 	}
 
 	ActiveClientSession::~ActiveClientSession()
 	{
-		LOG_INFO( Server, "Client {} disconnected", client_id );
 	}
 
 	void ActiveClientSession::Update( const PreciseTimestep& timestep )

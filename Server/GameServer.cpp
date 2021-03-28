@@ -83,6 +83,8 @@ namespace Server
 
 			// TODO: notify other clients of new connection
 			// TODO: other stuff
+
+			LOG_INFO( Server, "Client connected. Index: '{}', Id: '{}'", client_index, id );
 		}
 		catch (std::runtime_error& e)
 		{
@@ -98,14 +100,17 @@ namespace Server
 
 		auto client_it = connected_clients.find( client_id );
 		if (client_it != std::end( connected_clients ))
+		{
 			connected_clients.erase( client_it );
+			LOG_INFO( Server, "Client disconnected. Index: '{}', Id: '{}'", client_index, client_id );
+		}
 	}
 
 	void GameServer::Update( const PreciseTimestep& timestep )
 	{
 		if (!server.IsRunning())
 			return;
-
+		
 		// Receive and process messages
 		server.ReceivePackets();
 		ProcessMessages();

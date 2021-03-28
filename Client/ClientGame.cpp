@@ -42,10 +42,10 @@ namespace Game
     {
         if (client_server_session)
         {
-            client_server_session->Update( ts );
-
             if (client_server_session->IsDisconnected())
                 DisconnectFromServer();
+            else
+                client_server_session->Update( ts );
         }
 
         // TODO: Don't clear here, require individual states to clear the screen
@@ -63,6 +63,26 @@ namespace Game
 #endif
     }
 
+    void ClientGame::ConnectionStateChangedHandler( Sessions::ClientServerSession& sender )
+    {
+        ASSERT( client_server_session != nullptr );
+        ASSERT( &sender == client_server_session.get() );
+
+        switch (sender.GetConnectionState())
+        {
+        case Sessions::ClientServerSession::ConnectionState::Connected:
+            state_machine.Handle( ClientStates::ConnectedToServerEvent( &sender ) );
+            break;
+
+        case Sessions::ClientServerSession::ConnectionState::Connecting:
+            break;
+
+        case Sessions::ClientServerSession::ConnectionState::Disconnected:
+            // NOTHING, will get caught in the new Update() event
+            break;
+        }
+    }
+
     void ClientGame::ConnectToServer( const yojimbo::Address& address )
     {
         if (client_server_session)
@@ -74,7 +94,7 @@ namespace Game
         try
         {
             client_server_session = std::make_unique<Sessions::ClientServerSession>( address );
-            // TODO: connect to signals
+            client_server_session->ConnectionStateChanged.connect( &ClientGame::ConnectionStateChangedHandler, this );
         }
         catch (std::exception& e)
         {
@@ -91,8 +111,12 @@ namespace Game
         if (client_server_session == nullptr)
             return;
 
+        // disconnect handler before disconnecting
+        client_server_session->ConnectionStateChanged.disconnect( this );
+
         if (!client_server_session->IsDisconnected())
             client_server_session->Disconnect();
+
 
         auto e = ClientStates::DisconnectedFromServerEvent( client_server_session.get() );
         state_machine.Handle( e );

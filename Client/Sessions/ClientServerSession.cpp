@@ -69,6 +69,13 @@ namespace Sessions
 
 		if (disconnect_asap && !server_connection.IsDisconnected())
 			server_connection.Disconnect();
+
+		// call connection state event
+		if (server_connection.GetClientState() != previous_connection_state)
+		{
+			ConnectionStateChanged( *this );
+			previous_connection_state = server_connection.GetClientState();
+		}
 	}
 
 	void ClientServerSession::ProcessMessages()
