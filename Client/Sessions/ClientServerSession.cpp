@@ -24,7 +24,7 @@ namespace Sessions
 		uint64_t client_id = 0;
 		yojimbo::random_bytes( (uint8_t*)&client_id, 8 );
 		LOG_INFO( Client, "Attempting connection to '{}' with client id {}", address_string, client_id );
-		server_connection.InsecureConnect( Networking::ClientServerGameConnectionConfig::DefaultPrivateKey, 0, connection_address );
+		server_connection.InsecureConnect( Networking::ClientServerGameConnectionConfig::DefaultPrivateKey, client_id, connection_address );
 	}
 
 	ClientServerSession::~ClientServerSession()
