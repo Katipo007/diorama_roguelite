@@ -2,6 +2,7 @@
 
 #include <memory>
 
+#include "Client/Graphical/UI/ChatWindow.hpp"
 #include "Client/States/Events.hpp"
 #include "Common/Utility/StateMachine/DefaultAction.hpp"
 #include "Common/Utility/StateMachine/Actions/Might.hpp"
@@ -50,6 +51,9 @@ namespace ClientStates
 	protected:
 		void OnRender() const;
 
+		void ChatWindowSendMessageHandler( std::string_view msg );
+
+		UI::ChatWindow chat_window;
 		std::shared_ptr<Visual::SphericalCamera> main_camera;
 		std::unique_ptr<Game::ClientGameWorld> gameworld; // TODO: refactor into client session
 	};

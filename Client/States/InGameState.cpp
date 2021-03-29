@@ -1,5 +1,7 @@
 #include "InGameState.hpp"
 
+#include <functional>
+
 #include "Visual/Camera.hpp"
 #include "Visual/Device/RendererAPI.hpp"
 #include "Visual/Device/RendererCommand.hpp"
@@ -19,10 +21,14 @@ namespace ClientStates
 		main_camera->SetRadius( 5.f );
 
 		gameworld = std::make_unique<Game::ClientGameWorld>();
+
+		chat_window.EnteredMessage.connect( &InGameState::ChatWindowSendMessageHandler, this );
 	}
 
 	InGameState::~InGameState()
 	{
+		chat_window.EnteredMessage.disconnect( &InGameState::ChatWindowSendMessageHandler, this );
+
 		gameworld.reset();
 		main_camera.reset();
 	}
@@ -63,6 +69,8 @@ namespace ClientStates
 	{
 		(void)e;
 
+		chat_window.Do();
+
 		return fsm::Actions::NoAction{};
 	}
 
@@ -76,5 +84,10 @@ namespace ClientStates
 	void InGameState::OnRender() const
 	{
 		gameworld->Render( main_camera );
+	}
+
+	void InGameState::ChatWindowSendMessageHandler( std::string_view msg )
+	{
+		LOG_INFO( Client, "Sending chat message '{}'", (std::string)msg );
 	}
 }
