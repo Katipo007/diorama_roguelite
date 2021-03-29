@@ -30,7 +30,7 @@ namespace ClientStates
 	{
 		(void)e;
 
-		if (ImGui::Begin( "Main Menu", NULL, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration ))
+		if (ImGui::Begin( "Main Menu", NULL, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove ))
 		{
 			ImGui::Text( "Main Menu" );
 

@@ -45,7 +45,7 @@ namespace ClientStates
 	{
 		(void)e;
 
-		if (ImGui::Begin( "JoinMultiplayerState", NULL, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration ))
+		if (ImGui::Begin( "JoinMultiplayerState", NULL, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove ))
 		{
 			ImGui::Text( "Join Multiplayer" );
 
