@@ -13,3 +13,6 @@
 [submodule "yojimbo"]
 	path = Common/Vendor/yojimbo
 	url = https://github.com/Katipo007/yojimbo
+[submodule "sigslot"]
+	path = Common/Vendor/sigslot
+	url = https://github.com/palacaze/sigslot
