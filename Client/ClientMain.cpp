@@ -101,9 +101,6 @@ int main( int argc, char** argv )
 
 		io.IniFilename = NULL; // don't save settings
 		ImGui::StyleColorsDark();
-
-		auto& style = ImGui::GetStyle();
-		style.ScaleAllSizes( 2.f );
 	}
 #endif
 
