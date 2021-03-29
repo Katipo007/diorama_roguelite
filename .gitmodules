@@ -16,3 +16,6 @@
 [submodule "sigslot"]
 	path = Common/Vendor/sigslot
 	url = https://github.com/palacaze/sigslot
+[submodule "enumclassbitset"]
+	path = Common/Vendor/enumclassbitset
+	url = https://github.com/Katipo007/ArticleEnumClass-v2
