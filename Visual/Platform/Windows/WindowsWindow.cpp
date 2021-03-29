@@ -18,6 +18,13 @@
 #	pragma comment(lib, "Visual/Vendor/SDL2/lib/x86/SDL2.lib")
 #endif
 
+#ifdef DEARIMGUI_ENABLED
+#include "Visual/DearImGui/DearImGui.hpp"
+#pragma warning(push, 0)
+#include "Visual/Vendor/dearimgui/backends/imgui_impl_sdl.h"
+#pragma warning(pop)
+#endif
+
 namespace
 {
 	// We keep track of the number of SDL windows currently active so we can shut-down SDL
@@ -193,6 +200,11 @@ namespace Visual::Device
 		SDL_Event currentEvent;
 		while (SDL_PollEvent( &currentEvent ) != 0)
 		{
+#ifdef DEARIMGUI_ENABLED
+			if (DearImGui::IsEnabled())
+				ImGui_ImplSDL2_ProcessEvent( &currentEvent );
+#endif
+
 			switch (currentEvent.type)
 			{
 			case SDL_QUIT:
