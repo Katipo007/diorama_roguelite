@@ -4,7 +4,7 @@
 #include <sstream>
 
 #include "Common/Core/Base.hpp"
-#include "Common/Vendor/enumclassbitset/EnumClassBitset.hpp"
+#include "Common/Utility/EnumClassBitset.hpp"
 
 namespace Visual::Device
 {
@@ -106,5 +106,4 @@ namespace Visual::Device
 	}
 }
 
-/// ENABLE_ENUM_CLASS_BITMASK must be performed outside of any namespace
-ENABLE_ENUM_CLASS_BITMASK( Visual::Device::EventCategory );
+enableEnumClassBitmask( Visual::Device::EventCategory );

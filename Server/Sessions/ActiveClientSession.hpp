@@ -7,7 +7,7 @@
 #include "ClientServerCommon/Vendor/Wrappers/Networking.hpp"
 #include "Common/Utility/NonCopyable.hpp"
 #include "Common/Utility/Timestep.hpp"
-#include "Common/Vendor/enumclassbitset/EnumClassBitset.hpp"
+#include "Common/Utility/EnumClassBitset.hpp"
 
 namespace Server
 {
@@ -54,4 +54,4 @@ namespace Server::Sessions
 		std::string display_name;
 	};
 }
-ENABLE_ENUM_CLASS_BITMASK( Server::Sessions::ActiveClientSession::Flags );
+enableEnumClassBitmask( Server::Sessions::ActiveClientSession::Flags );
