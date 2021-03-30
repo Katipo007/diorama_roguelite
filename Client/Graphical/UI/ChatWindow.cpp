@@ -28,29 +28,9 @@ namespace UI
 	{
 		bool sent = false;
 
-		ImGui::SetNextWindowSize( ImVec2( 520, 600 ), ImGuiCond_FirstUseEver );
-		if (ImGui::Begin( "Chat" ))
+		ImGui::SetNextWindowSize( ImVec2( 200, 140 ), ImGuiCond_FirstUseEver );
+		if (ImGui::Begin( "Chat", NULL, ImGuiWindowFlags_NoCollapse ))
 		{
-			// Help text
-			{
-				ImGui::TextWrapped(
-					"This is the chat window! "
-					"ENTER to send messages." );
-
-				ImGui::Separator();
-			}
-
-			// Options menu
-			{
-				if (ImGui::BeginPopup( "Options" ))
-				{
-					ImGui::Checkbox( "Auto-scroll", &auto_scroll );
-					ImGui::EndPopup();
-				}
-
-				ImGui::Separator();
-			}
-
 			// Reserve enough left-over height for 1 separator + 1 input text
 			{
 				const float footer_height_to_reserve = ImGui::GetStyle().ItemSpacing.y + ImGui::GetFrameHeightWithSpacing();
@@ -59,7 +39,13 @@ namespace UI
 				// Provide option to clear the message history
 				if (ImGui::BeginPopupContextWindow())
 				{
-					if (ImGui::Selectable( "Clear" )) Clear();
+					ImGui::Checkbox( "Auto-scroll", &auto_scroll );
+
+					if (ImGui::Button( "Clear" ))
+					{
+						Clear();
+						ImGui::CloseCurrentPopup();
+					}
 					ImGui::EndPopup();
 				}
 
