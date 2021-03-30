@@ -40,7 +40,9 @@ namespace ClientStates
 		explicit InGameState();
 		virtual ~InGameState();
 
-		fsm::Actions::NoAction OnEnter( const ClientStates::ConnectedToServerEvent& e );
+		fsm::Actions::Might<fsm::Actions::TransitionTo<MainMenuState>> OnEnter();
+		//fsm::Actions::Might<fsm::Actions::TransitionTo<MainMenuState>> OnEnter( const FrameEvent& ) { LOG_INFO( Client, "Entered via FrameEvent!" ); return OnEnter(); }
+
 		fsm::Actions::TransitionTo<MainMenuState> OnLeave( const ClientStates::DisconnectedFromServerEvent& e );
 
 		fsm::Actions::NoAction HandleEvent( const FrameEvent& e );

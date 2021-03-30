@@ -1,9 +1,46 @@
 #pragma once
 
+#include <type_traits>
 #include "NoAction.hpp"
 
 namespace fsm::Actions
 {
+	namespace detail
+	{
+		// Primary template with a static assertion
+		// for a meaningful error message
+		// if it ever gets instantiated.
+		// We could leave it undefined if we didn't care.
+
+		template<typename, typename T>
+		struct has_OnEnter {
+			static_assert(
+				std::integral_constant<T, false>::value,
+				"Second template parameter needs to be of function type.");
+		};
+
+		// specialization that does the checking
+
+		template<typename C, typename... Args>
+		struct has_OnEnter<C, Args... > {
+		private:
+			template<typename T>
+			static constexpr auto check( T* )
+				-> typename
+				std::is_object<
+						decltype(std::declval<T>().OnEnter( std::declval<Args>()... ))
+				>::type;  // attempt to call it and see if the return type is correct
+
+			template<typename>
+			static constexpr std::false_type check( ... );
+
+			typedef decltype(check<C>( 0 )) type;
+
+		public:
+			static constexpr bool value = type::value;
+		};
+	}
+
 	/// <summary>
 	/// Have the state machine transition to the given state
 	/// </summary>
@@ -34,7 +71,12 @@ namespace fsm::Actions
 		template<typename PreviousState, typename Event>
 		auto LeaveState( PreviousState& previous_state, const Event& event ) -> decltype(previous_state.OnLeave( event )) { return previous_state.OnLeave( event ); }
 
-		template<typename NewState, typename Event>
+		// version which doesn't take event
+		template<typename NewState, typename Event, typename = typename std::enable_if<!detail::has_OnEnter<TargetState, const Event&>::value>::type>
+		auto EnterState( NewState& new_state, const Event& ) -> decltype(new_state.OnEnter()) { return new_state.OnEnter(); }
+
+		// version which does take event
+		template<typename NewState, typename Event, typename = typename std::enable_if<detail::has_OnEnter<TargetState, const Event&>::value>::type>
 		auto EnterState( NewState& new_state, const Event& event ) -> decltype(new_state.OnEnter( event )) { return new_state.OnEnter( event ); }
 	};
 }

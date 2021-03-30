@@ -33,7 +33,7 @@ namespace ClientStates
 		main_camera.reset();
 	}
 
-	fsm::Actions::NoAction InGameState::OnEnter( const ClientStates::ConnectedToServerEvent& e )
+	fsm::Actions::Might<fsm::Actions::TransitionTo<MainMenuState>> InGameState::OnEnter()
 	{
 		(void)e;
 		return fsm::Actions::NoAction();
