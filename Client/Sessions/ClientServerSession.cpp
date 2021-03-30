@@ -78,6 +78,14 @@ namespace Sessions
 		}
 	}
 
+	void ClientServerSession::SendChatMessage( std::string_view message )
+	{
+		auto* p = (Networking::Message::ChatMessageSB*)server_connection.CreateMessage( Networking::MessageId::ChatMessageSBId );
+		strcpy_s( p->message, std::string( message ).c_str() );
+
+		server_connection.SendMessage( Networking::ChannelType::Unreliable, p );
+	}
+
 	void ClientServerSession::ProcessMessages()
 	{
 		for (int channel = 0; channel < connection_config.numChannels; ++channel)

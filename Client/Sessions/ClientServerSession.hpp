@@ -33,6 +33,11 @@ namespace Sessions
 
 		sigslot::signal<ClientServerSession&> ConnectionStateChanged;
 
+		//
+		// Message sending
+		//
+		void SendChatMessage( std::string_view message );
+
 	protected:
 
 	private:

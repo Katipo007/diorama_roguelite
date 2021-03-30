@@ -9,6 +9,7 @@
 #include "Client/ClientGame.hpp"
 #include "Client/Game/ClientGameWorld.hpp"
 #include "Client/Game/PlayerObject.hpp"
+#include "Client/Sessions/ClientServerSession.hpp"
 
 namespace ClientStates
 {
@@ -35,13 +36,22 @@ namespace ClientStates
 
 	fsm::Actions::Might<fsm::Actions::TransitionTo<MainMenuState>> InGameState::OnEnter()
 	{
-		(void)e;
+		client_server_session = Game::GetClientGame().GetClientServerSession();
+
+		if (client_server_session == nullptr)
+		{
+			LOG_ERROR( Client, "Expected to have a session when entering InGameState!" );
+			Game::GetClientGame().DisconnectFromServer();
+			return fsm::Actions::TransitionTo<MainMenuState>{};
+		}
+
 		return fsm::Actions::NoAction();
 	}
 
 	fsm::Actions::TransitionTo<MainMenuState> InGameState::OnLeave( const ClientStates::DisconnectedFromServerEvent& e )
 	{
 		(void)e;
+
 		return fsm::Actions::TransitionTo<MainMenuState>{};
 	}
 
@@ -77,6 +87,9 @@ namespace ClientStates
 	fsm::Actions::TransitionTo<MainMenuState> InGameState::HandleEvent( const DisconnectedFromServerEvent& e )
 	{
 		(void)e;
+		ASSERT( !client_server_session || client_server_session == e.session );
+		client_server_session = nullptr;
+
 		LOG_INFO( Client, "Lost connection to server, returning to main menu" );
 		return fsm::Actions::TransitionTo<MainMenuState>();
 	}
@@ -88,6 +101,11 @@ namespace ClientStates
 
 	void InGameState::ChatWindowSendMessageHandler( std::string_view msg )
 	{
+		ASSERT( client_server_session );
+		if (!client_server_session)
+			return;
+
 		LOG_INFO( Client, "Sending chat message '{}'", (std::string)msg );
+		client_server_session->SendChatMessage( msg );
 	}
 }

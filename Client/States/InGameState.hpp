@@ -55,6 +55,8 @@ namespace ClientStates
 
 		void ChatWindowSendMessageHandler( std::string_view msg );
 
+		Sessions::ClientServerSession* client_server_session = nullptr;
+
 		UI::ChatWindow chat_window;
 		std::shared_ptr<Visual::SphericalCamera> main_camera;
 		std::unique_ptr<Game::ClientGameWorld> gameworld; // TODO: refactor into client session
