@@ -1,21 +1,10 @@
 #include "Image.hpp"
 
+#include "ImageResourceManager.hpp" // where ImageDefinition is defined
+
 namespace Resources
 {
-	ImageDefinition::ImageDefinition( TexturePtr texture, Rect<float> uv )
-		: texture_ptr( texture )
-		, uv_rect( uv )
-		, cached_size_f( uv.GetWidth(), uv.GetHeight() )
-		, cached_size_uint( (unsigned)uv.GetWidth(), (unsigned)uv.GetHeight() )
-	{
-		ASSERT( texture_ptr != nullptr );
-		ASSERT( uv_rect.IsValid() );
-	}
-
-	ImageDefinition::~ImageDefinition()
-	{
-	}
-
+	const Image Image::empty = Image();
 
 	Image::Image()
 	{
@@ -40,12 +29,12 @@ namespace Resources
 		return Image( to_copy.definition );
 	}
 
-	Image::Image( Image&& to_move )
+	Image::Image( Image&& to_move ) noexcept
 	{
 		std::swap( definition, to_move.definition );
 	}
 
-	Image& Image::operator=( Image&& to_move )
+	Image& Image::operator=( Image&& to_move ) noexcept
 	{
 		if (&to_move != this)
 		{
@@ -53,5 +42,15 @@ namespace Resources
 		}
 
 		return *this;
+	}
+
+	const Size<unsigned>& Image::GetSize() const
+	{
+		return definition ? definition->GetSize() : Size<unsigned>::empty;
+	}
+
+	const Size<float>& Image::GetSizeF() const
+	{
+		return definition ? definition->GetSizeF() : Size<float>::empty;
 	}
 }
