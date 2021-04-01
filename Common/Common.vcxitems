@@ -25,6 +25,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Utility\EnumClassBitset.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Utility\FileOps.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Utility\Hashing.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Utility\json.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Utility\Literals.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\Logging.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Utility\Math\Mat3.hpp" />
