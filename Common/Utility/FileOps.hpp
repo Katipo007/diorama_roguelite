@@ -36,7 +36,7 @@ namespace FileOps
 		return true;
 	}
 
-	inline bool ReadFile( const std::string& filename, std::string& file_contents )
+	inline bool ReadFile( std::string_view filename, std::string& file_contents )
 	{
 		std::ifstream file( filename, std::ios::binary );
 
