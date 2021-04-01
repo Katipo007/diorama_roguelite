@@ -19,3 +19,6 @@
 [submodule "enumclassbitset"]
 	path = Common/Vendor/enumclassbitset
 	url = https://github.com/Katipo007/ArticleEnumClass-v2
+[submodule "nlohmann/json"]
+	path = Common/Vendor/nlohmann/json
+	url = https://github.com/nlohmann/json
