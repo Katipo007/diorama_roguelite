@@ -8,8 +8,11 @@
 
 #define ONLY_EXECUTE_ONCE { static bool ___only_exec_once___i_ = false; if (___only_exec_once___i_) return; ___only_exec_once___i_ = true; }
 
+#pragma warning(push, 0)
+#define SPDLOG_COMPILED_LIB
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/sinks/basic_file_sink.h>
+#pragma warning(pop)
 
 namespace Logging
 {
