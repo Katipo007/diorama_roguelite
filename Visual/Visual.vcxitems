@@ -48,6 +48,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Renderer.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)RendererAPIs.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Device\Window.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Resources\Image.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Utility\StbImage.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)WorldSpace.hpp" />
   </ItemGroup>
@@ -71,6 +72,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Platform\Windows\WindowsOsAbstraction.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Renderer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Resources\Image.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Utility\StbImage.cpp" />
   </ItemGroup>
 </Project>
