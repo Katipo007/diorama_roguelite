@@ -3,6 +3,7 @@
 #include <type_traits>
 
 #include "Common/Geometry/Point2D.hpp"
+#include "Common/Geometry/Size.hpp"
 
 template<typename T>
 class Rect
@@ -15,6 +16,7 @@ public:
 	constexpr Rect() : x( 0 ), y( 0 ), w( 0 ), h( 0 ) {}
 	constexpr Rect( T x1, T y1, T x2, T y2 ) : x( x1 ), y( y1 ), w( x2 - x1 ), h( y2 - y1 ) {}
 	constexpr Rect( const Point2D<T>& min, const Point2D<T>& max ) : Rect( min.x, min.y, max.x, max.y ) { ASSERT( IsValid() ); }
+	constexpr Rect( const Point2D<T>& location, const Size<T>& size ) : Rect( location.x, location.y, location.x + size.width, location.y + size.height ) { ASSERT( IsValid() ); }
 
 	constexpr T GetLeft() const { return x; }
 	constexpr T GetTop() const { return y; }
