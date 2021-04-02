@@ -50,6 +50,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Device\Window.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Resources\Image.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Resources\ImageResourceManager.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)SpriteBatcher.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Utility\StbImage.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)WorldSpace.hpp" />
   </ItemGroup>
@@ -75,6 +76,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Renderer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Resources\Image.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Resources\ImageResourceManager.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)SpriteBatcher.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Utility\StbImage.cpp" />
   </ItemGroup>
 </Project>
