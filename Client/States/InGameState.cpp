@@ -18,8 +18,10 @@ namespace ClientStates
 		main_camera = std::make_shared<Visual::SphericalCamera>();
 		main_camera->SetPosition( { 0, 0, 0 } );
 		main_camera->SetAspectRatio( 1.f );
+		main_camera->SetClipSpace( 0.01f, 600.f );
 		main_camera->SetFOV( 75.f );
-		main_camera->SetRadius( 32.f );
+		main_camera->SetRadius( 128.f );
+		main_camera->SetRotationD( 95.f, 0.f );
 
 		chat_window.EnteredMessage.connect( &InGameState::ChatWindowSendMessageHandler, this );
 	}
@@ -65,10 +67,6 @@ namespace ClientStates
 	fsm::Actions::NoAction ClientStates::InGameState::HandleEvent( const FrameEvent& e )
 	{
 		(void)e;
-
-		//main_camera->SetRadius( 5.f + std::sin( timestep.time / 4.f ) * 2.f );
-		//main_camera->SetRotationD( 45.f, -45.f );
-		main_camera->SetRotationD( 95.f, 90.f * std::sin( e.timestep.time / 4 ) );
 
 		return fsm::Actions::NoAction{};
 	}
