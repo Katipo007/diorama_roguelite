@@ -2,12 +2,7 @@
 
 #include <memory>
 
-namespace Visual::Device
-{
-	class Shader;
-	class Texture2D;
-	class VertexArray;
-}
+#include "Visual/Resources/Image.hpp"
 
 namespace Game
 {
@@ -22,15 +17,9 @@ namespace Game
 		PlayerObject();
 		virtual ~PlayerObject();
 
-		std::shared_ptr<Visual::Device::Shader> GetShader() const { return shader; }
-		std::shared_ptr<Visual::Device::Texture2D> GetTexture() const { return texture; }
-		std::shared_ptr<Visual::Device::VertexArray> GetModel() const { return model; }
+		const Resources::Image& GetImage() const { return image; }
 
 	protected:
-		void CreateModel();
-
-		std::shared_ptr<Visual::Device::Shader> shader;
-		std::shared_ptr<Visual::Device::Texture2D> texture;
-		std::shared_ptr<Visual::Device::VertexArray> model;
+		Resources::Image image;
 	};
 }

@@ -1,6 +1,7 @@
 #include "ClientGameWorld.hpp"
 
 #include "Visual/Renderer.hpp"
+#include "Visual/SpriteBatcher.hpp"
 #include "Visual/Device/Shader.hpp"
 #include "Visual/Device/Texture.hpp"
 #include "Visual/Device/VertexArray.hpp"
@@ -16,12 +17,14 @@ namespace Game
 	ClientGameWorld::ClientGameWorld()
 		: GameWorld()
 	{
+		sprite_renderer = std::make_unique<Visual::SpriteBatcher>();
 		player = std::make_unique<PlayerObject>();
 	}
 
 	ClientGameWorld::~ClientGameWorld()
 	{
 		player.reset();
+		sprite_renderer.reset();
 	}
 
 	void ClientGameWorld::OnFrame( const Timestep& timestep )
@@ -33,6 +36,7 @@ namespace Game
 	{
 		// SETUP
 		Visual::Renderer::BeginScene( *camera );
+		sprite_renderer->Begin( *camera );
 
 		// ENVIRONMENT.
 		
@@ -46,6 +50,7 @@ namespace Game
 		// PARTICLE SYSTEMS.
 
 		// CLEANUP
+		sprite_renderer->EndScene();
 		Visual::Renderer::EndScene();
 	}
 
@@ -54,10 +59,7 @@ namespace Game
 		/// Draw player specificly
 		{
 			ASSERT( player );
-			const auto& player_texture = player->GetTexture();
-
-			player_texture->Bind( 0 );
-			Visual::Renderer::Submit( player->GetShader(), player->GetModel() );
+			sprite_renderer->DrawStandingImage( player->GetImage(), { 0.f, 0.f, 0.f } );
 		}
 	}
 }

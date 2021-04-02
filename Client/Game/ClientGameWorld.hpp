@@ -5,6 +5,7 @@
 namespace Visual
 {
 	class Camera;
+	class SpriteBatcher;
 }
 
 namespace Game
@@ -31,5 +32,6 @@ namespace Game
 
 	protected:
 		std::unique_ptr<PlayerObject> player;
+		std::unique_ptr<Visual::SpriteBatcher> sprite_renderer;
 	};
 }
