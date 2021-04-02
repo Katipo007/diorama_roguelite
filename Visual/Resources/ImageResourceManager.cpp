@@ -9,9 +9,9 @@ namespace Resources
 {
 	ImageDefinition::ImageDefinition( ConstTexturePtr texture, Rect<float> uv )
 		: texture_ptr( texture )
-		, uv_rect( uv )
+		, uv_rect( { uv.GetLeft() / texture->GetWidth(), uv.GetTop() / texture->GetHeight(), uv.GetRight() / texture->GetWidth(), uv.GetBottom() / texture->GetHeight() } )
 		, cached_size_f( uv.GetWidth(), uv.GetHeight() )
-		, cached_size_uint( (unsigned)uv.GetWidth(), (unsigned)uv.GetHeight() )
+		, cached_size_uint( (unsigned)cached_size_f.width, (unsigned)cached_size_f.height )
 	{
 		ASSERT( texture_ptr != nullptr );
 		ASSERT( uv_rect.IsValid() );
@@ -102,7 +102,7 @@ namespace Resources
 			// TODO: use specified format information
 
 			Visual::Device::Texture2D::LoadProperties props;
-			props.y_flip = true;
+			props.y_flip = false;
 			texture = renderer_api.CreateTexture2D( filepath_prefix / texture_filename, props );
 			if (!texture)
 				throw std::runtime_error( "Failed to load texture" );
@@ -130,7 +130,7 @@ namespace Resources
 				continue;
 			auto uvs = Rect<float> {
 				Point2D<float>{ frame.at( "x" ).get<float>(), frame.at( "y" ).get<float>() },
-				Size<float>{ frame.at( "w" ).get<float>() , frame.at( "h" ).get<float>() }
+				Size<float>{ frame.at( "w" ).get<float>(), frame.at( "h" ).get<float>() }
 			};
 			ASSERT( uvs.IsValid(), "Frame bounds are not a valid rectangle" );
 			if (!uvs.IsValid())
