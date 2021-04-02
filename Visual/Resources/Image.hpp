@@ -31,7 +31,7 @@ namespace Resources
 		Image( Image&& to_move ) noexcept;
 		Image& operator=( Image&& to_move ) noexcept;
 
-		bool IsNull() const { return definition != nullptr; }
+		bool IsNull() const { return definition == nullptr; }
 		operator bool() const { return !IsNull(); }
 
 		const Size<unsigned>& GetSize() const;
