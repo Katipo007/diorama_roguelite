@@ -21,13 +21,13 @@ namespace Resources
 	class ImageDefinition
 	{
 	protected:
-		using TexturePtr = std::shared_ptr<Visual::Device::Texture2D>;
+		using ConstTexturePtr = std::shared_ptr<const Visual::Device::Texture2D>;
 	public:
-		ImageDefinition( TexturePtr texture, Rect<float> uv );
+		ImageDefinition( ConstTexturePtr texture, Rect<float> uv );
 		virtual ~ImageDefinition();
 
-		const Rect<float> GetUVs() const { return uv_rect; }
-		TexturePtr GetSharedTexture() const { return texture_ptr; }
+		const Rect<float>& GetUVs() const { return uv_rect; }
+		const ConstTexturePtr& GetSharedTexture() const { return texture_ptr; }
 
 		const Size<unsigned>& GetSize() const { return cached_size_uint; }
 		const Size<float>& GetSizeF() const { return cached_size_f; }
@@ -37,7 +37,7 @@ namespace Resources
 		Size<float> cached_size_f;
 		Size<unsigned> cached_size_uint;
 
-		TexturePtr texture_ptr;
+		ConstTexturePtr texture_ptr;
 	};
 
 	/// <summary>

@@ -2,6 +2,11 @@
 
 #include "ImageResourceManager.hpp" // where ImageDefinition is defined
 
+namespace
+{
+	static const std::shared_ptr<const Visual::Device::Texture2D> EmptyTextureHandle = nullptr;
+}
+
 namespace Resources
 {
 	const Image Image::empty = Image();
@@ -52,5 +57,15 @@ namespace Resources
 	const Size<float>& Image::GetSizeF() const
 	{
 		return definition ? definition->GetSizeF() : Size<float>::empty;
+	}
+
+	const std::shared_ptr<const Visual::Device::Texture2D>& Image::GetSharedTexture() const
+	{
+		return definition ? definition->GetSharedTexture() : EmptyTextureHandle;
+	}
+
+	const Rect<float>& Image::GetUVs() const
+	{
+		return definition ? definition->GetUVs() : Rect<float>::empty;
 	}
 }

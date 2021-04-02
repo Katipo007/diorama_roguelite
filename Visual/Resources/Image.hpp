@@ -7,6 +7,11 @@
 #include "Common/Geometry/Size.hpp"
 #include "Visual/Device/Texture.hpp"
 
+namespace Visual::Device
+{
+	class Texture2D;
+}
+
 namespace Resources
 {
 	class ImageDefinition;
@@ -31,6 +36,9 @@ namespace Resources
 
 		const Size<unsigned>& GetSize() const;
 		const Size<float>& GetSizeF() const;
+
+		const std::shared_ptr<const Visual::Device::Texture2D>& GetSharedTexture() const;
+		const Rect<float>& GetUVs() const;
 
 	protected:
 		std::shared_ptr<const ImageDefinition> definition;

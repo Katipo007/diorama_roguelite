@@ -7,7 +7,7 @@
 
 namespace Resources
 {
-	ImageDefinition::ImageDefinition( TexturePtr texture, Rect<float> uv )
+	ImageDefinition::ImageDefinition( ConstTexturePtr texture, Rect<float> uv )
 		: texture_ptr( texture )
 		, uv_rect( uv )
 		, cached_size_f( uv.GetWidth(), uv.GetHeight() )
