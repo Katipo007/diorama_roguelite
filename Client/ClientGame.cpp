@@ -2,6 +2,7 @@
 
 #include "Client/Sessions/ClientServerSession.hpp"
 
+#include "Visual/Resources/ImageResourceManager.hpp"
 #include "Visual/Device/RendererCommand.hpp"
 
 namespace
@@ -26,10 +27,15 @@ namespace Game
     {
         ASSERT( static_client_game_ptr == nullptr ); // only one instance should ever exist
         static_client_game_ptr = this;
+
+        // load images
+        image_resource_manager = std::make_unique<Resources::ImageResourceManager>();
+        image_resource_manager->AddImagesFromFile( "Art/2DArt/texture.json" );
     }
 
     ClientGame::~ClientGame()
     {
+        image_resource_manager.reset();
         static_client_game_ptr = nullptr;
     }
 

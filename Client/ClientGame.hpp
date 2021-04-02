@@ -27,6 +27,11 @@ namespace Sessions
 	class ClientServerSession;
 }
 
+namespace Resources
+{
+	class ImageResourceManager;
+}
+
 namespace ClientStates
 {
 	using States = fsm::States<
@@ -69,6 +74,8 @@ namespace Game
 		void ConnectToServer( const yojimbo::Address& address );
 		void DisconnectFromServer();
 
+		const Resources::ImageResourceManager& GetResourceImageManager() const { ASSERT( image_resource_manager != nullptr ); return *image_resource_manager; }
+
 	protected:
 		ClientGame(); // for entry point to call
 
@@ -79,6 +86,7 @@ namespace Game
 
 	protected:
 		std::unique_ptr<Sessions::ClientServerSession> client_server_session;
+		std::unique_ptr<Resources::ImageResourceManager> image_resource_manager;
 
 		ClientStates::Machine state_machine;
 		bool user_requested_exit = false;
