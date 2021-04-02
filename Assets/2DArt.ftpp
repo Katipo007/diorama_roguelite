@@ -28,11 +28,11 @@
     "padding": 0,
     "extrude": 1,
     "allowRotation": false,
-    "allowTrim": true,
+    "allowTrim": false,
     "trimMode": "trim",
     "alphaThreshold": "0",
     "detectIdentical": true,
-    "packer": "MaxRectsBin",
-    "packerMethod": "BestShortSideFit"
+    "packer": "MaxRectsPacker",
+    "packerMethod": "Smart"
   }
 }
