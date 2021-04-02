@@ -24,22 +24,17 @@ namespace
 
 namespace Visual::Device::OpenGL
 {
-	ShaderOpenGL::ShaderOpenGL( const std::string& filepath )
+	ShaderOpenGL::ShaderOpenGL( const std::filesystem::path& filepath )
 		: opengl_program_id( 0 )
 	{
+		ASSERT( std::filesystem::is_regular_file( filepath ) );
 		ASSERT( !filepath.empty(), "Empty filename!" );
 
 		const auto file_src = ReadFile( filepath );
 		const auto shader_sources = PreProcess( file_src );
 		Compile( shader_sources );
 
-		// derive name from the filepath
-		auto last_slash_pos = filepath.find_last_of( "/\\" );
-		last_slash_pos = ( last_slash_pos == std::string::npos ) ? 0 : last_slash_pos + 1;
-
-		const auto last_dot_pos = filepath.rfind( '.' );
-		const auto count = ( last_dot_pos == std::string::npos ) ? filepath.size() - last_slash_pos : last_dot_pos - last_slash_pos;
-		name = filepath.substr( last_slash_pos, count );
+		name = filepath.filename().string();
 	}
 
 	ShaderOpenGL::ShaderOpenGL( std::string_view name_, std::string_view vertex_src_, std::string_view fragment_src_ )
@@ -146,7 +141,7 @@ namespace Visual::Device::OpenGL
 		glUniformMatrix4fv( location, 1, GL_FALSE, glm::value_ptr( value ) );
 	}
 
-	std::string ShaderOpenGL::ReadFile( const std::string & filepath )
+	std::string ShaderOpenGL::ReadFile( const std::filesystem::path& filepath )
 	{
 		std::string _result;
 

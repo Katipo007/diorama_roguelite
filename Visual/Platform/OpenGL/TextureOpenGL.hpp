@@ -12,7 +12,7 @@ namespace Visual::Device::OpenGL
 	{
 	public:
 		Texture2DOpenGL( uint32_t width, uint32_t height, const Texture::CreationProperties& props );
-		Texture2DOpenGL( std::string_view path, const Texture::LoadProperties& props );
+		Texture2DOpenGL( const std::filesystem::path& path, const Texture::LoadProperties& props );
 		virtual ~Texture2DOpenGL() override;
 
 		virtual uint32_t GetWidth() const override { return width; }

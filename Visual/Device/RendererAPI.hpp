@@ -40,10 +40,12 @@ namespace Visual::Device
 		_NODISCARD virtual std::shared_ptr<VertexBuffer> CreateVertexBuffer( const VertexBuffer::CreationProperties& props ) const = 0;
 		_NODISCARD virtual std::shared_ptr<IndexBuffer> CreateIndexBuffer( const IndexBuffer::CreationProperties& props ) const = 0;
 		_NODISCARD virtual std::shared_ptr<FrameBuffer> CreateFrameBuffer( const FrameBuffer::Specification& spec ) const = 0;
-		_NODISCARD virtual std::shared_ptr<Shader> CreateShader( std::string_view filepath ) const = 0;
+		_NODISCARD virtual std::shared_ptr<Shader> CreateShader( const std::filesystem::path& filepath ) const = 0;
+		_NODISCARD inline virtual std::shared_ptr<Shader> CreateShader( std::string_view filepath ) const { return CreateShader( std::filesystem::path( filepath ) ); }
 		_NODISCARD virtual std::shared_ptr<Shader> CreateShader( std::string_view name, std::string_view vertex_src, std::string_view fragment_src ) const = 0;
 		_NODISCARD virtual std::shared_ptr<Texture2D> CreateTexture2D( uint32_t width, uint32_t height, const Texture::CreationProperties& props = Texture::CreationProperties() ) const = 0;
-		_NODISCARD virtual std::shared_ptr<Texture2D> CreateTexture2D( std::string_view filepath, const Texture::LoadProperties& props = Texture::LoadProperties() ) const = 0;
+		_NODISCARD virtual std::shared_ptr<Texture2D> CreateTexture2D( const std::filesystem::path& filepath, const Texture::LoadProperties& props = Texture::LoadProperties() ) const = 0;
+		_NODISCARD inline virtual std::shared_ptr<Texture2D> CreateTexture2D( std::string_view filepath, const Texture::LoadProperties& props = Texture::LoadProperties() ) const { return CreateTexture2D( std::filesystem::path( filepath ), props ); }
 		_NODISCARD virtual std::shared_ptr<VertexArray> CreateVertexArray( const VertexArray::CreationProperties& props ) const = 0;
 	};
 }

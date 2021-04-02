@@ -11,7 +11,7 @@ namespace Visual::Device::OpenGL
 		: public ::Visual::Device::Shader
 	{
 	public:
-		ShaderOpenGL( const std::string& filepath );
+		ShaderOpenGL( const std::filesystem::path& filepath );
 		ShaderOpenGL( std::string_view name, std::string_view vertex_src, std::string_view fragment_src );
 		virtual ~ShaderOpenGL() override;
 
@@ -44,7 +44,7 @@ namespace Visual::Device::OpenGL
 		GLint GetNativeProgramID() const { return opengl_program_id; }
 
 	private:
-		std::string ReadFile( const std::string& filepath );
+		std::string ReadFile( const std::filesystem::path& filepath );
 		std::unordered_map<GLenum, std::string> PreProcess( std::string_view source );
 		void Compile( const std::unordered_map<GLenum, std::string>& shader_sources );
 

@@ -187,9 +187,9 @@ namespace Visual::Device::OpenGL
 		return std::make_shared<FrameBufferOpenGL>( spec );
 	}
 
-	std::shared_ptr<Shader> RendererAPIOpenGL::CreateShader( std::string_view filepath ) const
+	std::shared_ptr<Shader> RendererAPIOpenGL::CreateShader( const std::filesystem::path& filepath ) const
 	{
-		return std::make_shared<ShaderOpenGL>( static_cast<std::string>( filepath ) );
+		return std::make_shared<ShaderOpenGL>( filepath );
 	}
 
 	std::shared_ptr<Shader> RendererAPIOpenGL::CreateShader( std::string_view name, std::string_view vertex_src, std::string_view fragment_src ) const
@@ -202,7 +202,7 @@ namespace Visual::Device::OpenGL
 		return std::make_shared<Texture2DOpenGL>( width, height, props );
 	}
 
-	std::shared_ptr<Texture2D> RendererAPIOpenGL::CreateTexture2D( std::string_view filepath, const Texture::LoadProperties& props ) const
+	std::shared_ptr<Texture2D> RendererAPIOpenGL::CreateTexture2D( const std::filesystem::path& filepath, const Texture::LoadProperties& props ) const
 	{
 		return std::make_shared<Texture2DOpenGL>( filepath, props );
 	}

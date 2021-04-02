@@ -13,7 +13,7 @@ namespace Game
 	PlayerObject::PlayerObject()
 	{
 		auto& renderer = Visual::Device::RendererCommand::GetRendererAPI();
-		shader = renderer.CreateShader( "Shaders/DefaultTexture.glsl" );
+		shader = renderer.CreateShader( std::filesystem::path( "Shaders/DefaultTexture.glsl" ) );
 
 		texture = renderer.CreateTexture2D( 1, 1 );
 		uint32_t white_texture_data = 0xffffffff;

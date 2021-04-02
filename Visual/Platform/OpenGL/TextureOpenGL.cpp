@@ -42,9 +42,11 @@ namespace Visual::Device::OpenGL
 		glTextureParameteri( opengl_texture_id, GL_TEXTURE_WRAP_T, ConvertTextureWrapSetting( props.wrap_t ) );
 	}
 
-	Texture2DOpenGL::Texture2DOpenGL( std::string_view path, const Texture::LoadProperties& props )
+	Texture2DOpenGL::Texture2DOpenGL( const std::filesystem::path& filepath, const Texture::LoadProperties& props )
 	{
-		const auto _filepath = ( std::string )path;
+		ASSERT( std::filesystem::is_regular_file( filepath ) );
+		
+		const auto _filepath = filepath.string();
 		int _out_w, _out_h, _out_channels;
 		stbi_set_flip_vertically_on_load( props.y_flip ? 1 : 0 );
 		stbi_uc* _data = nullptr;
@@ -92,6 +94,7 @@ namespace Visual::Device::OpenGL
 		glTextureSubImage2D( opengl_texture_id, 0, 0, 0, static_cast<GLsizei>( width ), static_cast<GLsizei>( height ), opengl_data_format, GL_UNSIGNED_BYTE, _data );
 
 		stbi_image_free( _data );
+		this->filepath = filepath.string();
 	}
 
 	Texture2DOpenGL::~Texture2DOpenGL()

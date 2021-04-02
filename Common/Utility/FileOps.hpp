@@ -11,53 +11,14 @@
 
 namespace FileOps
 {
-	inline static std::streamoff StreamSize( std::istream& file )
-	{
-		std::istream::pos_type current_pos = file.tellg();
+	bool StreamReadString( std::istream& file, std::string& out_file_contents );
 
-		if( current_pos == std::istream::pos_type( -1 ) )
-			return -1;
+	bool ReadFile( const std::filesystem::path& filename, std::string& out_file_contents );
+	inline bool ReadFile( std::string_view filename, std::string& out_file_contents ) { return ReadFile( std::filesystem::path( filename ), out_file_contents ); }
 
-		file.seekg( 0, std::istream::end );
-		std::istream::pos_type end_pos = file.tellg();
-		file.seekg( current_pos );
-		return end_pos - current_pos;
-	}
+	std::vector<std::string> GetFilesInFolder( const std::filesystem::path& path );
+	inline std::vector<std::string> GetFilesInFolder( std::string_view path ) { return GetFilesInFolder( std::filesystem::path( path ) ); }
 
-	inline bool StreamReadString( std::istream& file, std::string& file_contents )
-	{
-		std::streamoff len = StreamSize( file );
-		if( len == -1 )
-			return false;
-
-		file_contents.resize( static_cast<std::string::size_type>( len ) );
-
-		file.read( &file_contents[ 0 ], file_contents.length() );
-		return true;
-	}
-
-	inline bool ReadFile( std::string_view filename, std::string& file_contents )
-	{
-		std::ifstream file( filename, std::ios::binary );
-
-		if( !file.is_open() )
-			return false;
-
-		const bool success = StreamReadString( file, file_contents );
-
-		file.close();
-
-		return success;
-	}
-
-	inline std::vector<std::string> GetFilesInFolder( const std::string& path )
-	{
-		auto filenames = std::vector<std::string>();
-		for( const auto & entry : std::filesystem::directory_iterator( path ) )
-			filenames.emplace_back( std::move( entry.path().string() ) );
-
-		return filenames;
-	}
-
-	std::filesystem::path GetFileDirectory( const std::string& filepath, bool relative_to_working_directory = true );
+	std::filesystem::path GetFileDirectory( const std::filesystem::path& filepath, bool relative_to_working_directory = true );
+	inline std::filesystem::path GetFileDirectory( std::string_view filepath, bool relative_to_working_directory = true ) { return GetFileDirectory( std::filesystem::path( filepath ), relative_to_working_directory ); }
 }

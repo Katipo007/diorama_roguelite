@@ -1,5 +1,6 @@
 #pragma once
 
+#include <filesystem>
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -54,12 +55,12 @@ namespace Resources
 
 
 #pragma region Adding images to manager
-		bool AddImagesFromJson( std::string_view json_string, std::string_view filepath_prefix = "" );
-		bool AddImagesFromFile( std::string_view filepath );
+		bool AddImagesFromJson( std::string_view json_string, const std::filesystem::path& filepath_prefix = std::filesystem::current_path() );
+		bool AddImagesFromFile( const std::filesystem::path& filepath );
 #pragma endregion
 
 	protected:
-		bool ParseJsonFreeTexPacker( const nlohmann::json& json, std::string_view filepath_prefix = "" );
+		bool ParseJsonFreeTexPacker( const nlohmann::json& json, const std::filesystem::path& filepath_prefix = std::filesystem::current_path() );
 		bool AddImageDefinition( std::string_view image_id, std::shared_ptr<Visual::Device::Texture2D> texture, const Rect<float>& uvs );
 
 	protected:

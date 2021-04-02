@@ -2,9 +2,60 @@
 
 #include <filesystem>
 
+namespace
+{
+	static std::streamoff StreamSize( std::istream& file )
+	{
+		std::istream::pos_type current_pos = file.tellg();
+
+		if (current_pos == std::istream::pos_type( -1 ))
+			return -1;
+
+		file.seekg( 0, std::istream::end );
+		std::istream::pos_type end_pos = file.tellg();
+		file.seekg( current_pos );
+		return end_pos - current_pos;
+	}
+}
+
 namespace FileOps
 {
-	std::filesystem::path GetFileDirectory( const std::string& filepath, bool relative_to_working_directory )
+	bool StreamReadString( std::istream& file, std::string& out_file_contents )
+	{
+		std::streamoff len = StreamSize( file );
+		if (len == -1)
+			return false;
+
+		out_file_contents.resize( static_cast<std::string::size_type>(len) );
+
+		file.read( &out_file_contents[0], out_file_contents.length() );
+		return true;
+	}
+
+	bool ReadFile( const std::filesystem::path& filename, std::string& file_contents )
+	{
+		std::ifstream file( filename, std::ios::binary );
+
+		if (!file.is_open())
+			return false;
+
+		const bool success = StreamReadString( file, file_contents );
+
+		file.close();
+
+		return success;
+	}
+
+	std::vector<std::string> GetFilesInFolder( const std::filesystem::path& path )
+	{
+		auto filenames = std::vector<std::string>();
+		for (const auto& entry : std::filesystem::directory_iterator( path ))
+			filenames.emplace_back( std::move( entry.path().string() ) );
+
+		return filenames;
+	}
+
+	std::filesystem::path GetFileDirectory( const std::filesystem::path& filepath, bool relative_to_working_directory )
 	{
 		const auto working_directory = std::filesystem::current_path();
 		if( relative_to_working_directory )

@@ -50,8 +50,9 @@ namespace Resources
 		return Image::empty;
 	}
 
-	bool ImageResourceManager::AddImagesFromJson( std::string_view json_string, std::string_view filepath_prefix )
+	bool ImageResourceManager::AddImagesFromJson( std::string_view json_string, const std::filesystem::path& filepath_prefix )
 	{
+		ASSERT( std::filesystem::is_directory( filepath_prefix ) );
 		auto j = nlohmann::json::parse( json_string );
 		bool handled = false;
 
@@ -71,18 +72,21 @@ namespace Resources
 		return handled;
 	}
 
-	bool ImageResourceManager::AddImagesFromFile( std::string_view filepath )
+	bool ImageResourceManager::AddImagesFromFile( const std::filesystem::path& filepath )
 	{
+		const auto file_directory = FileOps::GetFileDirectory( filepath, true );
+
 		std::string file_contents;
 		if (FileOps::ReadFile( filepath, file_contents ))
-			return AddImagesFromJson( file_contents );
+			return AddImagesFromJson( file_contents, file_directory );
 
 		LOG_WARN( Application, "Failed to open file " );
 		return false;
 	}
 
-	bool ImageResourceManager::ParseJsonFreeTexPacker( const nlohmann::json& json, std::string_view filepath_prefix )
+	bool ImageResourceManager::ParseJsonFreeTexPacker( const nlohmann::json& json, const std::filesystem::path& filepath_prefix )
 	{
+		ASSERT( std::filesystem::is_directory( filepath_prefix ) );
 		const auto& renderer_api = Visual::Device::RendererCommand::GetRendererAPI();
 
 		std::shared_ptr<Visual::Device::Texture2D> texture;
@@ -99,7 +103,7 @@ namespace Resources
 
 			Visual::Device::Texture2D::LoadProperties props;
 			props.y_flip = true;
-			texture = renderer_api.CreateTexture2D( (std::string)filepath_prefix + texture_filename, props );
+			texture = renderer_api.CreateTexture2D( filepath_prefix / texture_filename, props );
 			if (!texture)
 				throw std::runtime_error( "Failed to load texture" );
 		}
