@@ -27,7 +27,7 @@ namespace Visual::Device::OpenGL
 	ShaderOpenGL::ShaderOpenGL( const std::filesystem::path& filepath )
 		: opengl_program_id( 0 )
 	{
-		ASSERT( std::filesystem::is_regular_file( filepath ) );
+		ASSERT( !std::filesystem::is_directory( filepath ) );
 		ASSERT( !filepath.empty(), "Empty filename!" );
 
 		const auto file_src = ReadFile( filepath );

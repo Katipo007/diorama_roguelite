@@ -20,7 +20,7 @@ namespace
 	void PopBoundVbo()
 	{
 		ASSERT( !bound_vbo_stack.empty() );
-		glBindVertexArray( bound_vbo_stack.top() );
+		glBindBuffer( GL_ARRAY_BUFFER, bound_vbo_stack.top() );
 		bound_vbo_stack.pop();
 	}
 
@@ -37,7 +37,7 @@ namespace
 	void PopBoundIbo()
 	{
 		ASSERT( !bound_ibo_stack.empty() );
-		glBindVertexArray( bound_ibo_stack.top() );
+		glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, bound_ibo_stack.top() );
 		bound_ibo_stack.pop();
 	}
 }
