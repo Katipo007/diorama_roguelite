@@ -77,12 +77,12 @@ namespace Visual
 			: NMaxQuads( max_quads )
 			, NMaxVertices( max_quads * 4 )
 			, NMaxIndices( max_quads * 6 )
-			, NMaxTextureSlots( max_texture_slots )
+			, NMaxTextureSlots( std::min( (uint32_t)32, max_texture_slots ) )
 		{
-			if (NMaxQuads > 0)
-				throw std::runtime_error( "Reported that we can't render any quads??" );
-			if (NMaxTextureSlots > 0)
-				throw std::runtime_error( "Reported that we have no texture slots??" );
+			if (NMaxQuads < 1)
+				throw std::runtime_error( "Device reported it can't render quads?" );
+			if (NMaxTextureSlots <= 1)
+				throw std::runtime_error( "Device reported not enough texture slots" );
 
 			const auto& api = Device::RendererCommand::GetRendererAPI();
 			std::shared_ptr<Device::IndexBuffer> ib;
@@ -105,10 +105,10 @@ namespace Visual
 				ib_props.indices.reserve( NMaxIndices );
 
 				// generate the indices, a repeating pattern
-				constexpr uint32_t quad_indices[] = { 0, 1, 2, 2, 3, 0 };
+				constexpr uint32_t quad_indices[] = { 0, 1, 2, 1, 3, 2 };
 				constexpr uint32_t n_quad_indices = sizeof( quad_indices ) / sizeof( quad_indices[0] );
 				uint32_t i = 0;
-				std::generate_n( std::back_inserter( ib_props.indices ), NMaxIndices, [&]() mutable { return ((i % n_quad_indices) * n_quad_indices) + quad_indices[i++ % n_quad_indices]; } );
+				std::generate_n( std::back_inserter( ib_props.indices ), NMaxIndices, [&]() mutable { return ((i / n_quad_indices) * 4) + quad_indices[i++ % n_quad_indices]; } );
 
 				ib = api.CreateIndexBuffer( ib_props );
 			}
@@ -142,12 +142,12 @@ namespace Visual
 
 			// default shader
 			{
-				auto* initial_samplers = new unsigned int[NMaxTextureSlots];
+				auto* initial_samplers = new int[NMaxTextureSlots];
 				std::iota( initial_samplers, initial_samplers + (size_t)NMaxTextureSlots, 0 ); // fill initial samplers with 0, 1, 2, 3, etc
 
 				default_shader = api.CreateShader( std::filesystem::path( "Shaders/DefaultSpriteBatchShader.glsl" ) ); // TODO: replace extention once we support multiple pipelines
 				default_shader->Bind();
-				default_shader->SetUIntArray( "u_Textures", initial_samplers, NMaxTextureSlots );
+				default_shader->SetIntArray( "u_Textures", initial_samplers, NMaxTextureSlots );
 
 				delete[] initial_samplers;
 			}
@@ -191,7 +191,7 @@ namespace Visual
 
 		data->default_shader->Bind();
 		data->default_shader->SetMat4( "u_ViewProjection", camera.GetViewProjectionMatrix() );
-		data->default_shader->SetMat4( "u_World", world_transform );
+		data->default_shader->SetMat4( "u_Model", world_transform );
 
 		data->active_shader = data->default_shader;
 
@@ -211,6 +211,11 @@ namespace Visual
 		if (data->vertex_data.empty())
 			return; // nothing currently pending
 		
+		if (data->active_shader == nullptr)
+			data->active_shader = data->default_shader;
+
+		data->active_shader->Bind();
+
 		// bind textures
 		for (uint32_t i = 0; i < data->texture_slot_index; i++)
 			data->texture_slots[i]->Bind( i );
@@ -218,7 +223,7 @@ namespace Visual
 		data->va->Bind();
 
 		// move data into the vertex buffer object
-		data->vb->SetData( data->vertex_data.data(), (uint32_t)data->vertex_data.size() );
+		data->vb->SetData( data->vertex_data.data(), (uint32_t)data->vertex_data.size() * sizeof( QuadVertex ) );
 
 		Device::RendererCommand::DrawIndexed( data->va, data->quad_index_count );
 
@@ -276,7 +281,7 @@ namespace Visual
 			NextBatch();
 
 		const auto img_size_vec = glm::vec2( img.GetSizeF().width, img.GetSizeF().height );
-		const auto min = img_size_vec * pivot;
+		const auto min = -img_size_vec * pivot;
 		const auto max = min + img_size_vec;
 
 		const auto& texture_id = FindOrAddTexture( img.GetSharedTexture() );
