@@ -19,9 +19,7 @@ namespace ClientStates
 		main_camera->SetPosition( { 0, 0, 0 } );
 		main_camera->SetAspectRatio( 1.f );
 		main_camera->SetFOV( 75.f );
-		main_camera->SetRadius( 5.f );
-
-		gameworld = std::make_unique<Game::ClientGameWorld>();
+		main_camera->SetRadius( 32.f );
 
 		chat_window.EnteredMessage.connect( &InGameState::ChatWindowSendMessageHandler, this );
 	}
@@ -45,14 +43,23 @@ namespace ClientStates
 			return fsm::Actions::TransitionTo<MainMenuState>{};
 		}
 
+		gameworld = std::make_unique<Game::ClientGameWorld>();
+
 		return fsm::Actions::NoAction();
+	}
+
+	fsm::Actions::TransitionTo<MainMenuState> InGameState::OnLeave()
+	{
+		gameworld.reset();
+
+		return fsm::Actions::TransitionTo<MainMenuState>();
 	}
 
 	fsm::Actions::TransitionTo<MainMenuState> InGameState::OnLeave( const ClientStates::DisconnectedFromServerEvent& e )
 	{
 		(void)e;
 
-		return fsm::Actions::TransitionTo<MainMenuState>{};
+		return OnLeave();
 	}
 
 	fsm::Actions::NoAction ClientStates::InGameState::HandleEvent( const FrameEvent& e )
