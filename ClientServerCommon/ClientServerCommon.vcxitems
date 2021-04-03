@@ -17,7 +17,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\Constants.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\GameWorld.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\Systems\AbstractSystem.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Zone.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Game\ZoneCommon.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)ChatConstants.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Networking\ClientServerConfig.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Networking\MessageFactory.hpp" />
