@@ -28,6 +28,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Wrappers\Networking.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Game\ZoneCommon.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Networking\ClientServerConfig.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Networking\MessageFactory.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Vendor\Wrappers\Networking.cpp" />

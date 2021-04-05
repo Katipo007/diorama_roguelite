@@ -28,6 +28,6 @@ namespace Game
 	protected:
 		const ZoneId id;
 		std::string display_name;
-		const Size<uint16_t> size; // in tiles, actual size is `size * Game::TileSize`
+		Size<uint16_t> size; // in tiles, actual size is `size * Game::TileSize`
 	};
 }
