@@ -2,7 +2,7 @@
 
 #include "Client/Sessions/ClientServerSession.hpp"
 
-#include "Visual/Resources/ImageResourceManager.hpp"
+#include "Common/Core/Resources/ResourceManager.hpp"
 #include "Visual/Device/RendererCommand.hpp"
 
 namespace
@@ -29,13 +29,13 @@ namespace Game
         static_client_game_ptr = this;
 
         // load images
-        image_resource_manager = std::make_unique<Resources::ImageResourceManager>();
-        image_resource_manager->AddImagesFromFile( "Art/2DArt/texture.json" );
+        resource_manager = std::make_unique<Resources::ResourceManager>();
+        resource_manager->Init<Resources::Image>( std::make_unique<Resources::ImageLoader>() );
     }
 
     ClientGame::~ClientGame()
     {
-        image_resource_manager.reset();
+        resource_manager.reset();
         static_client_game_ptr = nullptr;
     }
 
@@ -127,5 +127,13 @@ namespace Game
         auto e = ClientStates::DisconnectedFromServerEvent( client_server_session.get() );
         state_machine.Handle( e );
         client_server_session.reset();
+    }
+
+    Resources::ResourceManager& ClientGame::GetResourceManager() const
+    {
+        ASSERT( resource_manager );
+        if (!resource_manager)
+            throw std::runtime_error( "Client game resource manager doesn't exist!" );
+        return *resource_manager;
     }
 }
