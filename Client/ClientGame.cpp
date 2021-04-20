@@ -1,22 +1,73 @@
 #include "ClientGame.hpp"
 
-#include "Client/Sessions/ClientServerSession.hpp"
+#include "Common/Core/ResourceManager.hpp"
+#include "Common/Utility/StateMachine/StateMachine.hpp"
+#include "Common/Utility/Timestep.hpp"
 
-#include "Common/Core/Resources/ResourceManager.hpp"
 #include "Visual/Device/RendererCommand.hpp"
 
-namespace
+#include "Client/Sessions/ClientServerSession.hpp"
+
+#include "Client/States/Events.hpp"
+#include "Client/States/PreGameState.hpp"
+#include "Client/States/MainMenuState.hpp"
+#include "Client/States/JoinMultiplayerState.hpp"
+#include "Client/States/LoadingState.hpp"
+#include "Client/States/InGameState.hpp"
+
+namespace ClientStates
 {
-    static Game::ClientGame* static_client_game_ptr = nullptr;
+    using States = fsm::States<
+        PreGameState
+        , MainMenuState
+        , JoinMultiplayerState
+        , LoadingState
+        , InGameState
+    >;
+
+    using Events = fsm::Events<
+        FrameEvent
+        , RenderEvent
+        , DearImGuiFrameEvent
+        , ConnectedToServerEvent
+        , DisconnectedFromServerEvent
+    >;
+
+    using Machine = fsm::Machine<States, Events>;
+
+
+    //namespace
+    //{
+    //    Game::ClientGame* owner = NULL;
+    //    //auto Z = std::tuple<PreGameState, MainMenuState, JoinMultiplayerState, LoadingState, InGameState>();
+    //    auto X = std::make_tuple( //std::tuple<PreGameState, MainMenuState, JoinMultiplayerState, LoadingState, InGameState>(
+    //        PreGameState()
+    //        , MainMenuState( *owner )
+    //        , JoinMultiplayerState( *owner )
+    //        , LoadingState()
+    //        , InGameState( *owner )
+    //        );
+    //}
 }
 
 namespace Game
 {
-    ClientGame& Game::GetClientGame()
+    struct ClientGame::ClientData
     {
-        ASSERT( static_client_game_ptr != nullptr );
-        return *static_client_game_ptr;
-    }
+        ClientStates::Machine state_machine;
+
+        ClientData( ClientGame& owner )
+            : state_machine(
+                ClientStates::PreGameState{}
+                , ClientStates::MainMenuState{ owner }
+                , ClientStates::JoinMultiplayerState{ owner }
+                , ClientStates::LoadingState{}
+                , ClientStates::InGameState{ owner }
+            )
+        {
+            (void)owner;
+        }
+    };
 
 
     ///
@@ -24,49 +75,18 @@ namespace Game
     /// 
 
     ClientGame::ClientGame()
+        : client_data( std::make_unique<ClientData>( *this ) )
     {
-        ASSERT( static_client_game_ptr == nullptr ); // only one instance should ever exist
-        static_client_game_ptr = this;
-
-        // load images
-        resource_manager = std::make_unique<Resources::ResourceManager>();
-        resource_manager->Init<Resources::Image>( std::make_unique<Resources::ImageLoader>() );
     }
 
     ClientGame::~ClientGame()
     {
-        resource_manager.reset();
-        static_client_game_ptr = nullptr;
+        client_data.reset();
     }
 
     void ClientGame::Exit()
     {
         user_requested_exit = true;
-    }
-
-    void ClientGame::OnFrame( const PreciseTimestep& ts )
-    {
-        if (client_server_session)
-        {
-            if (client_server_session->IsDisconnected())
-                DisconnectFromServer();
-            else
-                client_server_session->Update( ts );
-        }
-
-        // TODO: Don't clear here, require individual states to clear the screen
-        Visual::Device::RendererCommand::SetClearColour( ColourRGBA( 0, 0, 0, 255 ) );
-        Visual::Device::RendererCommand::Clear();
-
-        state_machine.Handle( ClientStates::FrameEvent( ts ) );
-        state_machine.Handle( ClientStates::RenderEvent() ); // TODO: separate rendering from steps
-    }
-
-    void ClientGame::OnDearImGuiFrame()
-    {
-#ifdef DEARIMGUI_ENABLED
-        state_machine.Handle( ClientStates::DearImGuiFrameEvent() );
-#endif
     }
 
     void ClientGame::ConnectionStateChangedHandler( Sessions::ClientServerSession& sender )
@@ -77,7 +97,7 @@ namespace Game
         switch (sender.GetConnectionState())
         {
         case Sessions::ClientServerSession::ConnectionState::Connected:
-            state_machine.Handle( ClientStates::ConnectedToServerEvent( &sender ) );
+            client_data->state_machine.Handle( ClientStates::ConnectedToServerEvent( &sender ) );
             break;
 
         case Sessions::ClientServerSession::ConnectionState::Connecting:
@@ -125,15 +145,50 @@ namespace Game
 
 
         auto e = ClientStates::DisconnectedFromServerEvent( client_server_session.get() );
-        state_machine.Handle( e );
+        client_data->state_machine.Handle( e );
         client_server_session.reset();
     }
 
-    Resources::ResourceManager& ClientGame::GetResourceManager() const
+    void ClientGame::Init()
     {
-        ASSERT( resource_manager );
-        if (!resource_manager)
-            throw std::runtime_error( "Client game resource manager doesn't exist!" );
-        return *resource_manager;
+    }
+
+    void ClientGame::OnGameEnd()
+    {
+    }
+
+    void ClientGame::OnFixedUpdate( const PreciseTimestep& ts )
+    {
+        if (client_server_session)
+        {
+            if (client_server_session->IsDisconnected())
+                DisconnectFromServer();
+            else
+                client_server_session->Update( ts );
+        }
+
+        // TODO: Don't clear here, require individual states to clear the screen
+        Visual::Device::RendererCommand::SetClearColour( ColourRGBA( 0, 0, 0, 255 ) );
+        Visual::Device::RendererCommand::Clear();
+
+        client_data->state_machine.Handle( ClientStates::FrameEvent( ts ) );
+    }
+
+    void ClientGame::OnVariableUpdate( const PreciseTimestep& ts )
+    {
+        (void)ts;
+    }
+
+    void ClientGame::OnRender( const PreciseTimestep& ts )
+    {
+        (void)ts; // TODO: use
+        client_data->state_machine.Handle( ClientStates::RenderEvent() );
+    }
+
+    void ClientGame::DoDearImGuiFrame()
+    {
+#ifdef DEARIMGUI_ENABLED
+        client_data->state_machine.Handle( ClientStates::DearImGuiFrameEvent() );
+#endif
     }
 }

@@ -13,7 +13,8 @@
 
 namespace ClientStates
 {
-	InGameState::InGameState()
+	InGameState::InGameState( Game::ClientGame& _client )
+		: client( _client )
 	{
 		main_camera = std::make_shared<Visual::SphericalCamera>();
 		main_camera->SetPosition( { 0, 0, 0 } );
@@ -26,6 +27,8 @@ namespace ClientStates
 		chat_window.EnteredMessage.connect( &InGameState::ChatWindowSendMessageHandler, this );
 	}
 
+	InGameState::InGameState( InGameState&& to_move ) = default;
+
 	InGameState::~InGameState()
 	{
 		chat_window.EnteredMessage.disconnect( &InGameState::ChatWindowSendMessageHandler, this );
@@ -36,12 +39,12 @@ namespace ClientStates
 
 	fsm::Actions::Might<fsm::Actions::TransitionTo<MainMenuState>> InGameState::OnEnter()
 	{
-		client_server_session = Game::GetClientGame().GetClientServerSession();
+		client_server_session = client.GetClientServerSession();
 
 		if (client_server_session == nullptr)
 		{
 			LOG_ERROR( Client, "Expected to have a session when entering InGameState!" );
-			Game::GetClientGame().DisconnectFromServer();
+			client.DisconnectFromServer();
 			return fsm::Actions::TransitionTo<MainMenuState>{};
 		}
 

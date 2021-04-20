@@ -9,6 +9,7 @@
 #include "Visual/DearImGui/DearImGui.hpp"
 
 #include "Common/Core/Base.hpp"
+#include "Common/Core/Core.hpp"
 #include "Common/Utility/OsAbstraction.hpp"
 #include "Common/Utility/Timestep.hpp"
 
@@ -16,7 +17,7 @@
 #include "ClientServerCommon/Vendor/Wrappers/Networking.hpp"
 
 std::unique_ptr<Visual::Device::Window> main_window;
-std::unique_ptr<Game::ClientGame> client_game;
+std::unique_ptr<Core> core;
 
 bool running = true;
 bool user_wants_to_exit = false;
@@ -159,57 +160,20 @@ int main( int argc, char** argv )
 	//
 	InputManager::SetWindowHandle( main_window->GetNativeWindow() );
 	
-	client_game.reset( new Game::ClientGame() );
-
+	core = std::make_unique<Core>( std::make_unique<Game::ClientGame>() );
 
 	// ============================================
 	// main loop
 	// ============================================
-	// TODO: refactor to use fixed timesteps
+	core->Dispatch();
 
-	LOG_INFO( Application, "Application setup complete, starting main loop" );
-	auto last_frame_time = main_window->GetApplicationTime();
-	while (running)
-	{
-		const auto time = main_window->GetApplicationTime();
-		PreciseTimestep timestep( time,  time - last_frame_time );
-		last_frame_time = time;
-
-		main_window->OnUpdateBegin();
-#ifdef DEARIMGUI_ENABLED
-		if (DearImGui::IsEnabled())
-			ImGui::NewFrame();
-#endif
-
-		client_game->OnFrame( timestep );
-
-#ifdef DEARIMGUI_ENABLED
-		if (DearImGui::IsEnabled())
-		{
-			client_game->OnDearImGuiFrame();
-
-			ImGui::Render();
-		}
-#endif
-		main_window->OnUpdateEnd();
-
-		user_wants_to_exit |= client_game->ShouldExit();
-
-		if (user_wants_to_exit) // TODO: any other pre-conditions here
-			running = false;
-	}
-
-	LOG_INFO( Application, "Application loop finished, exiting" );
-
-	//
-	// clear
-	//
-	{
-		client_game.reset();
-		Visual::Renderer::Shutdown();
-		main_window.reset();
-		InputManager::SetWindowHandle( NULL );
-	}
+	// ============================================
+	// cleanup
+	// ============================================
+	core.reset();
+	Visual::Renderer::Shutdown();
+	main_window.reset();
+	InputManager::SetWindowHandle( NULL );
 
 	//
 	// Shutdown Yojimbo

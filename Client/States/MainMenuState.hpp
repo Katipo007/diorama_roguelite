@@ -4,7 +4,11 @@
 #include "Common/Utility/StateMachine/DefaultAction.hpp"
 #include "Common/Utility/StateMachine/Actions/Might.hpp"
 #include "Common/Utility/StateMachine/Actions/TransitionTo.hpp"
-#include "Common/Utility/NonCopyable.hpp"
+
+namespace Game
+{
+	class ClientGame;
+}
 
 namespace ClientStates
 {
@@ -15,7 +19,6 @@ namespace ClientStates
 	/// </summary>
 	class MainMenuState
 		: public fsm::DefaultAction<fsm::Actions::NoAction>
-		, NonCopyable
 	{
 		using OutTransitionActions = fsm::Actions::Might<
 			fsm::Actions::TransitionTo<JoinMultiplayerState>
@@ -24,12 +27,18 @@ namespace ClientStates
 	public:
 		using fsm::DefaultAction<fsm::Actions::NoAction>::HandleEvent;
 
-		explicit MainMenuState();
+		explicit MainMenuState( Game::ClientGame& client );
+		explicit MainMenuState( MainMenuState&& to_move ) = default;
 		virtual ~MainMenuState();
 
 		fsm::Actions::NoAction HandleEvent( const FrameEvent& e );
 		OutTransitionActions HandleEvent( const DearImGuiFrameEvent& e );
 
 	protected:
+		Game::ClientGame& client;
+
+	private:
+		MainMenuState( const MainMenuState& ) = delete;
+		MainMenuState operator=( const MainMenuState& ) = delete;
 	};
 }

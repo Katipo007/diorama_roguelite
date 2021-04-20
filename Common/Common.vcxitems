@@ -16,12 +16,15 @@
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)CompileTime\PlatformDetection.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\Base.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\Core.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\AbstractGame.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\Resources\IResourceLoader.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\Resources\Resource.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\Resources\ResourceCache.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\Resources\ResourceHandle.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Core\Resources\ResourceManager.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\ResourceManager.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\Resources\ResourceTypes.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\Resources\StandardResources.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Deployment\Deployment.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\Assert.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)File\Filepath.hpp" />
@@ -58,8 +61,10 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\enumclassbitset\EnumClassBitset.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Core\Core.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Core\Resources\ResourceCache.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Core\Resources\ResourceManager.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Core\ResourceManager.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Core\Resources\StandardResources.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Utility\FileOps.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Core\Logging.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Utility\StateMachine\example.cpp" />

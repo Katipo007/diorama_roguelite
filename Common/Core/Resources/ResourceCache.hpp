@@ -6,11 +6,12 @@
 
 #include "ResourceTypes.hpp"
 
+class ResourceManager;
+
 namespace Resources
 {
 	class Resource;
 	class IResourceLoader;
-	class ResourceManager;
 
 	class BaseResourceCache
 	{

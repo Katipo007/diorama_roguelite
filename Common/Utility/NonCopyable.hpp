@@ -1,8 +1,11 @@
 #pragma once
 
-struct NonCopyable
+class NonCopyable
 {
+protected:
 	NonCopyable() = default;
+
+private:
 	NonCopyable( const NonCopyable& ) = delete;
 	NonCopyable operator=( const NonCopyable& ) = delete;
 };

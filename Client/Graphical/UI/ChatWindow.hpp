@@ -10,6 +10,8 @@ namespace UI
 
 	public:
 		ChatWindow();
+		ChatWindow( const ChatWindow& to_copy ) = default;
+		ChatWindow( ChatWindow&& to_move ) = default;
 		virtual ~ChatWindow();
 
 		// returns true if we just sent a message

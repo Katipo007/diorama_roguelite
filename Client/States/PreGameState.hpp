@@ -4,7 +4,6 @@
 #include "Common/Utility/StateMachine/DefaultAction.hpp"
 #include "Common/Utility/StateMachine/Actions/Might.hpp"
 #include "Common/Utility/StateMachine/Actions/TransitionTo.hpp"
-#include "Common/Utility/NonCopyable.hpp"
 
 namespace ClientStates
 {
@@ -15,16 +14,20 @@ namespace ClientStates
 	/// </summary>
 	class PreGameState final
 		: public fsm::DefaultAction<fsm::Actions::NoAction>
-		, NonCopyable
 	{
 	public:
 		using fsm::DefaultAction<fsm::Actions::NoAction>::HandleEvent;
 
 		explicit PreGameState();
+		explicit PreGameState( PreGameState&& to_move ) = default;
 		~PreGameState();
 
 		fsm::Actions::Might<fsm::Actions::TransitionTo<MainMenuState>> HandleEvent( const FrameEvent& e );
 
 	protected:
+
+	private:
+		PreGameState( const PreGameState& ) = delete;
+		PreGameState operator=( const PreGameState& ) = delete;
 	};
 }

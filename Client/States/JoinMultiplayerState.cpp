@@ -6,7 +6,8 @@
 
 namespace ClientStates
 {
-	JoinMultiplayerState::JoinMultiplayerState()
+	JoinMultiplayerState::JoinMultiplayerState( Game::ClientGame& _client )
+		: client( _client )
 	{
 	}
 
@@ -18,7 +19,7 @@ namespace ClientStates
 	{
 		(void)e;
 
-		if (const auto* client_server_session = Game::GetClientGame().GetClientServerSession())
+		if (const auto* client_server_session = client.GetClientServerSession())
 		{
 			const auto connection_state = client_server_session->GetConnectionState();
 			switch (connection_state)
@@ -49,7 +50,7 @@ namespace ClientStates
 		{
 			ImGui::Text( "Join Multiplayer" );
 
-			const bool is_connecting = Game::GetClientGame().GetClientServerSession() != nullptr;
+			const bool is_connecting = client.GetClientServerSession() != nullptr;
 			if (is_connecting)
 				ImGui::PushStyleVar( ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f );
 
@@ -108,21 +109,19 @@ namespace ClientStates
 
 	void JoinMultiplayerState::InitiateConnection( std::string address_str )
 	{
-		auto& game = Game::GetClientGame();
-		const auto* session = game.GetClientServerSession();
+		const auto* session = client.GetClientServerSession();
 		ASSERT( session == nullptr );
 		if (session != nullptr)
 			return;
 
 		auto address = yojimbo::Address( address_str.c_str() );
-		game.ConnectToServer( address );
+		client.ConnectToServer( address );
 	}
 
 	void JoinMultiplayerState::CancelConnection()
 	{
-		auto& game = Game::GetClientGame();
-		const auto* session = game.GetClientServerSession();
+		const auto* session = client.GetClientServerSession();
 		if (session != nullptr)
-			game.DisconnectFromServer();
+			client.DisconnectFromServer();
 	}
 }

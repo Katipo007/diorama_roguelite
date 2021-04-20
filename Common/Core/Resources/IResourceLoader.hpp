@@ -1,10 +1,11 @@
 #pragma once
 
+class ResourceManager;
+
 namespace Resources
 {
 	enum class AssetType;
 	class Resource;
-	class ResourceManager;
 
 	class IResourceLoader
 	{

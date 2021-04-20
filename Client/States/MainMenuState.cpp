@@ -11,7 +11,8 @@ namespace
 
 namespace ClientStates
 {
-	MainMenuState::MainMenuState()
+	MainMenuState::MainMenuState( Game::ClientGame& _client )
+		: client( _client )
 	{
 	}
 
@@ -42,7 +43,7 @@ namespace ClientStates
 
 			if (ImGui::Button( "Exit" ))
 			{
-				Game::GetClientGame().Exit();
+				client.Exit();
 			}
 
 			ImGui::End();

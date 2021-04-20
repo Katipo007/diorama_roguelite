@@ -4,18 +4,12 @@
 #include <type_traits>
 #include <queue>
 
+#include "Common/Core/AbstractGame.hpp"
 #include "Common/Utility/NonCopyable.hpp"
-#include "Common/Utility/StateMachine/StateMachine.hpp"
 #include "Common/Utility/Timestep.hpp"
 
-#include "Client/States/Events.hpp"
-#include "Client/States/PreGameState.hpp"
-#include "Client/States/MainMenuState.hpp"
-#include "Client/States/JoinMultiplayerState.hpp"
-#include "Client/States/LoadingState.hpp"
-#include "Client/States/InGameState.hpp"
-
-int main( int, char** );
+class Core;
+class ResourceManager;
 
 namespace yojimbo
 {
@@ -27,44 +21,21 @@ namespace Sessions
 	class ClientServerSession;
 }
 
-namespace Resources
-{
-	class ResourceManager;
-}
-
-namespace ClientStates
-{
-	using States = fsm::States<
-		  PreGameState
-		, MainMenuState
-		, JoinMultiplayerState
-		, LoadingState
-		, InGameState
-	>;
-
-	using Events = fsm::Events<
-		  FrameEvent
-		, RenderEvent
-		, DearImGuiFrameEvent
-		, ConnectedToServerEvent
-		, DisconnectedFromServerEvent
-	>;
-
-	using Machine = fsm::Machine<States, Events>;
-}
-
 namespace Game
 {
 	class ClientGame final
-		: NonCopyable
+		: public AbstractGame
+		, NonCopyable
 	{
-		friend int ::main( int, char** );
+		friend class ::Core;
 
 	public:
+		explicit ClientGame();
 		~ClientGame();
 
-		bool ShouldExit() const { return user_requested_exit; }
 		void Exit();
+
+		ResourceManager& GetResourceManager() const { return *resource_manager; }
 
 		//
 		// Client server session management
@@ -74,23 +45,26 @@ namespace Game
 		void ConnectToServer( const yojimbo::Address& address );
 		void DisconnectFromServer();
 
-		Resources::ResourceManager& GetResourceManager() const;
-
 	protected:
-		ClientGame(); // for entry point to call
+		virtual void Init() override;
+		virtual void OnGameEnd() override;
 
-		void OnFrame( const PreciseTimestep& ts ); // for entry point to call
-		void OnDearImGuiFrame();
+		virtual void OnFixedUpdate( const PreciseTimestep& ts ) override;
+		virtual void OnVariableUpdate( const PreciseTimestep& ts ) override;
+		virtual void OnRender( const PreciseTimestep& ts ) override;
+		void DoDearImGuiFrame();
 
 		void ConnectionStateChangedHandler( Sessions::ClientServerSession& sender );
 
 	protected:
 		std::unique_ptr<Sessions::ClientServerSession> client_server_session;
-		std::unique_ptr<Resources::ResourceManager> resource_manager;
+		Core* core = nullptr;
+		ResourceManager* resource_manager = nullptr;
 
-		ClientStates::Machine state_machine;
 		bool user_requested_exit = false;
-	};
 
-	ClientGame& GetClientGame();
+	private:
+		struct ClientData;
+		std::unique_ptr<ClientData> client_data;
+	};
 }

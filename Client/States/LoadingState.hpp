@@ -21,12 +21,12 @@ namespace ClientStates
 	/// </summary>
 	class LoadingState
 		: public fsm::DefaultAction<fsm::Actions::NoAction>
-		, NonCopyable
 	{
 	public:
 		using fsm::DefaultAction<fsm::Actions::NoAction>::HandleEvent;
 
 		explicit LoadingState();
+		explicit LoadingState( LoadingState&& to_move ) = default;
 		virtual ~LoadingState();
 
 		fsm::Actions::NoAction OnEnter( const ConnectedToServerEvent& e );
@@ -39,5 +39,9 @@ namespace ClientStates
 		fsm::Actions::TransitionTo<MainMenuState> HandleEvent( const DisconnectedFromServerEvent& e );
 
 	protected:
+
+	private:
+		LoadingState( const LoadingState& ) = delete;
+		LoadingState operator=( const LoadingState& ) = delete;
 	};
 }

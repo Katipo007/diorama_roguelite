@@ -17,6 +17,7 @@ namespace Visual
 
 namespace Game
 {
+	class ClientGame;
 	class PlayerObject;
 	class ClientGameWorld;
 }
@@ -32,12 +33,12 @@ namespace ClientStates
 
 	class InGameState
 		: public fsm::DefaultAction<fsm::Actions::NoAction>
-		, NonCopyable
 	{
 	public:
 		using fsm::DefaultAction<fsm::Actions::NoAction>::HandleEvent;
 
-		explicit InGameState();
+		explicit InGameState( Game::ClientGame& client );
+		explicit InGameState( InGameState&& to_move );
 		virtual ~InGameState();
 
 		fsm::Actions::Might<fsm::Actions::TransitionTo<MainMenuState>> OnEnter();
@@ -56,10 +57,15 @@ namespace ClientStates
 
 		void ChatWindowSendMessageHandler( std::string_view msg );
 
+		Game::ClientGame& client;
 		Sessions::ClientServerSession* client_server_session = nullptr;
 
 		UI::ChatWindow chat_window;
 		std::shared_ptr<Visual::SphericalCamera> main_camera;
 		std::unique_ptr<Game::ClientGameWorld> gameworld; // TODO: refactor into client session
+
+	private:
+		InGameState( const InGameState& ) = delete;
+		InGameState operator=( const InGameState& ) = delete;
 	};
 }
