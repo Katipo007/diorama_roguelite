@@ -43,6 +43,15 @@ namespace fsm
 		template <typename T, typename... Us>
 		struct has_type<T, std::tuple<Us...>> : or_<std::is_same<T, Us>...> {};
 
+		template< bool... Bs >
+		using bool_sequence = std::integer_sequence< bool, Bs... >;
+
+		template< bool... Bs >
+		using bool_and = std::is_same< bool_sequence< Bs... >,
+			bool_sequence< (Bs || true)... > >;
+
+		template< bool... Bs >
+		using bool_or = std::integral_constant< bool, !bool_and< !Bs... >::value >;
 
 		template <class T, class Tuple>
 		struct index
@@ -75,6 +84,8 @@ namespace fsm
 	template<typename... _States, typename... _Events>
 	class Machine<States<_States...>, Events<_Events...>>
 	{
+		static_assert(detail::bool_and< std::is_move_constructible< _States >::value... >::value, "All state types must be movable");
+
 		// Allow TransitionTo action to access protected members so it can call TransitionTo method
 		template<typename>
 		friend class Actions::TransitionTo;
@@ -83,11 +94,19 @@ namespace fsm
 	public:
 		using EventsVariant_T = std::variant<_Events...>;
 
-		Machine() : states(), current_state( &std::get<0>( states ) ) {}
+		Machine()
+			: states()
+			, current_state( &std::get<0>( states ) )
+		{}
 		virtual ~Machine() noexcept {}
 
 		// contruct the machine with pre-created states
-		Machine( _States&&... states_ ) : states( std::forward<_States>( states_ )... ) , current_state( &std::get<0>( states ) ) {}
+		template<typename = typename std::enable_if_t< detail::bool_and< std::is_move_constructible< _States >::value... >::value> >
+		explicit Machine( _States&&... states_ )
+			: states( std::forward<_States>( states_ )... )
+			, current_state( &std::get<0>( states ) )
+		{
+		}
 
 		// We don't support copy constructors yet :(
 		Machine( const Machine& ) = delete;

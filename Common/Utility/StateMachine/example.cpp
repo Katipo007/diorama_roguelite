@@ -53,7 +53,7 @@ namespace example
 	public:
 		using DefaultAction<Actions::NoAction>::HandleEvent;
 
-		LockedState( int key_ )
+		explicit LockedState( int key_ )
 			: key( key_ )
 		{}
 
@@ -88,7 +88,7 @@ namespace example
 	
 	void DoorExample()
 	{
-		Door door = Door{ ClosedState{}, OpenState{}, LockedState{0} };
+		Door door = Door( ClosedState{}, OpenState{}, LockedState{0} );
 
 		door.Handle( LockEvent{ 123 } );
 		door.Handle( LockEvent{ 123 } );
