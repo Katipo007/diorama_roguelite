@@ -15,9 +15,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)CompileTime\PlatformDetection.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\API\APITypesEnum.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\API\InputAPI.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\API\InternalAPI.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\API\SystemAPI.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\Base.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\Core.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\AbstractGame.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\API\VideoAPI.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\Resources\IResourceLoader.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\Resources\Resource.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\Resources\ResourceCache.hpp" />

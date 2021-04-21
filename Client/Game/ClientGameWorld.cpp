@@ -14,11 +14,12 @@ namespace Game
 	/// ClientGameWorld
 	/// 
 	
-	ClientGameWorld::ClientGameWorld()
+	ClientGameWorld::ClientGameWorld( ResourceManager& _resources )
 		: GameWorld()
+		, resources( _resources )
 	{
 		sprite_renderer = std::make_unique<Visual::SpriteBatcher>();
-		player = std::make_unique<PlayerObject>();
+		player = std::make_unique<PlayerObject>( _resources );
 	}
 
 	ClientGameWorld::~ClientGameWorld()
@@ -59,7 +60,7 @@ namespace Game
 		/// Draw player specificly
 		{
 			ASSERT( player );
-			sprite_renderer->DrawStandingImage( player->GetImage(), { 0.f, 0.f, 0.f } );
+			sprite_renderer->DrawStandingImage( *player->GetImage(), { 0.f, 0.f, 0.f } );
 		}
 	}
 }

@@ -2,7 +2,10 @@
 
 #include <memory>
 
+#include "Common/Core/Resources/ResourceHandle.hpp"
 #include "Visual/Resources/Image.hpp"
+
+class ResourceManager;
 
 namespace Game
 {
@@ -14,12 +17,12 @@ namespace Game
 	class PlayerObject
 	{
 	public:
-		PlayerObject();
+		PlayerObject( ResourceManager& resources );
 		virtual ~PlayerObject();
 
-		const Resources::Image& GetImage() const { return image; }
+		const Resources::ResourceHandle<Resources::Image>& GetImage() const { return image; }
 
 	protected:
-		Resources::Image image;
+		Resources::ResourceHandle<Resources::Image> image;
 	};
 }

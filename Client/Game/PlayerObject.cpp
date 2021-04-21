@@ -1,6 +1,7 @@
 #include "PlayerObject.hpp"
 
 #include "ClientGame.hpp"
+#include "Common/Core/ResourceManager.hpp"
 #include "Visual/Resources/ImageResourceManager.hpp"
 
 #include "Visual/Device/RendererCommand.hpp"
@@ -13,9 +14,10 @@
 
 namespace Game
 {
-	PlayerObject::PlayerObject()
+	PlayerObject::PlayerObject( ResourceManager& _resources )
 	{
-		image = Game::GetClientGame().GetResourceImageManager().GetImageById( "2DArt/NPCs/OldWizard" );
+		(void)_resources;
+		//image = _resources.Get<Resources::Image>( "2DArt/NPCs/OldWizard" );
 		ASSERT( image );
 	}
 

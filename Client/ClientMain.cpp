@@ -1,12 +1,8 @@
 
 #include <iostream>
 
-#include "Visual/Device/Window.hpp"
-#include "Visual/Renderer.hpp"
-#include "Visual/Input/Input.hpp"
-#include "Visual/Events/ApplicationEvents.hpp"
-#include "Visual/Events/KeyboardEvents.hpp"
-#include "Visual/DearImGui/DearImGui.hpp"
+#include "Visual/Plugins/OpenGL/VideoOpenGL.hpp"
+#include "Visual/Plugins/SDL2/SystemSDL2.hpp"
 
 #include "Common/Core/Base.hpp"
 #include "Common/Core/Core.hpp"
@@ -16,50 +12,8 @@
 #include "Client/ClientGame.hpp"
 #include "ClientServerCommon/Vendor/Wrappers/Networking.hpp"
 
-std::unique_ptr<Visual::Device::Window> main_window;
 std::unique_ptr<Core> core;
 
-bool running = true;
-bool user_wants_to_exit = false;
-
-namespace VD = Visual::Device;
-
-static void WindowEventHandler( Visual::Device::Event& application_event )
-{
-	Visual::Device::EventDispatcher d( application_event );
-	d.Dispatch< VD::ApplicationEvents::WindowClose >( [&]( VD::ApplicationEvents::WindowClose& e ) -> bool
-		{
-			(void)e;
-			user_wants_to_exit = true;
-			return false;
-		} );
-
-	d.Dispatch< VD::ApplicationEvents::WindowResized >( [&]( VD::ApplicationEvents::WindowResized& e ) -> bool
-		{
-#ifdef DEARIMGUI_ENABLED
-			ImGuiIO& io = ImGui::GetIO();
-			io.DisplaySize = ImVec2( (float)e.GetSender().GetWidth(), (float)e.GetSender().GetHeight() );
-#endif
-
-			Visual::Renderer::OnWindowResize( e.GetWidth(), e.GetHeight() );
-
-			return false;
-		} );
-
-	d.Dispatch< VD::KeyboardEvents::KeyPressed >( [&]( VD::KeyboardEvents::KeyPressed& e ) -> bool
-		{
-			bool handled = false;
-#ifdef DEARIMGUI_ENABLED
-			if (e.GetKeyCode() == Input::Key::F2 && e.GetRepeatCount() == 0)
-			{
-				DearImGui::SetEnabled( !DearImGui::IsEnabled() );
-				handled |= true;
-			}
-#endif
-
-			return handled;
-		} );
-}
 
 static int YojimboLoggingRoute( const char* fmt, ... )
 {
@@ -82,33 +36,15 @@ int main( int argc, char** argv )
 	(void)argc;
 	(void)argv;
 
-	Logging::InitDefaultClientSinks();
+	Logging::InitDefaultClientSinks(); // TODO: move logging into a plugin
 
 	LOG_INFO( Application, "Client starting" );
-	
-#ifdef DEARIMGUI_ENABLED
-	//
-	// setup imgui
-	//
-	ImGuiContext* imgui_context = NULL;
-	{
-		IMGUI_CHECKVERSION();
-		imgui_context = ImGui::CreateContext();
-		ImGui::SetCurrentContext( imgui_context );
-
-		ImGuiIO& io = ImGui::GetIO(); (void)io;
-		//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-		//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
-
-		io.IniFilename = NULL; // don't save settings
-		ImGui::StyleColorsDark();
-	}
-#endif
 
 	//
 	// Setup Yojimbo
 	//
 	{
+		// TODO: move Yojimbo into a plugin
 		if (!InitializeYojimbo())
 		{
 			LOG_CRITICAL( Client, "Critical Error: failed to initialize Yojimbo!" );
@@ -120,76 +56,38 @@ int main( int argc, char** argv )
 #endif
 		yojimbo_set_printf_function( YojimboLoggingRoute );
 	}
-
-	//
-	// Setup window
-	//
-	{
-		LOG_INFO( Application, "Creating application window" );
-		Visual::Device::Window::WindowCreationProperties window_props;
-		window_props.title = "Client";
-		window_props.width = 640;
-		window_props.height = 480;
-		window_props.renderer_api = RendererAPIs::API::OpenGL; // TODO: determine this automatically and/or pull from configuration file
-
-#ifndef _DEBUG
-		window_props.fullscreen = true;
-#endif
-
-		try
-		{
-			main_window = VD::Window::Create( window_props );
-			main_window->SetEventCallback( &WindowEventHandler );
-		}
-		catch (std::runtime_error& e)
-		{
-			LOG_CRITICAL( Application, "Error creating window: {0}", e.what() );
-			OS::ShowMessageBox( "Failed to create the application window", "Error", OS::MessageBoxTypes::Error );
-			main_window.reset();
-			return -1;
-		}
-
-		ASSERT( main_window );
-	}
-
-	Visual::Renderer::Init();
-	Visual::Renderer::SetDevice( main_window.get() );
-
-	//
-	// setup managers
-	//
-	InputManager::SetWindowHandle( main_window->GetNativeWindow() );
 	
-	core = std::make_unique<Core>( std::make_unique<Game::ClientGame>() );
+	// ============================================
+	// construct core
+	// ============================================
+	{
+		// TODO: swap plugins based on system
+
+		std::unordered_map<API::APIType, API::InternalAPI> plugin_factories;
+		plugin_factories[API::APIType::System] = []( API::SystemAPI* ) { return new Graphics::API::SystemSDL2(); };
+		plugin_factories[API::APIType::Video] = []( API::SystemAPI* system ) { return new Graphics::API::VideoOpenGL( system ); };
+
+		core = std::make_unique<Core>( std::make_unique<Game::ClientGame>(), plugin_factories );
+	}
 
 	// ============================================
 	// main loop
 	// ============================================
-	core->Dispatch();
+	{
+		core->Dispatch();
+	}
 
 	// ============================================
 	// cleanup
 	// ============================================
-	core.reset();
-	Visual::Renderer::Shutdown();
-	main_window.reset();
-	InputManager::SetWindowHandle( NULL );
+	{
+		core.reset();
+	}
 
 	//
 	// Shutdown Yojimbo
 	//
 	ShutdownYojimbo();
-
-#ifdef DEARIMGUI_ENABLED
-	//
-	// shutdown imgui
-	//
-	if (imgui_context != NULL)
-	{
-		ImGui::DestroyContext( imgui_context );
-		imgui_context = NULL;
-	}
-#endif
 
 	LOG_INFO( Application, "Client finished" );
 	return 0;

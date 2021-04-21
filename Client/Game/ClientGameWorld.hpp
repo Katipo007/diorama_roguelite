@@ -2,6 +2,8 @@
 
 #include "ClientServerCommon/Game/GameWorld.hpp"
 
+class ResourceManager;
+
 namespace Visual
 {
 	class Camera;
@@ -16,7 +18,7 @@ namespace Game
 		: public GameWorld
 	{
 	public:
-		ClientGameWorld();
+		ClientGameWorld( ResourceManager& resources );
 		~ClientGameWorld();
 
 		PlayerObject* GetPlayerObject() { return player.get(); }
@@ -31,6 +33,8 @@ namespace Game
 		void RenderGameObjects() const;
 
 	protected:
+		ResourceManager& resources;
+
 		std::unique_ptr<PlayerObject> player;
 		std::unique_ptr<Visual::SpriteBatcher> sprite_renderer;
 	};

@@ -48,7 +48,7 @@ namespace ClientStates
 			return fsm::Actions::TransitionTo<MainMenuState>{};
 		}
 
-		gameworld = std::make_unique<Game::ClientGameWorld>();
+		gameworld = std::make_unique<Game::ClientGameWorld>( client.GetResourceManager() );
 
 		return fsm::Actions::NoAction();
 	}

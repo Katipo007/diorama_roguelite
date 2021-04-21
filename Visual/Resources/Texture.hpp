@@ -1,32 +1,25 @@
 #pragma once
 
-#include "Common/Geometry/Size.hpp"
+#include <cinttypes>
+
 #include "Common/Core/Resources/Resource.hpp"
-#include "Common/Core/Resources/ResourceTypes.hpp"
+#include "Common/Geometry/Size.hpp"
 
-namespace Visual::Device
+namespace Graphics
 {
-	class Texture2D;
-}
-
-namespace Resources
-{
+	/// <summary>
+	/// A standard 2D texture
+	/// </summary>
 	class Texture
-		: public Resource
+		: public Resources::Resource
 	{
 	public:
-		Texture( Size<uint16_t> size );
-		virtual ~Texture();
+		Texture( Size<uint32_t> size );
+		virtual ~Texture() = default;
 
-		constexpr static AssetType GetResourceType() { return AssetType::Texture; }
-
-		static std::shared_ptr<Texture> LoadResource( IResourceLoader& loader );
-
-		std::shared_ptr<const Visual::Device::Texture2D> GetDeviceTexture() const { return device_texture; }
-		const Size<uint16_t>& GetSize() const { return size; }
+		virtual Size<uint32_t> GetSize() const { return size; }
 
 	protected:
-		std::shared_ptr<const Visual::Device::Texture2D> device_texture;
-		const Size<uint16_t> size;
+		Size<uint32_t> size;
 	};
 }
