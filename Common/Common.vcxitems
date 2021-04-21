@@ -30,6 +30,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\ResourceManager.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\Resources\ResourceTypes.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\Resources\StandardResources.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)DataTypes\Bytes.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Deployment\Deployment.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\Assert.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)File\Filepath.hpp" />

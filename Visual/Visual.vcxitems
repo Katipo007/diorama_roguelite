@@ -24,7 +24,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Device\RendererAPI.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Device\RendererCapabilities.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Device\RendererCommand.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Device\Shader.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Resources\Shader.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\SDL2\SystemSDL2.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Resources\Texture.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Device\VertexArray.hpp" />
