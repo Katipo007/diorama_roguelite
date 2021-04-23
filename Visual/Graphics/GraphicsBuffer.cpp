@@ -2,7 +2,7 @@
 
 #include "Common/Core/Assert.hpp"
 
-namespace Visual::Device
+namespace Graphics
 {
     uint32_t ShaderDataTypeSize( const ShaderDataType& type )
     {

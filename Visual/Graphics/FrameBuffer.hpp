@@ -2,7 +2,7 @@
 
 #include <cinttypes>
 
-namespace Visual::Device
+namespace Graphics
 {
 	class FrameBuffer
 	{

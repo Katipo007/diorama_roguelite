@@ -39,7 +39,77 @@ namespace Visual::Device::OpenGL
 
 	void RendererAPIOpenGL::Init()
 	{
-		
+		//glewExperimental = GL_TRUE;
+		const auto init_result = glewInit();
+		ASSERT( init_result == GLEW_OK );
+
+#ifdef _DEBUG
+		glEnable( GL_DEBUG_OUTPUT );
+		glEnable( GL_DEBUG_OUTPUT_SYNCHRONOUS );
+		glDebugMessageCallback( OpenGLMessageCallback, nullptr );
+
+		glDebugMessageControl( GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, NULL, GL_FALSE );
+#endif
+
+		glEnable( GL_BLEND );
+		glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+
+		glEnable( GL_DEPTH_TEST );
+		glDepthFunc( GL_LEQUAL );
+
+
+		// TEMP
+		glDisable( GL_CULL_FACE );
+
+		// fetch and store capabilities
+		{
+			// clear
+			memset( &cached_capabilities, 0, sizeof( cached_capabilities ) );
+
+			{
+				// max number of textures we can bind at once
+				{
+					int value = 0;
+					glGetIntegerv( GL_MAX_TEXTURE_IMAGE_UNITS, &value );
+					ASSERT( value >= 0 ); // hopefully never a negative number
+
+					// hopefully they can support at least two textures
+					if( value < 2 )
+						value = 2;
+
+					cached_capabilities.max_texture_slots = static_cast<uint32_t>( value );
+				}
+
+				// max 1d/2d texture resolution
+				{
+					int value = 0;
+					glGetIntegerv( GL_MAX_TEXTURE_SIZE, &value );
+					cached_capabilities.max_texture_2d_width = cached_capabilities.max_texture_2d_height = value;
+				}
+
+				// max 3d texture resolution
+				{
+					int value = 0;
+					glGetIntegerv( GL_MAX_3D_TEXTURE_SIZE, &value );
+					cached_capabilities.max_texture_3d_width = cached_capabilities.max_texture_3d_height = cached_capabilities.max_texture_3d_depth = value;
+				}
+
+				// max cube-map resolution
+				{
+					int value = 0;
+					glGetIntegerv( GL_MAX_CUBE_MAP_TEXTURE_SIZE, &value );
+					cached_capabilities.max_texture_cubemap_width = cached_capabilities.max_texture_cubemap_height = value;
+				}
+
+				// max number of texture coordinates supported
+				{
+					int value = 0;
+					glGetIntegerv( GL_MAX_TEXTURE_COORDS, &value );
+					cached_capabilities.max_texture_coordinates = value;
+				}
+
+			}
+		}
 	}
 
 	void RendererAPIOpenGL::Shutdown()

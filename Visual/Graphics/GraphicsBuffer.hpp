@@ -3,7 +3,7 @@
 #include <cinttypes>
 #include <string>
 
-namespace Visual::Device
+namespace Graphics
 {
 	enum class ShaderDataType
 	{

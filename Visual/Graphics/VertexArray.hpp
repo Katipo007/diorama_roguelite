@@ -1,21 +1,21 @@
 #pragma once
 
 #include <memory>
+#include <optional>
 #include <vector>
 #include "GraphicsBuffer.hpp"
 
-namespace Visual::Device
+namespace Graphics
 {
+	struct VertexArrayDefinition
+	{
+		std::optional<std::string> name;
+		std::vector<std::shared_ptr<VertexBuffer>> vertex_buffers;
+		std::shared_ptr<IndexBuffer> index_buffer;
+	};
+
 	class VertexArray
 	{
-	public:
-		struct CreationProperties
-		{
-			std::string name; ///< Optional
-			std::vector<std::shared_ptr<VertexBuffer>> vertex_buffers;
-			std::shared_ptr<IndexBuffer> index_buffer;
-		};
-
 	public:
 		virtual ~VertexArray() {}
 

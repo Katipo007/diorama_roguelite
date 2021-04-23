@@ -1,13 +1,24 @@
 #pragma once
 
 #include <string>
+#include "Common/File/Filepath.hpp"
 #include "Common/Geometry/Size.hpp"
+#include "Common/Geometry/Rect.hpp"
 
 namespace Graphics
 {
 	class Texture;
+	struct TextureDefinition;
+	struct TextureLoadProperties;
 	class Shader;
-	class ShaderDefinition;
+	class FrameBuffer;
+	struct FrameBufferDefinition;
+	class IndexBuffer;
+	struct IndexBufferDefinition;
+	class VertexArray;
+	struct VertexArrayDefinition;
+	class VertexBuffer;
+	struct VertexBufferDefinition;
 
 	class Window;
 	struct WindowDefinition;
@@ -28,8 +39,21 @@ namespace API
 		virtual bool HasWindow() const = 0;
 		virtual void SetVSync( const bool ) {}
 
-		virtual std::unique_ptr<Graphics::Texture> CreateTexture( Size<uint16_t> size ) = 0;
-		virtual std::unique_ptr<Graphics::Shader> CreateShader( const Graphics::ShaderDefinition& definition ) = 0;
+		virtual void SetViewport( Rect<uint32_t> ) = 0;
+		virtual Rect<uint32_t> GetViewport() const = 0;
+
+		virtual void DrawIndexed( const std::shared_ptr<Graphics::VertexArray>& vertex_array, uint32_t index_count = 0 ) = 0;
+
+		[[nodiscard]] virtual std::shared_ptr<Graphics::VertexBuffer> CreateVertexBuffer( const Graphics::VertexBufferDefinition& definition ) const = 0;
+		[[nodiscard]] virtual std::shared_ptr<Graphics::IndexBuffer> CreateIndexBuffer( const Graphics::IndexBufferDefinition& definition ) const = 0;
+		[[nodiscard]] virtual std::shared_ptr<Graphics::FrameBuffer> CreateFrameBuffer( const Graphics::FrameBufferDefinition& definition ) const = 0;
+		[[nodiscard]] virtual std::shared_ptr<Graphics::Shader> CreateShader( const Filepath& filepath ) const = 0;
+		[[nodiscard]] inline std::shared_ptr<Graphics::Shader> CreateShader( std::string_view filepath ) const { return CreateShader( Filepath( filepath ) ); }
+		[[nodiscard]] virtual std::shared_ptr<Graphics::Shader> CreateShader( std::string_view name, std::string_view vertex_src, std::string_view fragment_src ) const = 0;
+		[[nodiscard]] virtual std::shared_ptr<Graphics::Texture> CreateTexture( Size<uint32_t> size, const Graphics::TextureDefinition& props ) const = 0;
+		[[nodiscard]] virtual std::shared_ptr<Graphics::Texture> CreateTexture( const Filepath& filepath, const Graphics::TextureLoadProperties& props ) const = 0;
+		[[nodiscard]] inline std::shared_ptr<Graphics::Texture> CreateTexture( std::string_view filepath, const Graphics::TextureLoadProperties& props ) const { return CreateTexture( Filepath( filepath ), props ); }
+		[[nodiscard]] virtual std::shared_ptr<Graphics::VertexArray> CreateVertexArray( const Graphics::VertexArrayDefinition& definition ) const = 0;
 
 		virtual std::string_view GetShaderLanguage() const = 0;
 
