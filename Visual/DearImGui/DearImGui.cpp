@@ -1,23 +1,9 @@
 #include "DearImGui.hpp"
 
-#ifdef DEARIMGUI_ENABLED
-
-namespace
-{
-	static bool s_dearimgui_enabled = true; // TODO: disabled by default once we aren't using DearImGui for all our UI
-}
-
-namespace DearImGui
-{
-	bool IsEnabled()
-	{
-		return s_dearimgui_enabled;
-	}
-
-	void SetEnabled( const bool enabled )
-	{
-		s_dearimgui_enabled = enabled;
-	}
-}
-
-#endif // DEARIMGUI_ENABLED
+#pragma warning(push, 0)
+#	include "Visual/Vendor/dearimgui/imgui.cpp"
+#	include "Visual/Vendor/dearimgui/imgui_demo.cpp"
+#	include "Visual/Vendor/dearimgui/imgui_draw.cpp"
+#	include "Visual/Vendor/dearimgui/imgui_tables.cpp"
+#	include "Visual/Vendor/dearimgui/imgui_widgets.cpp"
+#pragma warning(pop)

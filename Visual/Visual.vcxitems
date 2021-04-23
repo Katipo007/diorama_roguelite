@@ -16,8 +16,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)Camera.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)DearImGui\config.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)DearImGui\DearImGui.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)DearImGUI\config.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)DearImGUI\DearImGui.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Device\FrameBuffer.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Device\GraphicsBuffer.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Device\GraphicsContext.hpp" />
@@ -60,8 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)Camera.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)DearImGui\DearImGui.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)DearImGui\DearImGuiCompile.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)DearImGUI\DearImGuiCompile.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Device\GraphicsBuffer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Device\RendererCommand.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Events\Event.cpp" />
