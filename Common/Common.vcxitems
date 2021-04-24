@@ -38,6 +38,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Geometry\Rect.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Geometry\Size.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Utility\CompileTime\Unreachable.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Utility\Containers.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Utility\EnumClassBitset.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Utility\FileOps.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Utility\Hashing.hpp" />
