@@ -124,8 +124,9 @@ namespace Graphics::API
 
         SDL_SetHint( SDL_HINT_VIDEO_HIGHDPI_DISABLED, "1" );
 
+        const auto screen_size = GetScreenSize();
         Size<uint32_t> window_size = definition.size;
-        Point2D<uint32_t> window_pos = { 0, 0 };
+        Point2D<uint32_t> window_pos = (screen_size - window_size) / 2;
         auto sdl_window = SDL_CreateWindow( definition.title.value_or( "Diorama Roguelite" ).c_str(), window_pos.x, window_pos.y, window_size.width, window_size.height, flags );
         if (!sdl_window)
         {

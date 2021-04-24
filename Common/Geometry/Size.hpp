@@ -3,6 +3,7 @@
 #include <type_traits>
 #include <limits>
 
+#include "Point2D.hpp"
 #include "Common/Core/Assert.hpp"
 
 template<typename T>
@@ -18,12 +19,17 @@ public:
 	constexpr Size() : width( 0 ), height( 0 ) {}
 	constexpr Size( T width, T height ) : width( width ), height( height ) {}
 
+	operator Point2D<T>() const { return { width, height }; }
+
 	inline Size Inflate( const Size& o ) const { return Size( width + o.width, height + o.height ); }
 	constexpr Size operator+( const Size& o ) const { return Size( width + o.width, height + o.height ); }
 	constexpr Size operator-( const Size& o ) const { return Size( width - o.width, height - o.height ); }
 
 	constexpr Size operator*( const Size& o ) const { return Size( width * o.width, height * o.height ); }
 	constexpr Size operator*( float v ) const { return Size( static_cast<T>(width * v), static_cast<T>(height * v) ); }
+
+	constexpr Size operator/( const Size& o ) const { return Size( width / o.width, height / o.height ); }
+	constexpr Size operator/( float v ) const { return Size( static_cast<T>(width / v), static_cast<T>(height / v) ); }
 
 	Size& operator+=( const Size& o ) { width += o.width; height += o.height; return *this; }
 	Size& operator-=( const Size& o ) { width -= o.width; height -= o.height; return *this; }
