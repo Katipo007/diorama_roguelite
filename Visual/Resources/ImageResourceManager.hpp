@@ -1,27 +1,26 @@
 #pragma once
 
-#include <filesystem>
 #include <memory>
 #include <string>
 #include <unordered_map>
 
+#include "Common/File/Filepath.hpp"
 #include "Common/Geometry/Rect.hpp"
 #include "Common/Geometry/Size.hpp"
 #include "Common/Utility/json.hpp"
 
 #include "Image.hpp"
 
-namespace Visual::Device
-{
-	class Texture2D;
-}
+namespace API { class VideoAPI; }
+
+namespace Graphics { class Texture; }
 
 namespace Resources
 {
 	class ImageDefinition
 	{
 	protected:
-		using ConstTexturePtr = std::shared_ptr<const Visual::Device::Texture2D>;
+		using ConstTexturePtr = std::shared_ptr<const Graphics::Texture>;
 	public:
 		ImageDefinition( ConstTexturePtr texture, Rect<float> uv );
 		virtual ~ImageDefinition();
@@ -46,7 +45,7 @@ namespace Resources
 	class ImageResourceManager final
 	{
 	public:
-		explicit ImageResourceManager();
+		explicit ImageResourceManager( ::API::VideoAPI& video );
 		~ImageResourceManager();
 
 #pragma region Retrieving images
@@ -55,15 +54,16 @@ namespace Resources
 
 
 #pragma region Adding images to manager
-		bool AddImagesFromJson( std::string_view json_string, const std::filesystem::path& filepath_prefix = std::filesystem::current_path() );
-		bool AddImagesFromFile( const std::filesystem::path& filepath );
+		bool AddImagesFromJson( std::string_view json_string, const Filepath& filepath_prefix = std::filesystem::current_path() );
+		bool AddImagesFromFile( const Filepath& filepath );
 #pragma endregion
 
 	protected:
-		bool ParseJsonFreeTexPacker( const nlohmann::json& json, const std::filesystem::path& filepath_prefix = std::filesystem::current_path() );
-		bool AddImageDefinition( std::string_view image_id, std::shared_ptr<Visual::Device::Texture2D> texture, const Rect<float>& uvs );
+		bool ParseJsonFreeTexPacker( const nlohmann::json& json, const Filepath& filepath_prefix = std::filesystem::current_path() );
+		bool AddImageDefinition( std::string_view image_id, std::shared_ptr<Graphics::Texture> texture, const Rect<float>& uvs );
 
 	protected:
+		::API::VideoAPI& video;
 		std::unordered_map<std::string, const std::shared_ptr<const ImageDefinition>> id_to_image_def;
 	};
 }

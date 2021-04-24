@@ -2,7 +2,9 @@
 
 #include "Common/Utility/Math/Mat4.hpp"
 
-namespace Visual::Device
+namespace API { class VideoAPI; }
+
+namespace Graphics
 {
 	class Shader;
 	class VertexArray;
@@ -17,20 +19,23 @@ namespace Visual
 	class Renderer
 	{
 	public:
-		static void Init();
-		static void Shutdown();
+		explicit Renderer( ::API::VideoAPI& video );
+		virtual ~Renderer();
 
-		static void SetDevice( Device::Window* device );
-		static void OnWindowResize( const uint32_t width, const uint32_t height );
+		void Init();
+		void Shutdown();
 
-		static void BeginScene( Camera& camera );
-		static void EndScene();
+		void OnWindowResize( const uint32_t width, const uint32_t height );
 
-		static void Submit( const std::shared_ptr<Device::Shader>& shader, const std::shared_ptr<Device::VertexArray>& vertex_array, const glm::mat4& model_transform = glm::mat4( 1.f ) );
+		void BeginScene( Camera& camera );
+		void EndScene();
+
+		void Submit( const std::shared_ptr<Graphics::Shader>& shader, const std::shared_ptr<Graphics::VertexArray>& vertex_array, const glm::mat4& model_transform = glm::mat4( 1.f ) );
 
 	private:
-		struct SceneData;
+		::API::VideoAPI& video;
 
+		struct SceneData;
 		static std::unique_ptr<SceneData> static_scene_data;
 	};
 }

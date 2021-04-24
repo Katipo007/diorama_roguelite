@@ -16,6 +16,7 @@ namespace Graphics
 
 	struct TextureDefinition
 	{
+		Size<uint32_t> size;
 		TextureWrapSetting wrap_s = TextureWrapSetting::Repeat;
 		TextureWrapSetting wrap_t = TextureWrapSetting::Repeat;
 	};
@@ -32,7 +33,7 @@ namespace Graphics
 	public:
 		virtual ~Texture() = default;
 
-		virtual Size<uint32_t> GetSize() const = 0;
+		virtual const Size<uint32_t>& GetSize() const noexcept = 0;
 
 		virtual void SetData( void* data, uint32_t size ) = 0;
 
@@ -40,6 +41,6 @@ namespace Graphics
 
 		virtual bool operator==( const Texture& other ) const = 0;
 
-		virtual uint32_t GetNativeId() const = 0;
+		virtual uint32_t GetNativeId() const noexcept = 0;
 	};
 }

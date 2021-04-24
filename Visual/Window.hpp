@@ -45,6 +45,8 @@ namespace Graphics
 		virtual void Hide() = 0;
 		virtual void SetVSync( const bool ) = 0;
 
+		virtual void SwapBuffers() = 0;
+
 		virtual void* GetNativeHandle() { return nullptr; }
 		virtual std::string_view GetNativeHandleType() const { return ""; }
 	};

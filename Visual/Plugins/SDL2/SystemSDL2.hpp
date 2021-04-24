@@ -8,8 +8,8 @@ namespace Graphics::API
 		: public ::API::InternalSystemAPI
 	{
 	public:
-		SystemSDL2();
-		~SystemSDL2();
+		explicit SystemSDL2();
+		virtual ~SystemSDL2();
 
 	protected:
 		void Init() override;

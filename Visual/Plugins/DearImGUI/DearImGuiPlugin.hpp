@@ -14,7 +14,7 @@ namespace Graphics::API
 		~DearImGuiPlugin();
 
 		void SetEnabled( const bool enable );
-		bool GetEnabled() const noexcept;
+		bool GetEnabled() const noexcept { return enabled; }
 
 		void OnWindowResized( Size<uint32_t> new_window_size );
 
@@ -25,5 +25,6 @@ namespace Graphics::API
 	private:
 		struct Data;
 		std::unique_ptr<Data> data;
+		bool enabled = false;
 	};
 }

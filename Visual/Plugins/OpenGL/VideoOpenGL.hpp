@@ -11,18 +11,30 @@ namespace Graphics::API
 		VideoOpenGL( ::API::SystemAPI& system );
 		~VideoOpenGL();
 
-		void BeginRender() override;
-		void EndRender() override;
+		virtual void BeginRender() override;
+		virtual void EndRender() override;
 
-		void SetWindow( Graphics::WindowDefinition&& definition ) override;
-		const Graphics::Window& GetWindow() const override;
-		bool HasWindow() const override;
-		void SetVSync( const bool ) override;
+		virtual void SetWindow( Graphics::WindowDefinition&& definition ) override;
+		virtual const Graphics::Window& GetWindow() const override;
+		virtual bool HasWindow() const override;
+		virtual void SetVSync( const bool ) override;
 
-		std::unique_ptr<Graphics::Texture> CreateTexture( Size<uint16_t> size ) override;
-		std::unique_ptr<Graphics::Shader> CreateShader( const Graphics::ShaderDefinition& definition ) override;
+		virtual void SetViewport( Rect<uint32_t> ) override;
+		virtual Rect<uint32_t> GetViewport() const override;
 
-		std::string_view GetShaderLanguage() const override;
+		virtual void DrawIndexed( const std::shared_ptr<Graphics::VertexArray>& vertex_array, uint32_t index_count = 0 ) override;
+
+		virtual std::shared_ptr<Graphics::VertexBuffer> CreateVertexBuffer( const Graphics::VertexBufferDefinition& definition ) const override;
+		virtual std::shared_ptr<Graphics::IndexBuffer> CreateIndexBuffer( const Graphics::IndexBufferDefinition& definition ) const override;
+		virtual std::shared_ptr<Graphics::FrameBuffer> CreateFrameBuffer( const Graphics::FrameBufferSpecification& definition ) const override;
+		virtual std::shared_ptr<Graphics::Shader> CreateShader( const Filepath& filepath ) const override;
+		virtual std::shared_ptr<Graphics::Shader> CreateShader( std::string_view name, std::string_view vertex_src, std::string_view fragment_src ) const override;
+		virtual std::shared_ptr<Graphics::Texture> CreateTexture( const Graphics::TextureDefinition& props ) const override;
+		virtual std::shared_ptr<Graphics::Texture> CreateTexture( const Filepath& filepath, const Graphics::TextureLoadProperties& props ) const override;
+		virtual std::shared_ptr<Graphics::VertexArray> CreateVertexArray( const Graphics::VertexArrayDefinition& definition ) const override;
+
+		virtual std::string_view GetName() const override;
+		virtual std::string_view GetShaderLanguage() const override;
 
 	protected:
 		void Init() override;

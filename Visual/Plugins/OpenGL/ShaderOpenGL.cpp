@@ -1,6 +1,5 @@
 #include "ShaderOpenGL.hpp"
-
-#ifdef RENDERER_IMPLEMENTATION_OPENGL
+#include "OpenGLHeader.hpp"
 
 #include <fstream>
 
@@ -22,9 +21,9 @@ namespace
 	}
 }
 
-namespace Visual::Device::OpenGL
+namespace Graphics::API
 {
-	ShaderOpenGL::ShaderOpenGL( const std::filesystem::path& filepath )
+	ShaderOpenGL::ShaderOpenGL( const Filepath& filepath )
 		: opengl_program_id( 0 )
 	{
 		ASSERT( !std::filesystem::is_directory( filepath ) );
@@ -312,5 +311,3 @@ namespace Visual::Device::OpenGL
 		}
 	}
 }
-
-#endif

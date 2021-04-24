@@ -1,15 +1,14 @@
 #include "FramebufferOpenGL.hpp"
-
-#ifdef RENDERER_IMPLEMENTATION_OPENGL
+#include "OpenGLHeader.hpp"
 
 namespace
 {
-	const uint32_t max_framebuffer_size = 8192u;
+	constexpr uint32_t MaxFramebufferSize = 8192u;
 }
 
-namespace Visual::Device::OpenGL
+namespace Graphics::API
 {
-	FrameBufferOpenGL::FrameBufferOpenGL( const FrameBuffer::Specification & spec )
+	FrameBufferOpenGL::FrameBufferOpenGL( const FrameBufferSpecification & spec )
 		: specification( spec )
 		, opengl_framebuffer_id( 0 )
 		, opengl_colour_attachment( 0 )
@@ -44,7 +43,7 @@ namespace Visual::Device::OpenGL
 
 		glCreateTextures( GL_TEXTURE_2D, 1, &opengl_colour_attachment );
 		glBindTexture( GL_TEXTURE_2D, opengl_colour_attachment );
-		glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA8, static_cast<GLsizei>( specification.width ), static_cast<GLsizei>( specification.height ), 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr );
+		glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA8, static_cast<GLsizei>( specification.size.width ), static_cast<GLsizei>( specification.size.height ), 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr );
 		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
 		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 
@@ -52,7 +51,7 @@ namespace Visual::Device::OpenGL
 
 		glCreateTextures( GL_TEXTURE_2D, 1, &opengl_depth_attachment );
 		glBindTexture( GL_TEXTURE_2D, opengl_depth_attachment );
-		glTexStorage2D( GL_TEXTURE_2D, 1, GL_DEPTH24_STENCIL8, static_cast<GLsizei>( specification.width ), static_cast<GLsizei>( specification.height ) );
+		glTexStorage2D( GL_TEXTURE_2D, 1, GL_DEPTH24_STENCIL8, static_cast<GLsizei>( specification.size.width ), static_cast<GLsizei>( specification.size.height ) );
 		glFramebufferTexture2D( GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, opengl_depth_attachment, 0 );
 
 		ASSERT( glCheckFramebufferStatus( GL_FRAMEBUFFER ) == GL_FRAMEBUFFER_COMPLETE, "Frame buffer is incomplete!" );
@@ -63,7 +62,7 @@ namespace Visual::Device::OpenGL
 	void FrameBufferOpenGL::Bind()
 	{
 		glBindFramebuffer( GL_FRAMEBUFFER, opengl_framebuffer_id );
-		glViewport( 0, 0, static_cast<GLsizei>( specification.width ), static_cast<GLsizei>( specification.height ) );
+		glViewport( 0, 0, static_cast<GLsizei>( specification.size.width ), static_cast<GLsizei>( specification.size.height ) );
 	}
 
 	void FrameBufferOpenGL::Unbind()
@@ -78,17 +77,14 @@ namespace Visual::Device::OpenGL
 			LOG_WARN( OpenGL, "Attempting to resize framebuffer with a 0 dimension! ({0} x {1})", width, height );
 			return;
 		}
-		else if( width > max_framebuffer_size || height > max_framebuffer_size )
+		else if( width > MaxFramebufferSize || height > MaxFramebufferSize)
 		{
 			LOG_WARN( OpenGL, "Attempting to resize framebuffer beyond limits! ({0} x {1})", width, height );
 			return;
 		}
 
-		specification.width = width;
-		specification.height = height;
+		specification.size = { width, height };
 
 		Invalidate();
 	}
 }
-
-#endif

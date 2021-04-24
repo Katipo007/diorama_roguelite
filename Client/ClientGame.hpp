@@ -21,6 +21,8 @@ namespace Sessions
 	class ClientServerSession;
 }
 
+namespace Graphics::API { class DearImGuiPlugin; }
+
 namespace Game
 {
 	class ClientGame final
@@ -35,6 +37,7 @@ namespace Game
 
 		void Exit();
 
+		Core& GetCore() const { return *core; }
 		ResourceManager& GetResourceManager() const { return *resource_manager; }
 
 		//
@@ -59,6 +62,7 @@ namespace Game
 	protected:
 		std::unique_ptr<Sessions::ClientServerSession> client_server_session;
 		Core* core = nullptr;
+		::Graphics::API::DearImGuiPlugin* dearimgui = nullptr;
 		ResourceManager* resource_manager = nullptr;
 
 		bool user_requested_exit = false;

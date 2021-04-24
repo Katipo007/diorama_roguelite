@@ -3,8 +3,8 @@
 #include <functional>
 
 #include "Visual/Camera.hpp"
-#include "Visual/Device/RendererAPI.hpp"
-#include "Visual/Device/RendererCommand.hpp"
+
+#include "Common/Core/Core.hpp"
 
 #include "Client/ClientGame.hpp"
 #include "Client/Game/ClientGameWorld.hpp"
@@ -48,7 +48,8 @@ namespace ClientStates
 			return fsm::Actions::TransitionTo<MainMenuState>{};
 		}
 
-		gameworld = std::make_unique<Game::ClientGameWorld>( client.GetResourceManager() );
+		ASSERT( client.GetCore().Video != nullptr );
+		gameworld = std::make_unique<Game::ClientGameWorld>( *client.GetCore().Video, client.GetResourceManager() );
 
 		return fsm::Actions::NoAction();
 	}

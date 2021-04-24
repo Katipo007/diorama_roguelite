@@ -4,12 +4,13 @@
 #include <numeric>
 #include <stack>
 
+#include "Common/Core/API/VideoAPI.hpp"
+
 #include "Visual/Camera.hpp"
-#include "Visual/Device/RendererAPI.hpp"
-#include "Visual/Device/RendererCommand.hpp"
-#include "Visual/Device/GraphicsBuffer.hpp"
-#include "Visual/Device/Shader.hpp"
-#include "Visual/Device/Texture.hpp"
+#include "Visual/Graphics/GraphicsBuffer.hpp"
+#include "Visual/Graphics/VertexArray.hpp"
+#include "Visual/Graphics/Shader.hpp"
+#include "Visual/Graphics/Texture.hpp"
 #include "Visual/Resources/Image.hpp"
 
 namespace
@@ -31,11 +32,11 @@ namespace
 	};
 #pragma pack(pop)
 
-	static const Visual::Device::BufferLayout VertexLayout( {
-			{ Visual::Device::ShaderDataType::Float3, "a_Position" }
-			, { Visual::Device::ShaderDataType::Float4, "a_Colour" }
-			, { Visual::Device::ShaderDataType::Float2, "a_Texcoord" }
-			, { Visual::Device::ShaderDataType::uInt, "a_TextureIndex" }
+	static const Graphics::BufferLayout VertexLayout( {
+			{ Graphics::ShaderDataType::Float3, "a_Position" }
+			, { Graphics::ShaderDataType::Float4, "a_Colour" }
+			, { Graphics::ShaderDataType::Float2, "a_Texcoord" }
+			, { Graphics::ShaderDataType::uInt, "a_TextureIndex" }
 		} );
 
 	constexpr uint32_t DefaultTextureIndex = 0; // index that the plain white texture should be loaded in
@@ -53,54 +54,56 @@ namespace Visual
 		const uint32_t NMaxIndices;
 		const uint32_t NMaxTextureSlots;
 
+		::API::VideoAPI& video;
+
 		// multiply colour
 		std::stack<glm::vec4> multiply_colour;
 
 		// device objects
-		std::shared_ptr<Device::VertexArray> va;
-		std::shared_ptr<Device::VertexBuffer> vb;
-		std::shared_ptr<Device::Shader> default_shader;
-		std::shared_ptr<Device::Texture2D> white_texture;
-		std::vector<std::shared_ptr<const Device::Texture2D>> texture_slots;
+		std::shared_ptr<Graphics::VertexArray> va;
+		std::shared_ptr<Graphics::VertexBuffer> vb;
+		std::shared_ptr<Graphics::Shader> default_shader;
+		std::shared_ptr<Graphics::Texture> white_texture;
+		std::vector<std::shared_ptr<const Graphics::Texture>> texture_slots;
 
 		// data pointers/counters
 		std::vector<QuadVertex> vertex_data;
 		uint32_t quad_index_count = 0;
 		uint32_t texture_slot_index = 0;
-		std::shared_ptr<Device::Shader> active_shader;
+		std::shared_ptr<Graphics::Shader> active_shader;
 
 		// current scene data
 		const Visual::Camera* scene_camera = nullptr;
 		glm::mat4 scene_transform = glm::mat4( 1.f );
 
-		Data( const uint32_t max_quads, const uint32_t max_texture_slots )
-			: NMaxQuads( max_quads )
-			, NMaxVertices( max_quads * 4 )
-			, NMaxIndices( max_quads * 6 )
-			, NMaxTextureSlots( std::min( (uint32_t)32, max_texture_slots ) )
+		Data( ::API::VideoAPI& video_, const uint32_t max_quads_, const uint32_t max_texture_slots_ )
+			: video( video_ )
+			, NMaxQuads( max_quads_ )
+			, NMaxVertices( max_quads_ * 4 )
+			, NMaxIndices( max_quads_ * 6 )
+			, NMaxTextureSlots( std::min( (uint32_t)32, max_texture_slots_ ) )
 		{
 			if (NMaxQuads < 1)
 				throw std::runtime_error( "Device reported it can't render quads?" );
 			if (NMaxTextureSlots <= 1)
 				throw std::runtime_error( "Device reported not enough texture slots" );
 
-			const auto& api = Device::RendererCommand::GetRendererAPI();
-			std::shared_ptr<Device::IndexBuffer> ib;
+			std::shared_ptr<Graphics::IndexBuffer> ib;
 
 			// vertex buffer
 			{
-				Device::VertexBuffer::CreationProperties vb_props;
+				Graphics::VertexBufferDefinition vb_props;
 				vb_props.name = "SpriteBatcher VB";
 				vb_props.layout = VertexLayout;
 				vb_props.data.reserve( sizeof( QuadVertex ) * NMaxVertices );
 				vb_props.SetDataFromVector( std::vector<QuadVertex>( NMaxVertices ) );
 
-				vb = api.CreateVertexBuffer( vb_props );
+				vb = video.CreateVertexBuffer( vb_props );
 			}
 
 			// index buffer
 			{
-				Device::IndexBuffer::CreationProperties ib_props;
+				Graphics::IndexBufferDefinition ib_props;
 				ib_props.name = "SpriteBatcher IB";
 				ib_props.indices.reserve( NMaxIndices );
 
@@ -110,17 +113,17 @@ namespace Visual
 				uint32_t i = 0;
 				std::generate_n( std::back_inserter( ib_props.indices ), NMaxIndices, [&]() mutable { return ((i / n_quad_indices) * 4) + quad_indices[i++ % n_quad_indices]; } );
 
-				ib = api.CreateIndexBuffer( ib_props );
+				ib = video.CreateIndexBuffer( ib_props );
 			}
 
 			// vertex array
 			{
-				Device::VertexArray::CreationProperties va_props;
+				Graphics::VertexArrayDefinition va_props;
 				va_props.name = "SpriteBatcher VA";
 				va_props.vertex_buffers = { vb };
 				va_props.index_buffer = std::move( ib );
 
-				va = api.CreateVertexArray( va_props );
+				va = video.CreateVertexArray( va_props );
 			}
 
 			// texture slots
@@ -131,8 +134,9 @@ namespace Visual
 
 			// white texture
 			{
-				Device::Texture2D::CreationProperties texture_props;
-				white_texture = api.CreateTexture2D( 1, 1, texture_props );
+				Graphics::TextureDefinition texture_props;
+				texture_props.size = { 1, 1 };
+				white_texture = video.CreateTexture( texture_props );
 				uint32_t white_texture_data = 0xffffffff;
 				white_texture->SetData( &white_texture_data, sizeof( decltype(white_texture_data) ) );
 
@@ -145,7 +149,7 @@ namespace Visual
 				auto* initial_samplers = new int[NMaxTextureSlots];
 				std::iota( initial_samplers, initial_samplers + (size_t)NMaxTextureSlots, 0 ); // fill initial samplers with 0, 1, 2, 3, etc
 
-				default_shader = api.CreateShader( std::filesystem::path( "Shaders/DefaultSpriteBatchShader.glsl" ) ); // TODO: replace extention once we support multiple pipelines
+				default_shader = video.CreateShader( std::filesystem::path( "Shaders/DefaultSpriteBatchShader.glsl" ) ); // TODO: replace extention once we support multiple pipelines
 				default_shader->Bind();
 				default_shader->SetIntArray( "u_Textures", initial_samplers, NMaxTextureSlots );
 
@@ -168,10 +172,10 @@ namespace Visual
 	/// SpriteBatcher
 	/// 
 
-	SpriteBatcher::SpriteBatcher()
+	SpriteBatcher::SpriteBatcher( ::API::VideoAPI& video_ )
+		: video( video_ )
 	{
-		const auto& renderer_api = Device::RendererCommand::GetRendererAPI();
-		const auto capabilities = renderer_api.GetCapabilities();
+		const auto capabilities = video.GetCapabilities();
 
 		// TODO: determine max number of vertexes/indices
 		data = std::make_unique<Data>( 20000, std::min( (uint32_t)capabilities.max_texture_slots, (uint32_t)10 ) );
@@ -225,7 +229,7 @@ namespace Visual
 		// move data into the vertex buffer object
 		data->vb->SetData( data->vertex_data.data(), (uint32_t)data->vertex_data.size() * sizeof( QuadVertex ) );
 
-		Device::RendererCommand::DrawIndexed( data->va, data->quad_index_count );
+		video.DrawIndexed( data->va, data->quad_index_count );
 
 		data->va->Unbind();
 
@@ -248,7 +252,7 @@ namespace Visual
 		StartBatch();
 	}
 
-	SpriteBatcher::TextureSlotId SpriteBatcher::FindOrAddTexture( const std::shared_ptr<const Device::Texture2D>& texture_handle )
+	SpriteBatcher::TextureSlotId SpriteBatcher::FindOrAddTexture( const std::shared_ptr<const Graphics::Texture>& texture_handle )
 	{
 		SpriteBatcher::TextureSlotId index = std::numeric_limits<TextureSlotId>::max();
 

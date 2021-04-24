@@ -1,27 +1,24 @@
 #include "BufferOpenGL.hpp"
-
-#ifdef RENDERER_IMPLEMENTATION_OPENGL
-
 #include "OpenGLHeader.hpp"
 
 #include <stack>
 
 namespace
 {
-	std::stack<GLuint> bound_vbo_stack;
+	std::stack<GLuint> BoundVboStack;
 
 	void PushBoundVbo()
 	{
 		GLint current = 0;
 		glGetIntegerv( GL_ARRAY_BUFFER_BINDING, &current );
-		bound_vbo_stack.push( current );
+		BoundVboStack.push( current );
 	}
 
 	void PopBoundVbo()
 	{
-		ASSERT( !bound_vbo_stack.empty() );
-		glBindBuffer( GL_ARRAY_BUFFER, bound_vbo_stack.top() );
-		bound_vbo_stack.pop();
+		ASSERT( !BoundVboStack.empty() );
+		glBindBuffer( GL_ARRAY_BUFFER, BoundVboStack.top() );
+		BoundVboStack.pop();
 	}
 
 
@@ -42,20 +39,20 @@ namespace
 	}
 }
 
-namespace Visual::Device::OpenGL
+namespace Graphics::API
 {
-	VertexBufferOpenGL::VertexBufferOpenGL( const CreationProperties& props )
-		: name( props.name )
-		, layout( props.layout )
+	VertexBufferOpenGL::VertexBufferOpenGL( const VertexBufferDefinition& definition )
+		: name( definition.name.value_or( "Unnamed vertex buffer" ) )
+		, layout( definition.layout )
 	{
 		PushBoundVbo();
 
 		glCreateBuffers( 1, &vbo );
 		Bind();
-		glBufferData( GL_ARRAY_BUFFER, props.data.size(), (void*)props.data.data(), GL_DYNAMIC_DRAW );
+		glBufferData( GL_ARRAY_BUFFER, definition.data.size(), (void*)definition.data.data(), GL_DYNAMIC_DRAW );
 
-		if (!props.name.empty())
-			glObjectLabel( GL_BUFFER, vbo, -1, props.name.c_str() );
+		if (definition.name)
+			glObjectLabel( GL_BUFFER, vbo, -1, definition.name.value().c_str() );
 
 		Unbind();
 		PopBoundVbo();
@@ -92,9 +89,9 @@ namespace Visual::Device::OpenGL
 		layout = layout_;
 	}
 
-	IndexBufferOpenGL::IndexBufferOpenGL( const CreationProperties& props )
-		: name( props.name )
-		, count( (uint32_t)props.indices.size() )
+	IndexBufferOpenGL::IndexBufferOpenGL( const IndexBufferDefinition& definition )
+		: name( definition.name.value_or( "Unnamed index buffer" ) )
+		, count( (uint32_t)definition.indices.size() )
 	{
 		// GL_ELEMENT_ARRAY_BUFFER is not valid without an actively bound VAO
 		// Binding with GL_ARRAY_BUFFER allows the data to be loaded regardless of VAO state. 
@@ -102,10 +99,10 @@ namespace Visual::Device::OpenGL
 		glCreateBuffers( 1, &ibo );
 
 		glBindBuffer( GL_ARRAY_BUFFER, ibo );
-		glBufferData( GL_ARRAY_BUFFER, count * sizeof( uint32_t ), (void*)props.indices.data(), GL_STATIC_DRAW );
+		glBufferData( GL_ARRAY_BUFFER, count * sizeof( uint32_t ), (void*)definition.indices.data(), GL_STATIC_DRAW );
 
-		if (!name.empty())
-			glObjectLabel( GL_BUFFER, ibo, -1, props.name.c_str() );
+		if (definition.name)
+			glObjectLabel( GL_BUFFER, ibo, -1, definition.name.value().c_str() );
 
 		PopBoundVbo(); // Vbo NOT Ibo to match above
 	}
@@ -125,5 +122,3 @@ namespace Visual::Device::OpenGL
 		glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
 	}
 }
-
-#endif

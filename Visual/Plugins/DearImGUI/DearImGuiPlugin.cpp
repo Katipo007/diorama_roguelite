@@ -50,9 +50,9 @@ namespace Graphics::API
 		}
 	}
 
-	void DearImGuiPlugin::SetEnabled( const bool enable )
+	void DearImGuiPlugin::SetEnabled( const bool enable_ )
 	{
-		DearImGui::SetEnabled( !DearImGui::IsEnabled() );
+		enabled = enable_;
 	}
 
 	void DearImGuiPlugin::OnWindowResized( Size<uint32_t> new_window_size )

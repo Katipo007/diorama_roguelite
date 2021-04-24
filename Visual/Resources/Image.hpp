@@ -5,11 +5,11 @@
 
 #include "Common/Geometry/Rect.hpp"
 #include "Common/Geometry/Size.hpp"
-#include "Visual/Device/Texture.hpp"
+#include "Visual/Graphics/Texture.hpp"
 
-namespace Visual::Device
+namespace Graphics
 {
-	class Texture2D;
+	class Texture;
 }
 
 namespace Resources
@@ -37,7 +37,7 @@ namespace Resources
 		const Size<unsigned>& GetSize() const;
 		const Size<float>& GetSizeF() const;
 
-		const std::shared_ptr<const Visual::Device::Texture2D>& GetSharedTexture() const;
+		const std::shared_ptr<const Graphics::Texture>& GetSharedTexture() const;
 		const Rect<float>& GetUVs() const;
 
 	protected:

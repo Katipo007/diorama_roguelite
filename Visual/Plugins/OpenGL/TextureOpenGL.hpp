@@ -1,28 +1,34 @@
 #pragma once
 
-#include "Visual/Resources/Texture.hpp"
+#include "Common/File/Filepath.hpp"
+#include "Visual/Graphics/Texture.hpp"
 
 namespace Graphics::API
 {
-	class VideoOpenGL;
-
 	class TextureOpenGL
 		: public ::Graphics::Texture
 	{
 	public:
-		explicit TextureOpenGL( VideoOpenGL& owner, Size<uint32_t> size );
+		TextureOpenGL( const ::Graphics::TextureDefinition& props );
+		TextureOpenGL( const Filepath& path, const ::Graphics::TextureLoadProperties& props );
 		virtual ~TextureOpenGL() override;
 
-		TextureOpenGL& operator=( TextureOpenGL&& to_move ) noexcept;
+		virtual const Size<uint32_t>& GetSize() const noexcept override { return size; }
 
-		void Bind( int slot ) const;
-		unsigned int GetNativeId() const;
+		virtual void SetData( void* data, uint32_t size ) override;
+
+		virtual void Bind( uint32_t slot ) const override;
+
+		virtual bool operator==( const Texture& other ) const override;
+
+		virtual uint32_t GetNativeId() const noexcept override { return opengl_texture_id; }
 
 	private:
-		void Create( Size<uint32_t> size );
+		std::string filepath;
+		Size<uint32_t> size;
 
-	private:
-		VideoOpenGL& owner;
-		unsigned int texture_id = 0;
+		unsigned int opengl_internal_format;
+		unsigned int opengl_data_format;
+		unsigned int opengl_texture_id;
 	};
 }

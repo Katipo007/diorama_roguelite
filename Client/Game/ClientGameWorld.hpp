@@ -4,9 +4,12 @@
 
 class ResourceManager;
 
+namespace API { class VideoAPI; }
+
 namespace Visual
 {
 	class Camera;
+	class Renderer;
 	class SpriteBatcher;
 }
 
@@ -18,7 +21,7 @@ namespace Game
 		: public GameWorld
 	{
 	public:
-		ClientGameWorld( ResourceManager& resources );
+		ClientGameWorld( ::API::VideoAPI& video, ResourceManager& resources );
 		~ClientGameWorld();
 
 		PlayerObject* GetPlayerObject() { return player.get(); }
@@ -33,9 +36,11 @@ namespace Game
 		void RenderGameObjects() const;
 
 	protected:
+		::API::VideoAPI& video;
 		ResourceManager& resources;
 
 		std::unique_ptr<PlayerObject> player;
+		std::unique_ptr<Visual::Renderer> renderer;
 		std::unique_ptr<Visual::SpriteBatcher> sprite_renderer;
 	};
 }

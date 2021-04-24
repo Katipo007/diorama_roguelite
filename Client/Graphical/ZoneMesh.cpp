@@ -1,11 +1,9 @@
 #include "ZoneMesh.hpp"
 
-#include "Visual/Device/RendererAPI.hpp"
-#include "Visual/Device/RendererCommand.hpp"
-#include "Visual/Device/GraphicsBuffer.hpp"
-#include "Visual/Device/Shader.hpp"
-#include "Visual/Device/Texture.hpp"
-#include "Visual/Device/VertexArray.hpp"
+#include "Visual/Graphics/GraphicsBuffer.hpp"
+#include "Visual/Graphics/Shader.hpp"
+#include "Visual/Graphics/Texture.hpp"
+#include "Visual/Graphics/VertexArray.hpp"
 
 #include "Visual/Resources/ImageResourceManager.hpp"
 
@@ -24,11 +22,11 @@ namespace
 	};
 #pragma pack(pop)
 
-	Visual::Device::BufferLayout Layout
+	Graphics::BufferLayout Layout
 	{
-		{ Visual::Device::ShaderDataType::Float3, "a_Position" }
-		, { Visual::Device::ShaderDataType::Float2, "a_Texcoord" }
-		, { Visual::Device::ShaderDataType::uInt, "a_TextureIndex" }
+		  { Graphics::ShaderDataType::Float3, "a_Position" }
+		, { Graphics::ShaderDataType::Float2, "a_Texcoord" }
+		, { Graphics::ShaderDataType::uInt, "a_TextureIndex" }
 	};
 
 	using VertexList_T = std::vector<Vertex>;
@@ -97,22 +95,21 @@ namespace Graphical
 
 	void ZoneMesh::Reconstruct( const Game::ClientZone& zone )
 	{
-		auto& api = Visual::Device::RendererCommand::GetRendererAPI();
 		const auto name_prefix = "Zone #" + std::to_string( zone.GetId() );
 
 		VertexList_T vertices;
 		IndexList_T indices;
 
-		Visual::Device::VertexBuffer::CreationProperties vb_props;
+		Graphics::VertexBufferDefinition vb_props;
 		vb_props.name = name_prefix + " mesh VB";
 		vb_props.layout = Layout;
 		vb_props.SetDataFromVector( vertices );
 
-		Visual::Device::IndexBuffer::CreationProperties ib_props;
+		Graphics::IndexBufferDefinition ib_props;
 		ib_props.name = name_prefix + " mesh IB";
 		ib_props.indices = indices;
 
-		Visual::Device::VertexArray::CreationProperties va_props;
+		Graphics::VertexArrayDefinition va_props;
 		va_props.name = name_prefix + " mesh VA";
 		va_props.vertex_buffers = { api.CreateVertexBuffer( vb_props ) };
 		va_props.index_buffer = api.CreateIndexBuffer( ib_props );

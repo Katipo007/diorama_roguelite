@@ -1,36 +1,35 @@
 #include "VertexArrayOpenGL.hpp"
-
-#ifdef RENDERER_IMPLEMENTATION_OPENGL
+#include "OpenGLHeader.hpp"
 
 #include <stack>
 
 namespace
 {
-	static GLenum GetShaderDataTypeToOpenGLBaseType( ::Visual::Device::ShaderDataType type )
+	static GLenum GetShaderDataTypeToOpenGLBaseType( ::Graphics::ShaderDataType type )
 	{
 		switch( type )
 		{
-			case ::Visual::Device::ShaderDataType::Float:
-			case ::Visual::Device::ShaderDataType::Float2:
-			case ::Visual::Device::ShaderDataType::Float3:
-			case ::Visual::Device::ShaderDataType::Float4:
-			case ::Visual::Device::ShaderDataType::Mat3:
-			case ::Visual::Device::ShaderDataType::Mat4:
+			case ::Graphics::ShaderDataType::Float:
+			case ::Graphics::ShaderDataType::Float2:
+			case ::Graphics::ShaderDataType::Float3:
+			case ::Graphics::ShaderDataType::Float4:
+			case ::Graphics::ShaderDataType::Mat3:
+			case ::Graphics::ShaderDataType::Mat4:
 				return GL_FLOAT;
 
-			case ::Visual::Device::ShaderDataType::Int:
-			case ::Visual::Device::ShaderDataType::Int2:
-			case ::Visual::Device::ShaderDataType::Int3:
-			case ::Visual::Device::ShaderDataType::Int4:
+			case ::Graphics::ShaderDataType::Int:
+			case ::Graphics::ShaderDataType::Int2:
+			case ::Graphics::ShaderDataType::Int3:
+			case ::Graphics::ShaderDataType::Int4:
 				return GL_INT;
 
-			case ::Visual::Device::ShaderDataType::uInt:
-			case ::Visual::Device::ShaderDataType::uInt2:
-			case ::Visual::Device::ShaderDataType::uInt3:
-			case ::Visual::Device::ShaderDataType::uInt4:
+			case ::Graphics::ShaderDataType::uInt:
+			case ::Graphics::ShaderDataType::uInt2:
+			case ::Graphics::ShaderDataType::uInt3:
+			case ::Graphics::ShaderDataType::uInt4:
 				return GL_UNSIGNED_INT;
 
-			case ::Visual::Device::ShaderDataType::Bool:
+			case ::Graphics::ShaderDataType::Bool:
 				return GL_BOOL;
 		}
 
@@ -62,10 +61,10 @@ namespace
 	}
 }
 
-namespace Visual::Device::OpenGL
+namespace Graphics::API
 {
-	VertexArrayOpenGL::VertexArrayOpenGL( const CreationProperties& props )
-		: name( props.name )
+	VertexArrayOpenGL::VertexArrayOpenGL( const ::Graphics::VertexArrayDefinition& props )
+		: name( props.name ? *props.name : "Unnamed vertex array" )
 		, vao( 0 )
 		, vbi( 0 )
 	{
@@ -74,8 +73,8 @@ namespace Visual::Device::OpenGL
 		glCreateVertexArrays( 1, &vao );
 		Bind();
 
-		if (!props.name.empty())
-			glObjectLabel( GL_VERTEX_ARRAY, vao, -1, props.name.c_str() );
+		if (props.name)
+			glObjectLabel( GL_VERTEX_ARRAY, vao, -1, props.name.value().c_str() );
 
 		for (auto& vb : props.vertex_buffers)
 			AddVertexBuffer( vb );
@@ -118,10 +117,10 @@ namespace Visual::Device::OpenGL
 		{
 			switch( element.type )
 			{
-				case ::Visual::Device::ShaderDataType::Float:
-				case ::Visual::Device::ShaderDataType::Float2:
-				case ::Visual::Device::ShaderDataType::Float3:
-				case ::Visual::Device::ShaderDataType::Float4:
+				case ::Graphics::ShaderDataType::Float:
+				case ::Graphics::ShaderDataType::Float2:
+				case ::Graphics::ShaderDataType::Float3:
+				case ::Graphics::ShaderDataType::Float4:
 				{
 					glEnableVertexAttribArray( vbi );
 					glVertexAttribPointer( vbi
@@ -135,15 +134,15 @@ namespace Visual::Device::OpenGL
 					break;
 				}
 
-				case ::Visual::Device::ShaderDataType::Int:
-				case ::Visual::Device::ShaderDataType::Int2:
-				case ::Visual::Device::ShaderDataType::Int3:
-				case ::Visual::Device::ShaderDataType::Int4:
-				case ::Visual::Device::ShaderDataType::uInt:
-				case ::Visual::Device::ShaderDataType::uInt2:
-				case ::Visual::Device::ShaderDataType::uInt3:
-				case ::Visual::Device::ShaderDataType::uInt4:
-				case ::Visual::Device::ShaderDataType::Bool:
+				case ::Graphics::ShaderDataType::Int:
+				case ::Graphics::ShaderDataType::Int2:
+				case ::Graphics::ShaderDataType::Int3:
+				case ::Graphics::ShaderDataType::Int4:
+				case ::Graphics::ShaderDataType::uInt:
+				case ::Graphics::ShaderDataType::uInt2:
+				case ::Graphics::ShaderDataType::uInt3:
+				case ::Graphics::ShaderDataType::uInt4:
+				case ::Graphics::ShaderDataType::Bool:
 				{
 					glEnableVertexAttribArray( vbi );
 					glVertexAttribIPointer( vbi
@@ -156,8 +155,8 @@ namespace Visual::Device::OpenGL
 					break;
 				}
 
-				case ::Visual::Device::ShaderDataType::Mat3:
-				case ::Visual::Device::ShaderDataType::Mat4:
+				case ::Graphics::ShaderDataType::Mat3:
+				case ::Graphics::ShaderDataType::Mat4:
 				{
 					const auto count = element.GetComponentCount();
 					for( uint32_t i = 0; i < count; ++i )
@@ -203,4 +202,3 @@ namespace Visual::Device::OpenGL
 		return vertex_buffers.size();
 	}
 }
-#endif

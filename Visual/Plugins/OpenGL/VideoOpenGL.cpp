@@ -4,8 +4,11 @@
 #include "Visual/OpenGLContext.hpp"
 
 #include "OpenGLHeader.hpp"
-#include "TextureOpenGL.hpp"
+#include "BufferOpenGL.hpp"
+#include "FrameBufferOpenGL.hpp"
 #include "ShaderOpenGL.hpp"
+#include "TextureOpenGL.hpp"
+#include "VertexArrayOpenGL.hpp"
 
 namespace Graphics::API
 {
@@ -30,7 +33,7 @@ namespace Graphics::API
 		if (!initialised)
 		{
 #pragma push_macro("CreateWindow")
-#undef CreateWindow
+#undef CreateWindow // we don't want the windows trash
 			window = system.CreateWindow( definition );
 #pragma pop_macro("CreateWindow")
 			InitOpenGL();
@@ -60,16 +63,6 @@ namespace Graphics::API
 		vsync_enabled = enabled_;
 		if( window )
 			window->SetVSync( vsync_enabled );
-	}
-
-	std::unique_ptr<Graphics::Texture> VideoOpenGL::CreateTexture( Size<uint16_t> size )
-	{
-		return std::make_unique<TextureOpenGL>( *this, size );
-	}
-
-	std::unique_ptr<Graphics::Shader> VideoOpenGL::CreateShader( const Graphics::ShaderDefinition& definition )
-	{
-		return std::make_unique<ShaderOpenGL>( definition );
 	}
 
 	std::string_view VideoOpenGL::GetShaderLanguage() const
@@ -141,7 +134,7 @@ namespace Graphics::API
 	void VideoOpenGL::SwapFrameBuffers()
 	{
 		if( window )
-			window->Swap();
+			window->SwapBuffers();
 	}
 
 	void VideoOpenGL::OnOpenGLDebugMessage( unsigned source, unsigned type, unsigned id, unsigned severity, int length, const char* message ) const
@@ -160,5 +153,69 @@ namespace Graphics::API
 		}
 
 		ASSERT( false, "Unknown severity level!" );
+	}
+
+	void VideoOpenGL::SetViewport( Rect<uint32_t> rect )
+	{
+		glViewport( rect.x, rect.y, rect.GetWidth(), rect.GetHeight() );
+	}
+
+	Rect<uint32_t> VideoOpenGL::GetViewport() const
+	{
+		GLint viewport[4];
+		glGetIntegerv( GL_VIEWPORT, viewport );
+		
+		return Rect( Point2D<uint32_t>( viewport[0], viewport[1] ), Size<uint32_t>( viewport[2], viewport[3] ) );
+	}
+
+	void VideoOpenGL::DrawIndexed( const std::shared_ptr<Graphics::VertexArray>& vertex_array, uint32_t index_count )
+	{
+		GLsizei count = index_count ? index_count : vertex_array->GetIndexBuffer()->GetCount();
+		glDrawElements( GL_TRIANGLES, count, GL_UNSIGNED_INT, NULL );
+	}
+
+	std::shared_ptr<Graphics::VertexBuffer> VideoOpenGL::CreateVertexBuffer( const Graphics::VertexBufferDefinition& definition ) const
+	{
+		return std::make_shared<VertexBufferOpenGL>( definition );
+	}
+
+	std::shared_ptr<Graphics::IndexBuffer> VideoOpenGL::CreateIndexBuffer( const Graphics::IndexBufferDefinition& definition ) const
+	{
+		return std::make_shared<IndexBufferOpenGL>( definition );
+	}
+
+	std::shared_ptr<Graphics::FrameBuffer> VideoOpenGL::CreateFrameBuffer( const Graphics::FrameBufferSpecification& specification ) const
+	{
+		return std::make_shared<FrameBufferOpenGL>( specification );
+	}
+
+	std::shared_ptr<Graphics::Shader> VideoOpenGL::CreateShader( const Filepath& filepath ) const
+	{
+		return std::make_shared<ShaderOpenGL>( filepath );
+	}
+
+	std::shared_ptr<Graphics::Shader> VideoOpenGL::CreateShader( std::string_view name, std::string_view vertex_src, std::string_view fragment_src ) const
+	{
+		return std::make_shared<ShaderOpenGL>( name, vertex_src, fragment_src );
+	}
+
+	std::shared_ptr<Graphics::Texture> VideoOpenGL::CreateTexture( const Graphics::TextureDefinition& definition ) const
+	{
+		return std::make_shared<TextureOpenGL>( definition );
+	}
+
+	std::shared_ptr<Graphics::Texture> VideoOpenGL::CreateTexture( const Filepath& filepath, const Graphics::TextureLoadProperties& props ) const
+	{
+		return std::make_shared<TextureOpenGL>( filepath, props );
+	}
+
+	std::shared_ptr<Graphics::VertexArray> VideoOpenGL::CreateVertexArray( const Graphics::VertexArrayDefinition& definition ) const
+	{
+		return std::make_shared<VertexArrayOpenGL>( definition );
+	}
+
+	std::string_view VideoOpenGL::GetName() const
+	{
+		return "OpenGL";
 	}
 }

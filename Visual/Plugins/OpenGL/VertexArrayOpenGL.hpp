@@ -1,17 +1,14 @@
 #pragma once
 
-#include "Visual/Device/VertexArray.hpp"
+#include "Visual/Graphics/VertexArray.hpp"
 
-#ifdef RENDERER_IMPLEMENTATION_OPENGL
-#include "OpenGLHeader.hpp"
-
-namespace Visual::Device::OpenGL
+namespace Graphics::API
 {
 	class VertexArrayOpenGL
-		: public ::Visual::Device::VertexArray
+		: public ::Graphics::VertexArray
 	{
 	public:
-		VertexArrayOpenGL( const CreationProperties& props );
+		VertexArrayOpenGL( const VertexArrayDefinition& definition );
 		virtual ~VertexArrayOpenGL() override;
 
 		virtual void Bind() const override;
@@ -28,13 +25,10 @@ namespace Visual::Device::OpenGL
 
 	private:
 		std::string name;
-		GLuint vao;
-		GLuint vbi; // vertex buffer index
+		unsigned int vao;
+		unsigned int vbi; // vertex buffer index
 
 		std::vector< std::shared_ptr< VertexBuffer > > vertex_buffers;
 		std::shared_ptr< IndexBuffer > index_buffer;
 	};
 }
-
-#endif
-

@@ -1,12 +1,12 @@
 #pragma once
 
-namespace Visual::Device
+namespace Graphics
 {
 	class VertexArray;
 	class VertexBuffer;
 	class IndexBuffer;
 	class Shader;
-	class Texture2D;
+	class Texture;
 }
 
 namespace Game
@@ -33,11 +33,11 @@ namespace Graphical
 		/// </summary>
 		/// <param name="texture_handle">Texture to locate or add</param>
 		/// <returns>Texture index</returns>
-		unsigned FindOrAddTexture( const std::shared_ptr<Visual::Device::Texture2D>& texture_handle );
+		unsigned FindOrAddTexture( const std::shared_ptr<Graphics::Texture>& texture_handle );
 
 	protected:
-		std::shared_ptr<Visual::Device::VertexArray> va;
-		std::shared_ptr<Visual::Device::Shader> shader;
-		std::vector<std::shared_ptr<Visual::Device::Texture2D>> textures;
+		std::shared_ptr<Graphics::VertexArray> va;
+		std::shared_ptr<Graphics::Shader> shader;
+		std::vector<std::shared_ptr<Graphics::Texture>> textures;
 	};
 }

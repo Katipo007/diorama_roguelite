@@ -12,7 +12,7 @@ namespace Graphics
 	struct TextureLoadProperties;
 	class Shader;
 	class FrameBuffer;
-	struct FrameBufferDefinition;
+	struct FrameBufferSpecification;
 	class IndexBuffer;
 	struct IndexBufferDefinition;
 	class VertexArray;
@@ -46,11 +46,11 @@ namespace API
 
 		[[nodiscard]] virtual std::shared_ptr<Graphics::VertexBuffer> CreateVertexBuffer( const Graphics::VertexBufferDefinition& definition ) const = 0;
 		[[nodiscard]] virtual std::shared_ptr<Graphics::IndexBuffer> CreateIndexBuffer( const Graphics::IndexBufferDefinition& definition ) const = 0;
-		[[nodiscard]] virtual std::shared_ptr<Graphics::FrameBuffer> CreateFrameBuffer( const Graphics::FrameBufferDefinition& definition ) const = 0;
+		[[nodiscard]] virtual std::shared_ptr<Graphics::FrameBuffer> CreateFrameBuffer( const Graphics::FrameBufferSpecification& definition ) const = 0;
 		[[nodiscard]] virtual std::shared_ptr<Graphics::Shader> CreateShader( const Filepath& filepath ) const = 0;
 		[[nodiscard]] inline std::shared_ptr<Graphics::Shader> CreateShader( std::string_view filepath ) const { return CreateShader( Filepath( filepath ) ); }
 		[[nodiscard]] virtual std::shared_ptr<Graphics::Shader> CreateShader( std::string_view name, std::string_view vertex_src, std::string_view fragment_src ) const = 0;
-		[[nodiscard]] virtual std::shared_ptr<Graphics::Texture> CreateTexture( Size<uint32_t> size, const Graphics::TextureDefinition& props ) const = 0;
+		[[nodiscard]] virtual std::shared_ptr<Graphics::Texture> CreateTexture( const Graphics::TextureDefinition& props ) const = 0;
 		[[nodiscard]] virtual std::shared_ptr<Graphics::Texture> CreateTexture( const Filepath& filepath, const Graphics::TextureLoadProperties& props ) const = 0;
 		[[nodiscard]] inline std::shared_ptr<Graphics::Texture> CreateTexture( std::string_view filepath, const Graphics::TextureLoadProperties& props ) const { return CreateTexture( Filepath( filepath ), props ); }
 		[[nodiscard]] virtual std::shared_ptr<Graphics::VertexArray> CreateVertexArray( const Graphics::VertexArrayDefinition& definition ) const = 0;

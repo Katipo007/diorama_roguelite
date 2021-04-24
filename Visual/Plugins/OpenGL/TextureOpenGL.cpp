@@ -1,23 +1,23 @@
 #include "TextureOpenGL.hpp"
-#include "Common/Utility/CompileTime/Unreachable.hpp"
+#include "OpenGLHeader.hpp"
 
-#ifdef RENDERER_IMPLEMENTATION_OPENGL
+#include "Common/Utility/CompileTime/Unreachable.hpp"
 
 #include "Visual/Utility/StbImage.hpp"
 
-namespace Visual::Device::OpenGL
+namespace Graphics::API
 {
 	namespace
 	{
-		GLuint ConvertTextureWrapSetting( Texture::TextureWrapSetting value )
+		GLuint ConvertTextureWrapSetting( TextureWrapSetting value )
 		{
 			switch( value )
 			{
-			case Texture::TextureWrapSetting::ClampToEdge:
+			case TextureWrapSetting::ClampToEdge:
 				return GL_CLAMP_TO_EDGE;
-			case Texture::TextureWrapSetting::Repeat:
+			case TextureWrapSetting::Repeat:
 				return  GL_REPEAT;
-			case Texture::TextureWrapSetting::MirroredRepeat:
+			case TextureWrapSetting::MirroredRepeat:
 				return GL_MIRRORED_REPEAT;
 			}
 
@@ -25,24 +25,23 @@ namespace Visual::Device::OpenGL
 		}
 	}
 
-	Texture2DOpenGL::Texture2DOpenGL( uint32_t width_, uint32_t height_, const Texture::CreationProperties& props )
-		: width( width_ )
-		, height( height_ )
+	TextureOpenGL::TextureOpenGL( const TextureDefinition& definition )
+		: size( definition.size )
 	{
 		opengl_internal_format = GL_RGBA8;
 		opengl_data_format = GL_RGBA;
 
 		glCreateTextures( GL_TEXTURE_2D, 1, &opengl_texture_id );
-		glTextureStorage2D( opengl_texture_id, 1, opengl_internal_format, static_cast<GLsizei>( width ), static_cast<GLsizei>( height ) );
+		glTextureStorage2D( opengl_texture_id, 1, opengl_internal_format, static_cast<GLsizei>( size.width ), static_cast<GLsizei>( size.height ) );
 
 		glTextureParameteri( opengl_texture_id, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
 		glTextureParameteri( opengl_texture_id, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
 
-		glTextureParameteri( opengl_texture_id, GL_TEXTURE_WRAP_S, ConvertTextureWrapSetting( props.wrap_s ) );
-		glTextureParameteri( opengl_texture_id, GL_TEXTURE_WRAP_T, ConvertTextureWrapSetting( props.wrap_t ) );
+		glTextureParameteri( opengl_texture_id, GL_TEXTURE_WRAP_S, ConvertTextureWrapSetting( definition.wrap_s ) );
+		glTextureParameteri( opengl_texture_id, GL_TEXTURE_WRAP_T, ConvertTextureWrapSetting( definition.wrap_t ) );
 	}
 
-	Texture2DOpenGL::Texture2DOpenGL( const std::filesystem::path& filepath, const Texture::LoadProperties& props )
+	TextureOpenGL::TextureOpenGL( const Filepath& filepath, const TextureLoadProperties& props )
 	{
 		ASSERT( std::filesystem::is_regular_file( filepath ) );
 		
@@ -54,8 +53,7 @@ namespace Visual::Device::OpenGL
 
 		ASSERT( _data, "Failed to load image" );
 
-		width = static_cast<uint32_t>( _out_w );
-		height = static_cast<uint32_t>( _out_h );
+		size = Size( (uint32_t)_out_w, (uint32_t)_out_h );
 
 		GLenum _internal_format = 0;
 		GLenum _data_format = 0;
@@ -83,7 +81,7 @@ namespace Visual::Device::OpenGL
 		ASSERT( opengl_internal_format & opengl_data_format, "Unsupported image format!" );
 
 		glCreateTextures( GL_TEXTURE_2D, 1, &opengl_texture_id );
-		glTextureStorage2D( opengl_texture_id, 1, opengl_internal_format, static_cast<GLsizei>( width ), static_cast<GLsizei>( height ) );
+		glTextureStorage2D( opengl_texture_id, 1, opengl_internal_format, static_cast<GLsizei>( size.width ), static_cast<GLsizei>( size.height ) );
 
 		glTextureParameteri( opengl_texture_id, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
 		glTextureParameteri( opengl_texture_id, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
@@ -91,28 +89,32 @@ namespace Visual::Device::OpenGL
 		glTextureParameteri( opengl_texture_id, GL_TEXTURE_WRAP_S, ConvertTextureWrapSetting( props.wrap_s ) );
 		glTextureParameteri( opengl_texture_id, GL_TEXTURE_WRAP_T, ConvertTextureWrapSetting( props.wrap_t ) );
 
-		glTextureSubImage2D( opengl_texture_id, 0, 0, 0, static_cast<GLsizei>( width ), static_cast<GLsizei>( height ), opengl_data_format, GL_UNSIGNED_BYTE, _data );
+		glTextureSubImage2D( opengl_texture_id, 0, 0, 0, static_cast<GLsizei>( size.width ), static_cast<GLsizei>( size.height ), opengl_data_format, GL_UNSIGNED_BYTE, _data );
 
 		stbi_image_free( _data );
 		this->filepath = filepath.string();
 	}
 
-	Texture2DOpenGL::~Texture2DOpenGL()
+	TextureOpenGL::~TextureOpenGL()
 	{
 		glDeleteTextures( 1, &opengl_texture_id );
 	}
 
-	void Texture2DOpenGL::SetData( void * data, uint32_t size )
+	void TextureOpenGL::SetData( void * data, uint32_t data_size )
 	{
 		uint32_t _bpp = ( opengl_data_format == GL_RGBA ) ? 4 : 3;
-		ASSERT( size == width * height * _bpp, "Data size must exactly match texture!" );
-		glTextureSubImage2D( opengl_texture_id, 0, 0, 0, static_cast<GLsizei>( width ), static_cast<GLsizei>( height ), opengl_data_format, GL_UNSIGNED_BYTE, data );
+		ASSERT( data_size == size.width * size.height * _bpp, "Data size must exactly match texture!" );
+		glTextureSubImage2D( opengl_texture_id, 0, 0, 0, static_cast<GLsizei>( size.width ), static_cast<GLsizei>( size.height ), opengl_data_format, GL_UNSIGNED_BYTE, data );
 	}
 
-	void Texture2DOpenGL::Bind( uint32_t slot ) const
+	void TextureOpenGL::Bind( uint32_t slot ) const
 	{
 		glBindTextureUnit( static_cast<GLenum>( slot ), opengl_texture_id );
 	}
-}
 
-#endif
+	bool TextureOpenGL::operator==( const Texture& other ) const
+	{
+		const auto& opengl_other = dynamic_cast<const TextureOpenGL&>(other);
+		return opengl_texture_id == opengl_other.opengl_texture_id;
+	}
+}

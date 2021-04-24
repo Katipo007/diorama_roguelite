@@ -1,20 +1,23 @@
 #include "ImageResourceManager.hpp"
 
+#include "Common/Core/API/VideoAPI.hpp"
 #include "Common/Utility/json.hpp"
 #include "Common/Utility/FileOps.hpp"
-#include "Visual/Device/RendererAPI.hpp"
-#include "Visual/Device/RendererCommand.hpp"
+
+#include "Visual/Graphics/Texture.hpp"
 
 namespace Resources
 {
 	ImageDefinition::ImageDefinition( ConstTexturePtr texture, Rect<float> uv )
 		: texture_ptr( texture )
-		, uv_rect( { uv.GetLeft() / texture->GetWidth(), uv.GetTop() / texture->GetHeight(), uv.GetRight() / texture->GetWidth(), uv.GetBottom() / texture->GetHeight() } )
 		, cached_size_f( uv.GetWidth(), uv.GetHeight() )
 		, cached_size_uint( (unsigned)cached_size_f.width, (unsigned)cached_size_f.height )
 	{
 		ASSERT( texture_ptr != nullptr );
 		ASSERT( uv_rect.IsValid() );
+
+		const auto texture_size = texture->GetSize();
+		uv_rect = { uv.GetLeft() / texture_size.width, uv.GetTop() / texture_size.height, uv.GetRight() / texture_size.width, uv.GetBottom() / texture_size.height };
 	}
 
 	ImageDefinition::~ImageDefinition()
@@ -26,7 +29,8 @@ namespace Resources
 	/// ImageResourceManager
 	/// 
 
-	ImageResourceManager::ImageResourceManager()
+	ImageResourceManager::ImageResourceManager( ::API::VideoAPI& video_ )
+		: video( video_ )
 	{
 	}
 
@@ -84,12 +88,11 @@ namespace Resources
 		return false;
 	}
 
-	bool ImageResourceManager::ParseJsonFreeTexPacker( const nlohmann::json& json, const std::filesystem::path& filepath_prefix )
+	bool ImageResourceManager::ParseJsonFreeTexPacker( const nlohmann::json& json, const Filepath& filepath_prefix )
 	{
 		ASSERT( std::filesystem::is_directory( filepath_prefix ) );
-		const auto& renderer_api = Visual::Device::RendererCommand::GetRendererAPI();
 
-		std::shared_ptr<Visual::Device::Texture2D> texture;
+		std::shared_ptr<Graphics::Texture> texture;
 		size_t added_images = 0;
 
 		const auto meta = json.at("meta");
@@ -101,9 +104,9 @@ namespace Resources
 
 			// TODO: use specified format information
 
-			Visual::Device::Texture2D::LoadProperties props;
+			Graphics::TextureLoadProperties props;
 			props.y_flip = false;
-			texture = renderer_api.CreateTexture2D( filepath_prefix / texture_filename, props );
+			texture = video.CreateTexture( filepath_prefix / texture_filename, props );
 			if (!texture)
 				throw std::runtime_error( "Failed to load texture" );
 		}
@@ -144,7 +147,7 @@ namespace Resources
 		return added_images > 0;
 	}
 
-	bool ImageResourceManager::AddImageDefinition( std::string_view image_id, std::shared_ptr<Visual::Device::Texture2D> texture, const Rect<float>& uvs )
+	bool ImageResourceManager::AddImageDefinition( std::string_view image_id, std::shared_ptr<Graphics::Texture> texture, const Rect<float>& uvs )
 	{
 		ASSERT( !image_id.empty() );
 		ASSERT( texture != nullptr );

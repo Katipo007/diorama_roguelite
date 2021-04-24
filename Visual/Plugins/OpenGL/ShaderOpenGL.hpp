@@ -1,30 +1,34 @@
 #pragma once
 
-#include "Visual/Resources/Shader.hpp"
+#include "Common/File/Filepath.hpp"
+#include "Visual/Graphics/Shader.hpp"
 
 namespace Graphics::API
 {
-	class ShaderOpenGL final
+	class ShaderOpenGL
 		: public ::Graphics::Shader
 	{
 	public:
-		explicit ShaderOpenGL( const ShaderDefinition& definition );
-		~ShaderOpenGL();
+		ShaderOpenGL( const Filepath& filepath );
+		ShaderOpenGL( std::string_view name, std::string_view vertex_src, std::string_view fragment_src );
+		virtual ~ShaderOpenGL() override;
 
-		void Bind();
-		void Unbind();
+		virtual void Bind() const override;
+		virtual void Unbind() const override;
 
-		void Destroy();
-		void SetUniformBlockBinding( unsigned int block_index, unsigned int binding );
-
-		int GetUniformLocation( const std::string& name, ShaderType stage ) override;
-		int GetBlockLocation( const std::string& name, ShaderType stage ) override;
-		int GetAttributeLocation( const std::string& name, ShaderType stage );
+		virtual void SetInt( const std::string& name, int value ) override;
+		virtual void SetUInt( const std::string& name, unsigned int value ) override;
+		virtual void SetIntArray( const std::string& name, int* values, uint32_t count ) override;
+		virtual void SetUIntArray( const std::string& name, unsigned int* values, uint32_t count ) override;
+		virtual void SetFloat( const std::string& name, float value ) override;
+		virtual void SetFloat3( const std::string& name, glm::vec3 value ) override;
+		virtual void SetFloat4( const std::string& name, glm::vec4 value ) override;
+		virtual void SetMat4( const std::string& name, glm::mat4 value ) override;
 
 		virtual std::string_view GetName() const { return name; }
 
-	protected:
 		// OpenGL impl
+
 		void UploadUniformInt( const std::string& name, int value );
 		void UploadUniformUInt( const std::string& name, unsigned int value );
 		void UploadUniformIntArray( const std::string& name, int* values, uint32_t count );
@@ -38,22 +42,17 @@ namespace Graphics::API
 		void UploadUniformMat3( const std::string& name, glm::mat3 value );
 		void UploadUniformMat4( const std::string& name, glm::mat4 value );
 
+		// FOR DEBUGGING PURPOSES ONLY!!!
+		int GetNativeProgramID() const { return opengl_program_id; }
+
 	private:
-		void LoadShaders( const std::unordered_map<ShaderType, std::vector<std::byte>>& shaders );
-		void Compile();
+		std::string ReadFile( const std::filesystem::path& filepath );
+		std::unordered_map<unsigned int, std::string> PreProcess( std::string_view source );
+		void Compile( const std::unordered_map<unsigned int, std::string>& shader_sources );
 
 	private:
 		std::string name;
-		unsigned int id = 0;
-		bool ready = false;
-
-		std::vector<Bytes> vertex_sources;
-		std::vector<Bytes> pixel_sources;
-		std::vector<unsigned int> program_ids;
-
-		std::unordered_map<std::string, unsigned int> attribute_locations;
-		std::unordered_map<std::string, unsigned int> uniform_locations;
-		std::unordered_map<std::string, unsigned int> block_locations;
+		int opengl_program_id;
 	};
 
 }

@@ -1,10 +1,9 @@
 #include "ClientGame.hpp"
 
+#include "Common/Core/Core.hpp"
 #include "Common/Core/ResourceManager.hpp"
 #include "Common/Utility/StateMachine/StateMachine.hpp"
 #include "Common/Utility/Timestep.hpp"
-
-#include "Visual/Device/RendererCommand.hpp"
 
 #include "Client/Sessions/ClientServerSession.hpp"
 
@@ -151,6 +150,8 @@ namespace Game
 
     void ClientGame::Init()
     {
+        ASSERT( core != nullptr );
+        // TODO: grab dearimgui plugin
     }
 
     void ClientGame::OnGameEnd()
@@ -166,10 +167,6 @@ namespace Game
             else
                 client_server_session->Update( ts );
         }
-
-        // TODO: Don't clear here, require individual states to clear the screen
-        Visual::Device::RendererCommand::SetClearColour( ColourRGBA( 0, 0, 0, 255 ) );
-        Visual::Device::RendererCommand::Clear();
 
         client_data->state_machine.Handle( ClientStates::FrameEvent( ts ) );
     }
@@ -187,8 +184,9 @@ namespace Game
 
     void ClientGame::DoDearImGuiFrame()
     {
-#ifdef DEARIMGUI_ENABLED
-        client_data->state_machine.Handle( ClientStates::DearImGuiFrameEvent() );
-#endif
+        if (!dearimgui)
+            return;
+
+        client_data->state_machine.Handle( ClientStates::DearImGuiFrameEvent( *dearimgui ) );
     }
 }

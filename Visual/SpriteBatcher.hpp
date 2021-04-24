@@ -3,17 +3,12 @@
 #include "Common/Utility/Math/Vec2.hpp"
 #include "Common/Utility/Math/Vec3.hpp"
 #include "Common/Utility/Math/Mat4.hpp"
-#include "Visual/Graphics/Colour.hpp"
+#include "Visual/Colour.hpp"
 
-namespace Resources
-{
-	class Image;
-}
+namespace API { class VideoAPI; }
+namespace Graphics { class Texture; }
+namespace Resources { class Image; }
 
-namespace Visual::Device
-{
-	class Texture2D;
-}
 
 namespace Visual
 {
@@ -39,7 +34,7 @@ namespace Visual
 		};
 
 	public:
-		explicit SpriteBatcher();
+		explicit SpriteBatcher( ::API::VideoAPI& video );
 		virtual ~SpriteBatcher();
 
 		void Begin( const Camera& camera, const glm::mat4& world_transform = glm::mat4( 1.f ) );
@@ -64,9 +59,11 @@ namespace Visual
 		void NextBatch();
 
 		// Warning: can cause batch breaks
-		TextureSlotId FindOrAddTexture( const std::shared_ptr<const Device::Texture2D>& texture_handle );
+		TextureSlotId FindOrAddTexture( const std::shared_ptr<const Graphics::Texture>& texture_handle );
 
 	private:
+		::API::VideoAPI& video;
+
 		struct Data;
 
 		std::unique_ptr<Data> data;

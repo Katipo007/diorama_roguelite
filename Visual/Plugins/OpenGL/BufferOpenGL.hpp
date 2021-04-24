@@ -1,16 +1,14 @@
 #pragma once
 
-#include "Visual/Device/GraphicsBuffer.hpp"
+#include "Visual/Graphics/GraphicsBuffer.hpp"
 
-#ifdef RENDERER_IMPLEMENTATION_OPENGL
-
-namespace Visual::Device::OpenGL
+namespace Graphics::API
 {
 	class VertexBufferOpenGL
-		: public ::Visual::Device::VertexBuffer
+		: public ::Graphics::VertexBuffer
 	{
 	public:
-		VertexBufferOpenGL( const CreationProperties& props );
+		VertexBufferOpenGL( const VertexBufferDefinition& props );
 		virtual ~VertexBufferOpenGL();
 
 		virtual void Bind() const override;
@@ -28,10 +26,10 @@ namespace Visual::Device::OpenGL
 	};
 
 	class IndexBufferOpenGL
-		: public ::Visual::Device::IndexBuffer
+		: public ::Graphics::IndexBuffer
 	{
 	public:
-		IndexBufferOpenGL( const CreationProperties& props );
+		IndexBufferOpenGL( const IndexBufferDefinition& props );
 		virtual ~IndexBufferOpenGL();
 
 		virtual void Bind() const;
@@ -44,5 +42,3 @@ namespace Visual::Device::OpenGL
 		uint32_t count;
 	};
 }
-
-#endif

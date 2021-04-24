@@ -1,10 +1,11 @@
 #include "ClientGameWorld.hpp"
 
+#include "Common/Core/API/VideoAPI.hpp"
 #include "Visual/Renderer.hpp"
 #include "Visual/SpriteBatcher.hpp"
-#include "Visual/Device/Shader.hpp"
-#include "Visual/Device/Texture.hpp"
-#include "Visual/Device/VertexArray.hpp"
+#include "Visual/Graphics/Shader.hpp"
+#include "Visual/Graphics/Texture.hpp"
+#include "Visual/Graphics/VertexArray.hpp"
 
 #include "Client/Game/PlayerObject.hpp"
 
@@ -14,12 +15,14 @@ namespace Game
 	/// ClientGameWorld
 	/// 
 	
-	ClientGameWorld::ClientGameWorld( ResourceManager& _resources )
+	ClientGameWorld::ClientGameWorld( ::API::VideoAPI& video_, ResourceManager& resources_ )
 		: GameWorld()
-		, resources( _resources )
+		, video( video_ )
+		, resources( resources_ )
 	{
-		sprite_renderer = std::make_unique<Visual::SpriteBatcher>();
-		player = std::make_unique<PlayerObject>( _resources );
+		renderer = std::make_unique<Visual::Renderer>( video );
+		sprite_renderer = std::make_unique<Visual::SpriteBatcher>( video );
+		player = std::make_unique<PlayerObject>( resources );
 	}
 
 	ClientGameWorld::~ClientGameWorld()
@@ -36,7 +39,7 @@ namespace Game
 	void ClientGameWorld::Render( std::shared_ptr<Visual::Camera> camera ) const
 	{
 		// SETUP
-		Visual::Renderer::BeginScene( *camera );
+		renderer->BeginScene( *camera );
 		sprite_renderer->Begin( *camera );
 
 		// ENVIRONMENT.
@@ -52,7 +55,7 @@ namespace Game
 
 		// CLEANUP
 		sprite_renderer->EndScene();
-		Visual::Renderer::EndScene();
+		renderer->EndScene();
 	}
 
 	void ClientGameWorld::RenderGameObjects() const

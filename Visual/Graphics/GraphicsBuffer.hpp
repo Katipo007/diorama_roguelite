@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cinttypes>
+#include <optional>
 #include <string>
 
 namespace Graphics
@@ -70,24 +71,24 @@ namespace Graphics
 		uint32_t stride = 0;
 	};
 
+
+	struct VertexBufferDefinition
+	{
+		std::optional<std::string> name;
+		BufferLayout layout;
+		std::vector<unsigned char> data;
+
+		template<typename T>
+		void SetDataFromVector( const std::vector<T>& in_ )
+		{
+			const auto data_size = in_.size() * sizeof( T );
+			data.resize( data_size );
+			memcpy( data.data(), in_.data(), data_size );
+		}
+	};
+
 	class VertexBuffer
 	{
-	public:
-		struct CreationProperties
-		{
-			std::string name; ///< Optional
-			BufferLayout layout;
-			std::vector<unsigned char> data;
-
-			template<typename T>
-			void SetDataFromVector( const std::vector<T>& in_ )
-			{
-				const auto data_size = in_.size() * sizeof( T );
-				data.resize( data_size );
-				memcpy( data.data(), in_.data(), data_size );
-			}
-		};
-
 	public:
 		virtual ~VertexBuffer() = default;
 
@@ -100,15 +101,14 @@ namespace Graphics
 		virtual void SetLayout( const BufferLayout& layout ) = 0;
 	};
 
+	struct IndexBufferDefinition
+	{
+		std::optional<std::string> name;
+		std::vector<uint32_t> indices;
+	};
+
 	class IndexBuffer
 	{
-	public:
-		struct CreationProperties
-		{
-			std::string name; ///< Optional
-			std::vector<uint32_t> indices;
-		};
-
 	public:
 		virtual ~IndexBuffer() = default;
 

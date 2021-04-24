@@ -4,7 +4,7 @@
 
 namespace
 {
-	static const std::shared_ptr<const Visual::Device::Texture2D> EmptyTextureHandle = nullptr;
+	static const std::shared_ptr<const Graphics::Texture> EmptyTextureHandle = nullptr;
 }
 
 namespace Resources
@@ -59,7 +59,7 @@ namespace Resources
 		return definition ? definition->GetSizeF() : Size<float>::empty;
 	}
 
-	const std::shared_ptr<const Visual::Device::Texture2D>& Image::GetSharedTexture() const
+	const std::shared_ptr<const Graphics::Texture>& Image::GetSharedTexture() const
 	{
 		return definition ? definition->GetSharedTexture() : EmptyTextureHandle;
 	}
