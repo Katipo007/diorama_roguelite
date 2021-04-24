@@ -22,6 +22,8 @@ namespace Graphics
 
 	class Window;
 	struct WindowDefinition;
+
+	struct DeviceCapabilities;
 }
 
 namespace API
@@ -41,6 +43,8 @@ namespace API
 
 		virtual void SetViewport( Rect<uint32_t> ) = 0;
 		virtual Rect<uint32_t> GetViewport() const = 0;
+
+		virtual const Graphics::DeviceCapabilities& GetDeviceCapabilities() const = 0;
 
 		virtual void DrawIndexed( const std::shared_ptr<Graphics::VertexArray>& vertex_array, uint32_t index_count = 0 ) = 0;
 

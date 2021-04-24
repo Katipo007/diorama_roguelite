@@ -18,6 +18,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Camera.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)DearImGUI\config.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)DearImGUI\DearImGui.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\DeviceCapabilities.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\FrameBuffer.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\GraphicsBuffer.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Shader.hpp" />
@@ -29,6 +30,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\OpenGL\ShaderOpenGL.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\OpenGL\TextureOpenGL.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\OpenGL\VertexArrayOpenGL.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\SDL2\OpenGLContextSDL2.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\SDL2\SystemSDL2.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Events\ApplicationEvents.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Events\Event.hpp" />
@@ -41,6 +43,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)OpenGLContext.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\DearImGUI\DearImGuiPlugin.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\OpenGL\VideoOpenGL.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\SDL2\WindowSDL2.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Renderer.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)RendererAPIs.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Window.hpp" />
@@ -63,6 +66,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\OpenGL\TextureOpenGL.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\OpenGL\VertexArrayOpenGL.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\OpenGL\VideoOpenGL.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\SDL2\OpenGLContextSDL2.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\SDL2\SystemSDL2.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\SDL2\WindowSDL2.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Renderer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Resources\Image.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Resources\ImageResourceManager.cpp" />

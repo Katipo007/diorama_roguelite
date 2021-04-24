@@ -7,6 +7,7 @@
 #include "Common/Core/API/VideoAPI.hpp"
 
 #include "Visual/Camera.hpp"
+#include "Visual/Graphics/DeviceCapabilities.hpp"
 #include "Visual/Graphics/GraphicsBuffer.hpp"
 #include "Visual/Graphics/VertexArray.hpp"
 #include "Visual/Graphics/Shader.hpp"
@@ -175,10 +176,10 @@ namespace Visual
 	SpriteBatcher::SpriteBatcher( ::API::VideoAPI& video_ )
 		: video( video_ )
 	{
-		const auto capabilities = video.GetCapabilities();
+		const auto& capabilities = video.GetDeviceCapabilities();
 
 		// TODO: determine max number of vertexes/indices
-		data = std::make_unique<Data>( 20000, std::min( (uint32_t)capabilities.max_texture_slots, (uint32_t)10 ) );
+		data = std::make_unique<Data>( video, 20000, std::min( (uint32_t)capabilities.max_texture_slots, (uint32_t)10 ) );
 	}
 
 	SpriteBatcher::~SpriteBatcher()

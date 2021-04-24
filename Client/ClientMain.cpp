@@ -63,11 +63,13 @@ int main( int argc, char** argv )
 	{
 		// TODO: swap plugins based on system
 
-		std::unordered_map<API::APIType, API::InternalAPI> plugin_factories;
+		using APIFactory_T = std::function<API::InternalAPI* ( API::SystemAPI* )>;
+		std::unordered_map<API::APIType, APIFactory_T> plugin_factories;
 		plugin_factories[API::APIType::System] = []( API::SystemAPI* ) { return new Graphics::API::SystemSDL2(); };
-		plugin_factories[API::APIType::Video] = []( API::SystemAPI* system ) { return new Graphics::API::VideoOpenGL( system ); };
+		plugin_factories[API::APIType::Video] = []( API::SystemAPI* system ) { ASSERT( system ); return new Graphics::API::VideoOpenGL( *system ); };
 
 		core = std::make_unique<Core>( std::make_unique<Game::ClientGame>(), plugin_factories );
+		core->Init();
 	}
 
 	// ============================================

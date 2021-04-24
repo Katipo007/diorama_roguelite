@@ -7,13 +7,13 @@
 
 #define RETRIEVE_PLUGIN_REQUIRED( _factories, _type, _storage_ptr ) { \
 	if( const auto& factory = _factories[ API::APIType::_type ] ) \
-		{ _storage_ptr.reset( dynamic_cast<API::Internal##_type##API*>( factory( system_api.get() ) ) ); LOG_INFO( Application, "_type API: {}", _storage_ptr->GetName() ); } \
+		{ _storage_ptr.reset( dynamic_cast<API::Internal##_type##API*>( factory( system_api.get() ) ) ); LOG_INFO( Application, #_type " API: {}", _storage_ptr->GetName() ); } \
 	if( _storage_ptr == nullptr ) \
 		throw std::runtime_error( "Non-optional '" #_type "' API was not provided!" ); }
 
 #define RETRIEVE_PLUGIN_OPTIONAL( _factories, _type, _storage_ptr ) \
 	if( const auto& factory = _factories[ API::APIType::_type ] ) \
-		{ _storage_ptr.reset( dynamic_cast<API::Internal##_type##API*>( factory( system_api.get() ) ) ); LOG_INFO( Application, "_type API: {}", _storage_ptr->GetName() ); } \
+		{ _storage_ptr.reset( dynamic_cast<API::Internal##_type##API*>( factory( system_api.get() ) ) ); LOG_INFO( Application, #_type " API: {}", _storage_ptr->GetName() ); } \
 
 Core::Core( std::unique_ptr<AbstractGame> _game, PluginFactoryMap_T& plugin_factories )
 	: game( std::move( _game ) )
@@ -45,6 +45,8 @@ void Core::Init()
 	InitRNG();
 
 	AssignAPIs();
+	game->core = this;
+	game->resource_manager = resource_manager.get();
 	game->Init();
 
 	is_initialised = true;
@@ -60,7 +62,6 @@ int Core::Dispatch()
 	Clock_T::time_point last_time;
 	target_time = last_time = start_time;
 
-	bool is_running = true;
 	if (target_fps <= 0)
 	{
 		while (is_running)
@@ -70,8 +71,8 @@ int Core::Dispatch()
 			constexpr double fixed_delta = 1.0 / 60.0;
 
 			const auto timestep = PreciseTimestep( current_time_seconds, fixed_delta );
-			game->OnFixedUpdate( timestep );
-			game->OnVariableUpdate( timestep );
+			DoFixedUpdate( timestep );
+			DoVariableUpdate( timestep );
 		}
 	}
 	else
@@ -90,7 +91,7 @@ int Core::Dispatch()
 				// Perform a given number of steps this frame
 				int steps_needed = static_cast<int>(std::chrono::duration<float>( current_time - target_time ).count() * target_fps);
 				for (int i = 0; i < std::min( steps_needed, MaxFixedStepsPerFrame ); i++)
-					game->OnFixedUpdate( PreciseTimestep( current_time_seconds, fixed_timestep_seconds ) );
+					DoFixedUpdate( PreciseTimestep( current_time_seconds, fixed_timestep_seconds ) );
 
 				num_steps += steps_needed;
 				target_time = start_time + std::chrono::microseconds( (num_steps * 1000000ll) / target_fps );
@@ -104,7 +105,7 @@ int Core::Dispatch()
 			{
 				constexpr double Max_DeltaTimeSeconds = 0.1;
 				const double seconds_since_last_frame = std::chrono::duration_cast<std::chrono::milliseconds>(current_time - last_time).count() / 1000.0;
-				game->OnVariableUpdate( PreciseTimestep( current_time_seconds, std::min( seconds_since_last_frame, Max_DeltaTimeSeconds ) ) );
+				DoVariableUpdate( PreciseTimestep( current_time_seconds, std::min( seconds_since_last_frame, Max_DeltaTimeSeconds ) ) );
 			}
 
 			last_time = current_time;
@@ -140,6 +141,48 @@ void Core::Shutdown()
 	AssignAPIs();
 
 	is_initialised = false;
+}
+
+void Core::DoFixedUpdate( const PreciseTimestep& ts )
+{
+	if (is_running)
+		game->OnFixedUpdate( ts );
+}
+
+void Core::DoVariableUpdate( const PreciseTimestep& ts )
+{
+	PumpEvents( ts );
+	if (is_running)
+		game->OnVariableUpdate( ts );
+
+	if (system_api)
+		system_api->Update( ts );
+
+	DoRender( ts );
+}
+
+void Core::DoRender( const PreciseTimestep& ts )
+{
+	if (video_api)
+	{
+		video_api->BeginRender();
+
+		if (is_running)
+			game->OnRender( ts );
+
+		video_api->EndRender();
+	}
+}
+
+void Core::PumpEvents( const PreciseTimestep& ts )
+{
+	if( input_api )
+		input_api->BeginEvents( ts );
+	if (!system_api->GenerateEvents( Video, Input ))
+	{
+		exit_code = 0;
+		is_running = false;
+	}
 }
 
 void Core::InitAPIs()

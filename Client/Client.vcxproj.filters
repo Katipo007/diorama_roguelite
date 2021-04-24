@@ -54,9 +54,6 @@
     <ClCompile Include="Game\ClientZone.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Graphical\ZoneMesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precompiled\pch.hpp">
@@ -96,9 +93,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Game\ClientZone.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphical\ZoneMesh.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

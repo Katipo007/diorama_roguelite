@@ -2,6 +2,7 @@
 
 #include "Common/Core/Core.hpp"
 #include "Common/Core/ResourceManager.hpp"
+#include "Common/Core/API/VideoAPI.hpp"
 #include "Common/Utility/StateMachine/StateMachine.hpp"
 #include "Common/Utility/Timestep.hpp"
 
@@ -13,6 +14,8 @@
 #include "Client/States/JoinMultiplayerState.hpp"
 #include "Client/States/LoadingState.hpp"
 #include "Client/States/InGameState.hpp"
+
+#include "Visual/Window.hpp"
 
 namespace ClientStates
 {
@@ -151,7 +154,15 @@ namespace Game
     void ClientGame::Init()
     {
         ASSERT( core != nullptr );
+        ASSERT( core->Video != nullptr );
         // TODO: grab dearimgui plugin
+
+        Graphics::WindowDefinition window_def;
+        window_def.title = "Diorama Roguelite";
+        window_def.size = { 800, 600 };
+        core->Video->SetWindow( std::move( window_def ) );
+
+        ASSERT( core->Video->HasWindow() );
     }
 
     void ClientGame::OnGameEnd()

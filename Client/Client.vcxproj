@@ -91,7 +91,6 @@
     <ClCompile Include="Game\ClientZone.cpp" />
     <ClCompile Include="Game\PlayerObject.cpp" />
     <ClCompile Include="Graphical\UI\ChatWindow.cpp" />
-    <ClCompile Include="Graphical\ZoneMesh.cpp" />
     <ClCompile Include="Precompiled\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Level4</WarningLevel>
@@ -110,7 +109,6 @@
     <ClInclude Include="Game\ClientZone.hpp" />
     <ClInclude Include="Game\PlayerObject.hpp" />
     <ClInclude Include="Graphical\UI\ChatWindow.hpp" />
-    <ClInclude Include="Graphical\ZoneMesh.hpp" />
     <ClInclude Include="Precompiled\pch.hpp" />
     <ClInclude Include="Sessions\ClientServerSession.hpp" />
     <ClInclude Include="States\Events.hpp" />

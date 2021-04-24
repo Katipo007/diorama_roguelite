@@ -91,6 +91,43 @@ namespace Graphics::API
 		if (init_result != GLEW_OK)
 			throw std::runtime_error( "glew failed to initialise" ); // TODO: show error
 
+		// Fetch capabilities
+		{
+			// max number of textures we can bind at once
+			{
+				int value = 0;
+				glGetIntegerv( GL_MAX_TEXTURE_IMAGE_UNITS, &value );
+				ASSERT( value >= 0 ); // hopefully never a negative number
+
+				// hopefully they can support at least two textures
+				if (value < 2)
+					value = 2;
+
+				capabilities.max_texture_slots = static_cast<uint32_t>(value);
+			}
+
+			// max 1d/2d texture resolution
+			{
+				int value = 0;
+				glGetIntegerv( GL_MAX_TEXTURE_SIZE, &value );
+				capabilities.max_texture_width = capabilities.max_texture_height = value;
+			}
+
+			// max cube-map resolution
+			{
+				int value = 0;
+				glGetIntegerv( GL_MAX_CUBE_MAP_TEXTURE_SIZE, &value );
+				capabilities.max_cubemap_width = capabilities.max_cubemap_height = value;
+			}
+
+			// max number of texture coordinates supported
+			{
+				int value = 0;
+				glGetIntegerv( GL_MAX_TEXTURE_COORDS, &value );
+				capabilities.max_texture_coordinates = value;
+			}
+		}
+
 #ifdef _DEBUG
 		SetupDebugMessageCallback();
 #endif

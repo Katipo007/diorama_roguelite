@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Common/Core/API/InternalAPI.hpp"
+#include "Visual/Graphics/DeviceCapabilities.hpp"
 
 namespace Graphics::API
 {
@@ -21,6 +22,8 @@ namespace Graphics::API
 
 		virtual void SetViewport( Rect<uint32_t> ) override;
 		virtual Rect<uint32_t> GetViewport() const override;
+
+		virtual const Graphics::DeviceCapabilities& GetDeviceCapabilities() const override { return capabilities; }
 
 		virtual void DrawIndexed( const std::shared_ptr<Graphics::VertexArray>& vertex_array, uint32_t index_count = 0 ) override;
 
@@ -53,6 +56,8 @@ namespace Graphics::API
 		::API::SystemAPI& system;
 		std::unique_ptr<::Graphics::OpenGLContext> context;
 		bool initialised = false;
+
+		DeviceCapabilities capabilities;
 
 		std::shared_ptr<::Graphics::Window> window;
 		bool vsync_enabled = false;

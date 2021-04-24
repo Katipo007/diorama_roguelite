@@ -55,7 +55,7 @@ private:
 	void DoVariableUpdate( const PreciseTimestep& ts );
 	void DoRender( const PreciseTimestep& ts );
 
-	void PumpEvents();
+	void PumpEvents( const PreciseTimestep& ts );
 
 	void InitAPIs();
 	void AssignAPIs();
@@ -65,6 +65,9 @@ private:
 	bool is_initialised = false;
 
 	int target_fps;
+	bool is_running = true;
+	int exit_code = -1;
+
 	std::unique_ptr<AbstractGame> game;
 	std::unique_ptr<ResourceManager> resource_manager;
 
