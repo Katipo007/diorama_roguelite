@@ -3,6 +3,7 @@
 
 #include "Visual/Plugins/OpenGL/VideoOpenGL.hpp"
 #include "Visual/Plugins/SDL2/SystemSDL2.hpp"
+#include "Visual/Plugins/DearImGUI/DearImGuiPlugin.hpp"
 
 #include "Common/Core/Base.hpp"
 #include "Common/Core/Core.hpp"
@@ -64,9 +65,14 @@ int main( int argc, char** argv )
 		// TODO: swap plugins based on system
 
 		using APIFactory_T = std::function<API::BaseAPI* ( API::SystemAPI* )>;
-		std::unordered_map<API::APIType, APIFactory_T> plugin_factories;
-		plugin_factories[API::APIType::System] = []( API::SystemAPI* ) { return new Graphics::API::SystemSDL2(); };
-		plugin_factories[API::APIType::Video] = []( API::SystemAPI* system ) { ASSERT( system ); return new Graphics::API::VideoOpenGL( *system ); };
+		std::unordered_map<API::APIType, APIFactory_T> plugin_factories = {
+			{ API::APIType::System, []( API::SystemAPI* ) { return new Graphics::API::SystemSDL2(); } },
+			{ API::APIType::Video, []( API::SystemAPI* system ) { ASSERT( system ); return new Graphics::API::VideoOpenGL( *system ); } },
+
+#if (DEVELOPER_TOOLS == 1)
+			{ API::APIType::DearImGui, []( API::SystemAPI* system ) { ASSERT( system ); return new Graphics::API::DearImGuiPlugin( *system ); } },
+#endif
+		};
 
 		core = std::make_unique<Core>( std::make_unique<Game::ClientGame>(), plugin_factories );
 		core->Init();

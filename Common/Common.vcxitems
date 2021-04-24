@@ -17,6 +17,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)CompileTime\PlatformDetection.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\API\APITypesEnum.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\API\BaseAPI.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\API\DearImGuiAPI.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\API\InputAPI.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\API\SystemAPI.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\Base.hpp" />
