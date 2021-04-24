@@ -5,6 +5,7 @@
 #include "Visual/Camera.hpp"
 
 #include "Common/Core/Core.hpp"
+#include "Common/Core/API/VideoAPI.hpp"
 
 #include "Client/ClientGame.hpp"
 #include "Client/Game/ClientGameWorld.hpp"
@@ -48,8 +49,9 @@ namespace ClientStates
 			return fsm::Actions::TransitionTo<MainMenuState>{};
 		}
 
-		ASSERT( client.GetCore().Video != nullptr );
-		gameworld = std::make_unique<Game::ClientGameWorld>( *client.GetCore().Video, client.GetResourceManager() );
+		auto* video = client.GetCore().GetAPI<API::VideoAPI>();
+		ASSERT( video != nullptr );
+		gameworld = std::make_unique<Game::ClientGameWorld>( *video, client.GetResourceManager() );
 
 		return fsm::Actions::NoAction();
 	}

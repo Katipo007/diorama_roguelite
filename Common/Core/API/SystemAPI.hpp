@@ -1,10 +1,9 @@
 #pragma once
 
+#include "APITypesEnum.hpp"
+#include "BaseAPI.hpp"
 #include "Common/Geometry/Size.hpp"
 #include "Common/File/Filepath.hpp"
-#include "Common/Utility/Timestep.hpp"
-
-class Core;
 
 namespace Graphics
 {
@@ -19,11 +18,14 @@ namespace API
 	class VideoAPI;
 
 	class SystemAPI
+		: public BaseAPI
 	{
 		friend class ::Core;
 
 	public:
 		virtual ~SystemAPI() {}
+
+		static constexpr APIType GetType() noexcept { return APIType::System; }
 
 		virtual const Filepath& GetAssetsFilepath() const = 0;
 

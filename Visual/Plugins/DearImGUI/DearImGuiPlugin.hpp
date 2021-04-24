@@ -1,13 +1,15 @@
 #pragma once
 
-#include "Common/Core/API/InternalAPI.hpp"
+#include "Common/Core/API/BaseAPI.hpp"
 
 #include "Common/Geometry/Size.hpp"
+
+namespace API { class SystemAPI; }
 
 namespace Graphics::API
 {
 	class DearImGuiPlugin final
-		: ::API::InternalAPI
+		: ::API::BaseAPI
 	{
 	public:
 		DearImGuiPlugin( ::API::SystemAPI& system );

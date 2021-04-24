@@ -1,12 +1,15 @@
 #pragma once
 
-#include "Common/Core/API/InternalAPI.hpp"
+#include "Common/Core/API/VideoAPI.hpp"
 #include "Visual/Graphics/DeviceCapabilities.hpp"
+
+namespace API { class SystemAPI; }
+namespace Graphics { class OpenGLContext; }
 
 namespace Graphics::API
 {
 	class VideoOpenGL final
-		: public ::API::InternalVideoAPI
+		: public ::API::VideoAPI
 	{
 	public:
 		VideoOpenGL( ::API::SystemAPI& system );
@@ -36,7 +39,7 @@ namespace Graphics::API
 		virtual std::shared_ptr<Graphics::Texture> CreateTexture( const Filepath& filepath, const Graphics::TextureLoadProperties& props ) const override;
 		virtual std::shared_ptr<Graphics::VertexArray> CreateVertexArray( const Graphics::VertexArrayDefinition& definition ) const override;
 
-		virtual std::string_view GetName() const override;
+		virtual std::string_view GetName() const noexcept override;
 		virtual std::string_view GetShaderLanguage() const override;
 
 	protected:

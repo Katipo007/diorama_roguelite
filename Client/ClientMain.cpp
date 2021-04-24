@@ -63,7 +63,7 @@ int main( int argc, char** argv )
 	{
 		// TODO: swap plugins based on system
 
-		using APIFactory_T = std::function<API::InternalAPI* ( API::SystemAPI* )>;
+		using APIFactory_T = std::function<API::BaseAPI* ( API::SystemAPI* )>;
 		std::unordered_map<API::APIType, APIFactory_T> plugin_factories;
 		plugin_factories[API::APIType::System] = []( API::SystemAPI* ) { return new Graphics::API::SystemSDL2(); };
 		plugin_factories[API::APIType::Video] = []( API::SystemAPI* system ) { ASSERT( system ); return new Graphics::API::VideoOpenGL( *system ); };

@@ -1,13 +1,13 @@
 #pragma once
 
-#include "Common/Core/API/InternalAPI.hpp"
+#include "Common/Core/API/SystemAPI.hpp"
 
 namespace Graphics::API
 {
 	class WindowSDL2;
 
 	class SystemSDL2 final
-		: public ::API::InternalSystemAPI
+		: public ::API::SystemAPI
 	{
 	public:
 		explicit SystemSDL2();
@@ -26,7 +26,7 @@ namespace Graphics::API
 		virtual bool GenerateEvents( ::API::VideoAPI* video, ::API::InputAPI* input ) override;
 		virtual void Update( const PreciseTimestep& ts ) override;
 
-		virtual std::string_view GetName() const override;
+		virtual std::string_view GetName() const noexcept override;
 
 	protected:
 		virtual void Init() override;

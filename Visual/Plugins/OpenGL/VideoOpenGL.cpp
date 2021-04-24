@@ -1,5 +1,6 @@
 #include "VideoOpenGL.hpp"
 
+#include "Common/Core/API/SystemAPI.hpp"
 #include "Visual/Window.hpp"
 #include "Visual/OpenGLContext.hpp"
 
@@ -251,7 +252,7 @@ namespace Graphics::API
 		return std::make_shared<VertexArrayOpenGL>( definition );
 	}
 
-	std::string_view VideoOpenGL::GetName() const
+	std::string_view VideoOpenGL::GetName() const noexcept
 	{
 		return "OpenGL";
 	}

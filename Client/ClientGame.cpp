@@ -154,15 +154,16 @@ namespace Game
     void ClientGame::Init()
     {
         ASSERT( core != nullptr );
-        ASSERT( core->Video != nullptr );
+        auto* video = core->GetAPI<API::VideoAPI>();
+        ASSERT( video != nullptr );
         // TODO: grab dearimgui plugin
 
         Graphics::WindowDefinition window_def;
         window_def.title = "Diorama Roguelite";
         window_def.size = { 800, 600 };
-        core->Video->SetWindow( std::move( window_def ) );
+        video->SetWindow( std::move( window_def ) );
 
-        ASSERT( core->Video->HasWindow() );
+        ASSERT( video->HasWindow() );
     }
 
     void ClientGame::OnGameEnd()

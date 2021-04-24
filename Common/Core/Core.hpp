@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <string>
 #include <vector>
 
@@ -11,14 +12,8 @@ class ResourceManager;
 
 namespace API
 {
-	class InputAPI;
-	class InternalInputAPI;
+	class BaseAPI;
 	class SystemAPI;
-	class InternalSystemAPI;
-	class VideoAPI;
-	class InternalVideoAPI;
-
-	class InternalAPI;
 }
 
 /// <summary>
@@ -27,7 +22,7 @@ namespace API
 class Core final
 {
 public:
-	using PluginFactory_T = std::function<API::InternalAPI* ( API::SystemAPI* )>;
+	using PluginFactory_T = std::function<API::BaseAPI* ( API::SystemAPI* )>;
 	using PluginFactoryMap_T = std::unordered_map<API::APIType, PluginFactory_T>;
 
 public:
@@ -39,9 +34,11 @@ public:
 	AbstractGame& GetGame() const { return *game; }
 	ResourceManager& GetResourceManager() const { return *resource_manager; }
 
-	API::InputAPI* Input = nullptr;
-	API::SystemAPI* System = nullptr;
-	API::VideoAPI* Video = nullptr;
+	template<class API_T> API_T* GetAPI() noexcept { constexpr API::APIType type = API_T::GetType(); return dynamic_cast<API_T*>( GetAPI( type ) ); }
+	template<class API_T> const API_T* GetAPI() const noexcept { constexpr API::APIType type = API_T::GetType(); return dynamic_cast<const API_T*>(GetAPI( type )); }
+
+	inline API::BaseAPI* GetAPI( const API::APIType type ) noexcept { return apis[(size_t)type].get(); }
+	inline const API::BaseAPI* GetAPI( const API::APIType type ) const noexcept { return apis[(size_t)type].get(); }
 
 	int Dispatch();
 
@@ -58,7 +55,6 @@ private:
 	void PumpEvents( const PreciseTimestep& ts );
 
 	void InitAPIs();
-	void AssignAPIs();
 	void ShutdownAPIs();
 
 private:
@@ -71,7 +67,5 @@ private:
 	std::unique_ptr<AbstractGame> game;
 	std::unique_ptr<ResourceManager> resource_manager;
 
-	std::unique_ptr<API::InternalInputAPI> input_api;
-	std::unique_ptr<API::InternalSystemAPI> system_api;
-	std::unique_ptr<API::InternalVideoAPI> video_api;
+	std::array<std::unique_ptr<API::BaseAPI>, static_cast<size_t>(API::APIType::NumAPITypes)> apis;
 };

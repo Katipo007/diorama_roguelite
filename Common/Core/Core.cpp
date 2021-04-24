@@ -3,17 +3,10 @@
 #include "ResourceManager.hpp"
 #include "AbstractGame.hpp"
 
-#include "Common/Core/API/InternalAPI.hpp"
-
-#define RETRIEVE_PLUGIN_REQUIRED( _factories, _type, _storage_ptr ) { \
-	if( const auto& factory = _factories[ API::APIType::_type ] ) \
-		{ _storage_ptr.reset( dynamic_cast<API::Internal##_type##API*>( factory( system_api.get() ) ) ); LOG_INFO( Application, #_type " API: {}", _storage_ptr->GetName() ); } \
-	if( _storage_ptr == nullptr ) \
-		throw std::runtime_error( "Non-optional '" #_type "' API was not provided!" ); }
-
-#define RETRIEVE_PLUGIN_OPTIONAL( _factories, _type, _storage_ptr ) \
-	if( const auto& factory = _factories[ API::APIType::_type ] ) \
-		{ _storage_ptr.reset( dynamic_cast<API::Internal##_type##API*>( factory( system_api.get() ) ) ); LOG_INFO( Application, #_type " API: {}", _storage_ptr->GetName() ); } \
+#include "Common/Core/API/BaseAPI.hpp"
+#include "Common/Core/API/InputAPI.hpp"
+#include "Common/Core/API/SystemAPI.hpp"
+#include "Common/Core/API/VideoAPI.hpp"
 
 Core::Core( std::unique_ptr<AbstractGame> _game, PluginFactoryMap_T& plugin_factories )
 	: game( std::move( _game ) )
@@ -26,9 +19,30 @@ Core::Core( std::unique_ptr<AbstractGame> _game, PluginFactoryMap_T& plugin_fact
 	///
 	/// initialise plugins
 	///
-	RETRIEVE_PLUGIN_REQUIRED( plugin_factories, System, system_api );
-	RETRIEVE_PLUGIN_OPTIONAL( plugin_factories, Input, input_api );
-	RETRIEVE_PLUGIN_OPTIONAL( plugin_factories, Video, video_api );
+	{
+		API::SystemAPI* system = nullptr;
+		for (auto i = 0; i < static_cast<size_t>(API::APIType::NumAPITypes); i++)
+		{
+			const auto api_t = static_cast<API::APIType>(i);
+			if (plugin_factories.count( api_t ) > 0)
+			{
+				const auto& factory = plugin_factories[api_t];
+				apis[i].reset( factory( system ) );
+				ASSERT( apis[i] != nullptr );
+
+				LOG_INFO( Application, "Added '{}'", apis[i]->GetName() );
+
+				if (api_t == API::APIType::System)
+				{
+					ASSERT( system == nullptr );
+					system = dynamic_cast<API::SystemAPI*>( apis[i].get() );
+				}
+			}
+		}
+
+		if (!system)
+			FATAL( "No system interface was provided" );
+	}
 }
 
 Core::~Core()
@@ -44,7 +58,6 @@ void Core::Init()
 	InitAPIs();
 	InitRNG();
 
-	AssignAPIs();
 	game->core = this;
 	game->resource_manager = resource_manager.get();
 	game->Init();
@@ -138,8 +151,6 @@ void Core::Shutdown()
 	ShutdownAPIs();
 	resource_manager.reset();
 
-	AssignAPIs();
-
 	is_initialised = false;
 }
 
@@ -155,7 +166,7 @@ void Core::DoVariableUpdate( const PreciseTimestep& ts )
 	if (is_running)
 		game->OnVariableUpdate( ts );
 
-	if (system_api)
+	if (const auto& system_api = GetAPI<API::SystemAPI>())
 		system_api->Update( ts );
 
 	DoRender( ts );
@@ -163,7 +174,7 @@ void Core::DoVariableUpdate( const PreciseTimestep& ts )
 
 void Core::DoRender( const PreciseTimestep& ts )
 {
-	if (video_api)
+	if (const auto& video_api = GetAPI<API::VideoAPI>())
 	{
 		video_api->BeginRender();
 
@@ -176,9 +187,14 @@ void Core::DoRender( const PreciseTimestep& ts )
 
 void Core::PumpEvents( const PreciseTimestep& ts )
 {
+	const auto& system_api = GetAPI<API::SystemAPI>();
+	const auto& input_api = GetAPI<API::InputAPI>();
+	const auto& video_api = GetAPI<API::VideoAPI>();
+
 	if( input_api )
 		input_api->BeginEvents( ts );
-	if (!system_api->GenerateEvents( Video, Input ))
+
+	if (!system_api->GenerateEvents( video_api, input_api ))
 	{
 		exit_code = 0;
 		is_running = false;
@@ -189,35 +205,20 @@ void Core::InitAPIs()
 {
 	// order is important
 
-	if (system_api)
-		system_api->Init();
-
-	if (input_api)
-		input_api->Init();
-
-	if (video_api)
-		video_api->Init();
-}
-
-void Core::AssignAPIs()
-{
-	ASSERT( system_api != nullptr );
-
-	System = system_api.get();
-	Input = input_api.get();
-	Video = video_api.get();
+	std::for_each( std::begin( apis ), std::end( apis ), []( const std::unique_ptr<API::BaseAPI>& entry )
+		{
+			if( entry )
+				entry->Init();
+		} );
 }
 
 void Core::ShutdownAPIs()
 {
 	// order is important and should be done in reverse of that in InitAPIs()
 
-	if (video_api)
-		video_api->Shutdown();
-
-	if (input_api)
-		input_api->Shutdown();
-
-	if (system_api)
-		system_api->Shutdown();
+	std::for_each( std::rbegin( apis ), std::rend( apis ), []( const std::unique_ptr<API::BaseAPI>& entry )
+		{
+			if( entry )
+				entry->Shutdown();
+		} );
 }

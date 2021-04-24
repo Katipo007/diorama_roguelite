@@ -1,6 +1,9 @@
 #pragma once
 
 #include <string>
+
+#include "APITypesEnum.hpp"
+#include "BaseAPI.hpp"
 #include "Common/File/Filepath.hpp"
 #include "Common/Geometry/Size.hpp"
 #include "Common/Geometry/Rect.hpp"
@@ -29,9 +32,12 @@ namespace Graphics
 namespace API
 {
 	class VideoAPI
+		: public BaseAPI
 	{
 	public:
 		virtual ~VideoAPI() {}
+
+		static constexpr APIType GetType() noexcept { return APIType::Video; }
 
 		virtual void BeginRender() = 0;
 		virtual void EndRender() = 0;

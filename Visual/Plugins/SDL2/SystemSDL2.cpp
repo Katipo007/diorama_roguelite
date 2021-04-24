@@ -222,7 +222,7 @@ namespace Graphics::API
         return true;
     }
 
-    std::string_view SystemSDL2::GetName() const
+    std::string_view SystemSDL2::GetName() const noexcept
     {
         return "SDL2";
     }
