@@ -21,7 +21,7 @@ namespace Sessions
 	class ClientServerSession;
 }
 
-namespace Graphics::API { class DearImGuiPlugin; }
+namespace API { class DearImGuiAPI; }
 
 namespace Game
 {
@@ -62,7 +62,7 @@ namespace Game
 	protected:
 		std::unique_ptr<Sessions::ClientServerSession> client_server_session;
 
-		::Graphics::API::DearImGuiPlugin* dearimgui = nullptr;
+		::API::DearImGuiAPI* dearimgui = nullptr;
 
 		bool user_requested_exit = false;
 

@@ -282,6 +282,9 @@ namespace Visual
 
 	void SpriteBatcher::DrawStandingImage( const Resources::Image& img, glm::vec3 location, glm::vec2 pivot )
 	{
+		if (img.IsNull())
+			return;
+
 		if (data->quad_index_count >= data->NMaxIndices)
 			NextBatch();
 

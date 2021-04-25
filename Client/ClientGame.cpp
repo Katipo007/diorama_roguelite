@@ -2,6 +2,7 @@
 
 #include "Common/Core/Core.hpp"
 #include "Common/Core/ResourceManager.hpp"
+#include "Common/Core/API/DearImGuiAPI.hpp"
 #include "Common/Core/API/VideoAPI.hpp"
 #include "Common/Utility/StateMachine/StateMachine.hpp"
 #include "Common/Utility/Timestep.hpp"
@@ -156,7 +157,7 @@ namespace Game
         ASSERT( core != nullptr );
         auto* video = core->GetAPI<API::VideoAPI>();
         ASSERT( video != nullptr );
-        // TODO: grab dearimgui plugin
+        dearimgui = core->GetAPI<API::DearImGuiAPI>();
 
         Graphics::WindowDefinition window_def;
         window_def.title = "Diorama Roguelite";
@@ -186,6 +187,7 @@ namespace Game
     void ClientGame::OnVariableUpdate( const PreciseTimestep& ts )
     {
         (void)ts;
+        DoDearImGuiFrame();
     }
 
     void ClientGame::OnRender( const PreciseTimestep& ts )
@@ -196,7 +198,7 @@ namespace Game
 
     void ClientGame::DoDearImGuiFrame()
     {
-        if (!dearimgui)
+        if (!dearimgui || !dearimgui->GetEnabled())
             return;
 
         client_data->state_machine.Handle( ClientStates::DearImGuiFrameEvent( *dearimgui ) );

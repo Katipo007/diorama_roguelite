@@ -12,10 +12,7 @@ namespace Sessions
 	class ClientServerSession;
 }
 
-namespace Graphics::API
-{
-	class DearImGuiPlugin;
-}
+namespace API { class DearImGuiAPI; }
 
 namespace ClientStates
 {
@@ -33,11 +30,11 @@ namespace ClientStates
 	struct RenderEvent {};
 	struct DearImGuiFrameEvent
 	{
-		explicit DearImGuiFrameEvent( ::Graphics::API::DearImGuiPlugin& dearimgui_ )
-			: dearimgui( dearimgui_ )
+		explicit DearImGuiFrameEvent( ::API::DearImGuiAPI& dearimgui_ )
+			: dearimgui_api( dearimgui_ )
 		{}
 
-		::Graphics::API::DearImGuiPlugin& dearimgui;
+		::API::DearImGuiAPI& dearimgui_api;
 	};
 
 	struct ConnectedToServerEvent

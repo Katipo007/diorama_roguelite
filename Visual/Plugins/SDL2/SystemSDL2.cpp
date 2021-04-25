@@ -7,6 +7,9 @@
 #	pragma comment(lib, "Visual/Vendor/SDL2/lib/x86/SDL2.lib")
 #endif
 
+#include "Common/Core/API/DearImGuiAPI.hpp"
+#include "Common/Core/API/InputAPI.hpp"
+
 #include "OpenGLContextSDL2.hpp"
 #include "WindowSDL2.hpp"
 
@@ -176,12 +179,15 @@ namespace Graphics::API
             } );
     }
 
-    bool SystemSDL2::GenerateEvents( ::API::VideoAPI* video, ::API::InputAPI* input )
+    bool SystemSDL2::GenerateEvents( ::API::VideoAPI* video, ::API::InputAPI* input, ::API::DearImGuiAPI* dearimgui )
     {
         SDL_Event event;
         SDL_PumpEvents();
         while (SDL_PeepEvents( &event, 1, SDL_GETEVENT, SDL_FIRSTEVENT, SDL_LASTEVENT ))
         {
+            if (dearimgui)
+                dearimgui->ProcessSystemEvent( &event );
+
             switch (event.type)
             {
             case SDL_KEYDOWN:
@@ -200,7 +206,6 @@ namespace Graphics::API
             }
             case SDL_QUIT:
             {
-                std::cout << "SDL_QUIT received." << std::endl;
                 return false;
             }
             case SDL_WINDOWEVENT:

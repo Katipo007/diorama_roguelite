@@ -14,6 +14,7 @@ namespace API
 {
 	class BaseAPI;
 	class SystemAPI;
+	class VideoAPI;
 }
 
 /// <summary>
@@ -22,7 +23,7 @@ namespace API
 class Core final
 {
 public:
-	using PluginFactory_T = std::function<API::BaseAPI* ( API::SystemAPI* )>;
+	using PluginFactory_T = std::function<API::BaseAPI* (API::SystemAPI*, API::VideoAPI*)>;
 	using PluginFactoryMap_T = std::unordered_map<API::APIType, PluginFactory_T>;
 
 public:

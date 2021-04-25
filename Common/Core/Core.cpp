@@ -4,6 +4,7 @@
 #include "AbstractGame.hpp"
 
 #include "Common/Core/API/BaseAPI.hpp"
+#include "Common/Core/API/DearImGuiAPI.hpp"
 #include "Common/Core/API/InputAPI.hpp"
 #include "Common/Core/API/SystemAPI.hpp"
 #include "Common/Core/API/VideoAPI.hpp"
@@ -15,28 +16,27 @@ Core::Core( std::unique_ptr<AbstractGame> _game, PluginFactoryMap_T& plugin_fact
 	if (!game)
 		throw std::runtime_error( "Where yo game at? (Game object was null at Core construction)" );
 
-
 	///
 	/// initialise plugins
 	///
 	{
 		API::SystemAPI* system = nullptr;
+		API::VideoAPI* video = nullptr;
 		for (auto i = 0; i < static_cast<size_t>(API::APIType::NumAPITypes); i++)
 		{
 			const auto api_t = static_cast<API::APIType>(i);
 			if (plugin_factories.count( api_t ) > 0)
 			{
 				const auto& factory = plugin_factories[api_t];
-				apis[i].reset( factory( system ) );
+				apis[i].reset( factory( system, video ) );
 				ASSERT( apis[i] != nullptr );
 
 				LOG_INFO( Application, "Added '{}'", apis[i]->GetName() );
-
+				
 				if (api_t == API::APIType::System)
-				{
-					ASSERT( system == nullptr );
 					system = dynamic_cast<API::SystemAPI*>( apis[i].get() );
-				}
+				else if (api_t == API::APIType::Video)
+					video = dynamic_cast<API::VideoAPI*>(apis[i].get());
 			}
 		}
 
@@ -163,8 +163,15 @@ void Core::DoFixedUpdate( const PreciseTimestep& ts )
 void Core::DoVariableUpdate( const PreciseTimestep& ts )
 {
 	PumpEvents( ts );
+	const auto& dearimgui_api = GetAPI<API::DearImGuiAPI>();
+	if( dearimgui_api )
+		dearimgui_api->OnFrameBegin();
+
 	if (is_running)
 		game->OnVariableUpdate( ts );
+
+	if (dearimgui_api)
+		dearimgui_api->OnFrameEnd();
 
 	if (const auto& system_api = GetAPI<API::SystemAPI>())
 		system_api->Update( ts );
@@ -181,6 +188,9 @@ void Core::DoRender( const PreciseTimestep& ts )
 		if (is_running)
 			game->OnRender( ts );
 
+		if (const auto& dearimgui_api = GetAPI<API::DearImGuiAPI>())
+			dearimgui_api->DoRender();
+
 		video_api->EndRender();
 	}
 }
@@ -190,11 +200,12 @@ void Core::PumpEvents( const PreciseTimestep& ts )
 	const auto& system_api = GetAPI<API::SystemAPI>();
 	const auto& input_api = GetAPI<API::InputAPI>();
 	const auto& video_api = GetAPI<API::VideoAPI>();
+	const auto& dearimgui_api = GetAPI<API::DearImGuiAPI>();
 
 	if( input_api )
 		input_api->BeginEvents( ts );
 
-	if (!system_api->GenerateEvents( video_api, input_api ))
+	if (!system_api->GenerateEvents( video_api, input_api, dearimgui_api ))
 	{
 		exit_code = 0;
 		is_running = false;

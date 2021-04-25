@@ -14,6 +14,7 @@ namespace Graphics
 
 namespace API
 {
+	class DearImGuiAPI;
 	class InputAPI;
 	class VideoAPI;
 
@@ -39,6 +40,6 @@ namespace API
 		virtual void SetThreadName( std::string name ) {}
 
 	private:
-		virtual bool GenerateEvents( VideoAPI* video, InputAPI* input ) = 0;
+		virtual bool GenerateEvents( VideoAPI* video, InputAPI* input, DearImGuiAPI* dearimgui ) = 0;
 	};
 }

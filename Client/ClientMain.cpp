@@ -64,13 +64,13 @@ int main( int argc, char** argv )
 	{
 		// TODO: swap plugins based on system
 
-		using APIFactory_T = std::function<API::BaseAPI* ( API::SystemAPI* )>;
+		using APIFactory_T = std::function<API::BaseAPI* ( API::SystemAPI*, API::VideoAPI*)>;
 		std::unordered_map<API::APIType, APIFactory_T> plugin_factories = {
-			{ API::APIType::System, []( API::SystemAPI* ) { return new Graphics::API::SystemSDL2(); } },
-			{ API::APIType::Video, []( API::SystemAPI* system ) { ASSERT( system ); return new Graphics::API::VideoOpenGL( *system ); } },
+			{ API::APIType::System, []( API::SystemAPI*, API::VideoAPI* ) { return new Graphics::API::SystemSDL2(); } },
+			{ API::APIType::Video, []( API::SystemAPI* system, API::VideoAPI* ) { ASSERT( system ); return new Graphics::API::VideoOpenGL( *system ); } },
 
 #if (DEVELOPER_TOOLS == 1)
-			{ API::APIType::DearImGui, []( API::SystemAPI* system ) { ASSERT( system ); return new Graphics::API::DearImGuiPlugin( *system ); } },
+			{ API::APIType::DearImGui, []( API::SystemAPI* system, API::VideoAPI* video ) { ASSERT( system && video ); return new Graphics::API::DearImGuiPlugin( *system, *video ); } },
 #endif
 		};
 

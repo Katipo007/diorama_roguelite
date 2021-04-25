@@ -23,7 +23,7 @@ namespace Graphics::API
 
 		virtual std::thread CreateThread( std::string_view name, std::function<void()> runnable ) override;
 
-		virtual bool GenerateEvents( ::API::VideoAPI* video, ::API::InputAPI* input ) override;
+		virtual bool GenerateEvents( ::API::VideoAPI* video, ::API::InputAPI* input, ::API::DearImGuiAPI* dearimgui ) override;
 		virtual void Update( const PreciseTimestep& ts ) override;
 
 		virtual std::string_view GetName() const noexcept override;
