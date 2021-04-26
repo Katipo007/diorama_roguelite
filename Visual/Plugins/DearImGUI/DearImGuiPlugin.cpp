@@ -3,6 +3,7 @@
 #include "Common/Core/API/SystemAPI.hpp"
 #include "Common/Core/API/VideoAPI.hpp"
 
+#include "Visual/Plugins/OpenGL/OpenGLHeader.hpp"
 #include "Visual/DearImGui/DearImGui.hpp"
 #define IMGUI_IMPL_OPENGL_LOADER_GLEW
 #include "Visual/Vendor/dearimgui/backends/imgui_impl_opengl3.h"

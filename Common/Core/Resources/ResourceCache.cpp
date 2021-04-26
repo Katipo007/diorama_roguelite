@@ -3,8 +3,8 @@
 #include <algorithm>
 #include <execution>
 
-#include "IResourceLoader.hpp"
 #include "Resource.hpp"
+#include "ResourceLoader.hpp"
 
 namespace
 {
@@ -21,16 +21,10 @@ namespace
 
 namespace Resources
 {
-	BaseResourceCache::BaseResourceCache( ResourceManager& _manager, const AssetType _type, std::unique_ptr<IResourceLoader> _loader )
+	BaseResourceCache::BaseResourceCache( ResourceManager& _manager, const AssetType _type )
 		: manager( _manager )
 		, type( _type )
-		, loader( std::move( _loader ) )
 	{
-		ASSERT( loader );
-		if (!loader)
-			throw std::runtime_error( "Created ResourceCache without a loader" );
-
-		loader->Init( manager );
 	}
 
 	BaseResourceCache::~BaseResourceCache()
@@ -56,13 +50,13 @@ namespace Resources
 		if (it != std::end( resources ))
 			return it->second.resource;
 
+		auto* non_const_this = const_cast<BaseResourceCache*>(this);
+
 		// not in the cache, try loading
-		auto loaded_resource = loader->LoadAsset( _resource_id, type );
+		auto loader = ResourceLoader( _resource_id, non_const_this->manager );
+		auto loaded_resource = LoadResource( loader );
 		if (loaded_resource)
-		{
-			auto* non_const_this = const_cast<BaseResourceCache*>(this);
 			non_const_this->AddResource( loaded_resource );
-		}
 
 		ASSERT( !loaded_resource );
 
@@ -100,7 +94,7 @@ namespace Resources
 			} );
 	}
 
-	void BaseResourceCache::AddResource( std::unique_ptr<Resource>& _new_resource )
+	void BaseResourceCache::AddResource( UntypedResourcePtr& _new_resource )
 	{
 		ASSERT( _new_resource );
 		if (!_new_resource)
@@ -110,9 +104,7 @@ namespace Resources
 		ASSERT( !resource_id.empty() );
 		TEMP_STR_FROM_VIEW( resource_id );
 
-		auto* raw_ptr = _new_resource.release();
-		auto shared_resource = std::shared_ptr<const Resource>( raw_ptr );
-
-		auto [it, success] = resources.try_emplace( temp_str, shared_resource, current_generation );
+		auto [it, success] = resources.try_emplace( temp_str, _new_resource, current_generation );
+		ASSERT( success );
 	}
 }

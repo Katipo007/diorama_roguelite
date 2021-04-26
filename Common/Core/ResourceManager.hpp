@@ -3,6 +3,8 @@
 #include "Common/Core/Resources/ResourceHandle.hpp"
 #include "Common/Core/Resources/ResourceCache.hpp"
 
+class Core;
+
 namespace Resources
 {
 	enum class AssetType;
@@ -16,11 +18,11 @@ class ResourceManager final
 	using CacheCollection_T = std::unordered_map<Resources::AssetType, std::unique_ptr<Resources::BaseResourceCache>>;
 
 public:
-	explicit ResourceManager();
+	explicit ResourceManager( ::Core& core );
 	virtual ~ResourceManager();
 
 	template<typename RESOURCE>
-	void Init( std::unique_ptr<Resources::IResourceLoader> loader )
+	void Init()
 	{
 		static_assert(std::is_base_of<Resources::Resource, RESOURCE>::value, "Provided type must derive from Resources::Resource");
 		constexpr Resources::AssetType type = RESOURCE::GetResourceType();
@@ -28,7 +30,7 @@ public:
 		if (const auto* existing_cache = GetCacheInternal( type ))
 			throw std::runtime_error( "ResourceCache already initialised for this type of resource" );
 
-		auto [it, success] = caches.try_emplace( type, std::make_unique<Resources::ResourceCache<RESOURCE>>( *this, std::move( loader ) ) );
+		auto [it, success] = caches.try_emplace( type, std::make_unique<Resources::ResourceCache<RESOURCE>>( *this ) );
 		if (!success)
 			throw std::runtime_error( "Failed to store ResourceCache of given type" );
 	}
@@ -58,10 +60,14 @@ public:
 		throw std::runtime_error( "Given resource type is not initialised for this ResourceManager" );
 	}
 
+	Core& GetCore() noexcept { return core; }
+	const Core& GetCore() const noexcept { return core; }
+
 protected:
 	Resources::BaseResourceCache* GetCacheInternal( const Resources::AssetType type );
 	const Resources::BaseResourceCache* GetCacheInternal( const Resources::AssetType type ) const;
 
 private:
 	CacheCollection_T caches;
+	Core& core;
 };

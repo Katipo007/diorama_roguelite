@@ -4,9 +4,11 @@
 #include "Visual/Plugins/OpenGL/VideoOpenGL.hpp"
 #include "Visual/Plugins/SDL2/SystemSDL2.hpp"
 #include "Visual/Plugins/DearImGUI/DearImGuiPlugin.hpp"
+#include "Visual/Graphics/Texture.hpp"
 
 #include "Common/Core/Base.hpp"
 #include "Common/Core/Core.hpp"
+#include "Common/Core/ResourceManager.hpp"
 #include "Common/Utility/OsAbstraction.hpp"
 #include "Common/Utility/Timestep.hpp"
 
@@ -74,7 +76,12 @@ int main( int argc, char** argv )
 #endif
 		};
 
-		core = std::make_unique<Core>( std::make_unique<Game::ClientGame>(), plugin_factories );
+		const auto resource_initaliser = []( ResourceManager& manager )
+		{
+			manager.Init<Graphics::Texture>();
+		};
+
+		core = std::make_unique<Core>( std::make_unique<Game::ClientGame>(), resource_initaliser, plugin_factories );
 		core->Init();
 	}
 

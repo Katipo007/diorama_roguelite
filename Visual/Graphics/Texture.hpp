@@ -4,6 +4,10 @@
 #include <string>
 
 #include "Common/Geometry/Size.hpp"
+#include "Common/Core/Resources/Resource.hpp"
+#include "Common/Core/Resources/ResourceTypes.hpp"
+
+namespace Resources { class ResourceLoader; }
 
 namespace Graphics
 {
@@ -29,9 +33,13 @@ namespace Graphics
 	};
 
 	class Texture
+		: public ::Resources::Resource
 	{
 	public:
 		virtual ~Texture() = default;
+
+		static constexpr ::Resources::AssetType GetResourceType() noexcept { return ::Resources::AssetType::Texture; }
+		static std::shared_ptr<Texture> LoadResource( ::Resources::ResourceLoader& loader );
 
 		virtual const Size<uint32_t>& GetSize() const noexcept = 0;
 

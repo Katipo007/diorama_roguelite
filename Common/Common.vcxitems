@@ -24,7 +24,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\Core.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\AbstractGame.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\API\VideoAPI.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Core\Resources\IResourceLoader.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\Resources\ResourceLoader.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\Resources\Resource.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\Resources\ResourceCache.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\Resources\ResourceHandle.hpp" />
@@ -72,6 +72,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Core\Core.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Core\Resources\ResourceCache.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Core\ResourceManager.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Core\Resources\ResourceLoader.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Core\Resources\StandardResources.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Utility\FileOps.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Core\Logging.cpp" />

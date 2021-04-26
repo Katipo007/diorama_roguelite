@@ -58,6 +58,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)DearImGUI\DearImGui.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Events\Event.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\GraphicsBuffer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Graphics\Texture.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\DearImGUI\DearImGuiPlugin.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\OpenGL\BufferOpenGL.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\OpenGL\FrameBufferOpenGL.cpp" />

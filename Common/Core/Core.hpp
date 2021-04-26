@@ -23,11 +23,12 @@ namespace API
 class Core final
 {
 public:
+	using ResourceManagerInitaliserFunc_T = std::function<void( ResourceManager& )>;
 	using PluginFactory_T = std::function<API::BaseAPI* (API::SystemAPI*, API::VideoAPI*)>;
 	using PluginFactoryMap_T = std::unordered_map<API::APIType, PluginFactory_T>;
 
 public:
-	explicit Core( std::unique_ptr<AbstractGame> game, PluginFactoryMap_T& plugin_factory );
+	explicit Core( std::unique_ptr<AbstractGame> game, const ResourceManagerInitaliserFunc_T& resource_initaliser_func, PluginFactoryMap_T& plugin_factory );
 	~Core();
 
 	void Init();
@@ -67,6 +68,8 @@ private:
 
 	std::unique_ptr<AbstractGame> game;
 	std::unique_ptr<ResourceManager> resource_manager;
+
+	ResourceManagerInitaliserFunc_T resource_initaliser_func;
 
 	std::array<std::unique_ptr<API::BaseAPI>, static_cast<size_t>(API::APIType::NumAPITypes)> apis;
 };

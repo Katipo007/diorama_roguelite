@@ -9,8 +9,11 @@
 #include "Common/Core/API/SystemAPI.hpp"
 #include "Common/Core/API/VideoAPI.hpp"
 
-Core::Core( std::unique_ptr<AbstractGame> _game, PluginFactoryMap_T& plugin_factories )
-	: game( std::move( _game ) )
+#include "Common/Core/Resources/StandardResources.hpp"
+
+Core::Core( std::unique_ptr<AbstractGame> game_, const ResourceManagerInitaliserFunc_T& resource_initaliser_func_, PluginFactoryMap_T& plugin_factories_ )
+	: game( std::move( game_ ) )
+	, resource_initaliser_func( resource_initaliser_func_ )
 	, target_fps( 60 )
 {
 	if (!game)
@@ -25,9 +28,9 @@ Core::Core( std::unique_ptr<AbstractGame> _game, PluginFactoryMap_T& plugin_fact
 		for (auto i = 0; i < static_cast<size_t>(API::APIType::NumAPITypes); i++)
 		{
 			const auto api_t = static_cast<API::APIType>(i);
-			if (plugin_factories.count( api_t ) > 0)
+			if (plugin_factories_.count( api_t ) > 0)
 			{
-				const auto& factory = plugin_factories[api_t];
+				const auto& factory = plugin_factories_[api_t];
 				apis[i].reset( factory( system, video ) );
 				ASSERT( apis[i] != nullptr );
 
@@ -130,7 +133,13 @@ int Core::Dispatch()
 
 void Core::InitResources()
 {
-	resource_manager = std::make_unique<ResourceManager>();
+	ASSERT( !resource_manager );
+	resource_manager = std::make_unique<ResourceManager>( *this );
+
+	Resources::Standard::InitStandardResources( *resource_manager );
+
+	if (resource_initaliser_func)
+		resource_initaliser_func( *resource_manager );
 }
 
 void Core::InitRNG()

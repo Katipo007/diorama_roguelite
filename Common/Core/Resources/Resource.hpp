@@ -19,6 +19,9 @@ namespace Resources
 		
 		std::string_view GetResourceId() const { return resource_id; }
 	
+	protected:
+		Resource() {}
+
 	private:
 		std::string resource_id;
 	};

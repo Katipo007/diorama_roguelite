@@ -11,7 +11,7 @@ class ResourceManager;
 namespace Resources
 {
 	class Resource;
-	class IResourceLoader;
+	class ResourceLoader;
 
 	class BaseResourceCache
 	{
@@ -19,7 +19,7 @@ namespace Resources
 		using UntypedResourcePtr = std::shared_ptr<const Resource>;
 
 	public:
-		explicit BaseResourceCache( ResourceManager& manager, const AssetType type, std::unique_ptr<IResourceLoader> loader );
+		explicit BaseResourceCache( ResourceManager& manager, const AssetType type );
 		virtual ~BaseResourceCache();
 
 		AssetType GetResourceType() const { return type; }
@@ -37,12 +37,12 @@ namespace Resources
 		void NextGeneration();
 
 	protected:
-		void AddResource( std::unique_ptr<Resource>& new_resource );
+		void AddResource( UntypedResourcePtr& new_resource );
+		virtual UntypedResourcePtr LoadResource( ResourceLoader& loader ) const = 0;
 
 	private:
 		ResourceManager& manager;
 		const AssetType type;
-		std::unique_ptr<IResourceLoader> loader;
 
 		struct ResourceEntry
 		{
@@ -67,14 +67,19 @@ namespace Resources
 		using ResourcePtr = std::shared_ptr<const RESOURCE>;
 
 	public:
-		ResourceCache( ResourceManager& manager, std::unique_ptr<IResourceLoader> loader )
-			: BaseResourceCache( manager, std::move( loader ) )
+		ResourceCache( ResourceManager& manager )
+			: BaseResourceCache( manager, RESOURCE::GetResourceType() )
 		{}
 		virtual ~ResourceCache() {}
 
 		ResourcePtr Get( std::string_view resource_id ) const
 		{
 			return std::dynamic_pointer_cast<RESOURCE>(GetUntyped( resource_id ));
+		}
+
+		virtual UntypedResourcePtr LoadResource( ResourceLoader& loader ) const override
+		{
+			return std::dynamic_pointer_cast<Resource>( RESOURCE::LoadResource( loader ) );
 		}
 	};
 }

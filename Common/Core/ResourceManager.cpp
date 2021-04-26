@@ -1,6 +1,7 @@
 #include "ResourceManager.hpp"
 
-ResourceManager::ResourceManager()
+ResourceManager::ResourceManager( ::Core& core_ )
+	: core( core_ )
 {
 }
 
