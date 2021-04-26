@@ -28,7 +28,17 @@ namespace ClientStates
 		chat_window.EnteredMessage.connect( &InGameState::ChatWindowSendMessageHandler, this );
 	}
 
-	InGameState::InGameState( InGameState&& to_move ) = default;
+	InGameState::InGameState( InGameState&& to_move )
+		: client( to_move.client )
+		, chat_window( std::move( to_move.chat_window ) )
+	{
+		std::swap( main_camera, to_move.main_camera );
+		std::swap( gameworld, to_move.gameworld );
+		std::swap( client_server_session, to_move.client_server_session );
+
+		chat_window.EnteredMessage.disconnect( &InGameState::ChatWindowSendMessageHandler, &to_move );
+		chat_window.EnteredMessage.connect( &InGameState::ChatWindowSendMessageHandler, this );
+	}
 
 	InGameState::~InGameState()
 	{
