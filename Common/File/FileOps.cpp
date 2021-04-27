@@ -1,7 +1,5 @@
 #include "FileOps.hpp"
 
-#include <filesystem>
-
 namespace
 {
 	static std::streamoff StreamSize( std::istream& file )
@@ -32,7 +30,7 @@ namespace FileOps
 		return true;
 	}
 
-	bool ReadFile( const std::filesystem::path& filename, std::string& file_contents )
+	bool ReadFile( const Filepath& filename, std::string& file_contents )
 	{
 		std::ifstream file( filename, std::ios::binary );
 
@@ -46,7 +44,7 @@ namespace FileOps
 		return success;
 	}
 
-	std::vector<std::string> GetFilesInFolder( const std::filesystem::path& path )
+	std::vector<std::string> GetFilesInFolder( const Filepath& path )
 	{
 		auto filenames = std::vector<std::string>();
 		for (const auto& entry : std::filesystem::directory_iterator( path ))
@@ -55,12 +53,12 @@ namespace FileOps
 		return filenames;
 	}
 
-	std::filesystem::path GetFileDirectory( const std::filesystem::path& filepath, bool relative_to_working_directory )
+	Filepath GetFileDirectory( const Filepath& filepath, bool relative_to_working_directory )
 	{
 		const auto working_directory = std::filesystem::current_path();
 		if( relative_to_working_directory )
 		{
-			auto path = std::filesystem::path( filepath );
+			auto path = Filepath( filepath );
 			if( path.has_filename() )
 				path = path.parent_path();
 
@@ -75,7 +73,7 @@ namespace FileOps
 		}
 		else
 		{
-			const auto path = std::filesystem::path( filepath );
+			const auto path = Filepath( filepath );
 
 			if( path.has_filename() )
 				return path.parent_path();
