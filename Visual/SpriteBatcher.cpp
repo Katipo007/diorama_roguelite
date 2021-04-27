@@ -12,7 +12,7 @@
 #include "Visual/Graphics/VertexArray.hpp"
 #include "Visual/Graphics/Shader.hpp"
 #include "Visual/Graphics/Texture.hpp"
-#include "Visual/Resources/Image.hpp"
+#include "Visual/Resources/SpriteSheet.hpp"
 
 namespace
 {
@@ -280,20 +280,25 @@ namespace Visual
 		return index;
 	}
 
-	void SpriteBatcher::DrawStandingImage( const Resources::Image& img, glm::vec3 location, glm::vec2 pivot )
+	void SpriteBatcher::DrawStandingSprite( const Resources::ResourceHandle<Graphics::Sprite>& sprite, glm::vec3 location )
 	{
-		if (img.IsNull())
+		if (!sprite)
+			return;
+		auto sprite_sheet = sprite->GetSpriteSheet();
+		if (!sprite_sheet)
 			return;
 
 		if (data->quad_index_count >= data->NMaxIndices)
 			NextBatch();
 
-		const auto img_size_vec = glm::vec2( img.GetSizeF().width, img.GetSizeF().height );
-		const auto min = -img_size_vec * pivot;
+		auto& img = sprite->GetSprite();
+		
+		const auto img_size_vec = glm::vec2( img.size.width, img.size.height );
+		const auto min = glm::vec2( -img.pivot.x, -img.pivot.y );
 		const auto max = min + img_size_vec;
 
-		const auto& texture_id = FindOrAddTexture( img.GetSharedTexture() );
-		const auto& uvs = img.GetUVs();
+		const auto& texture_id = FindOrAddTexture( sprite_sheet->GetTexture() );
+		const auto& uvs = img.uvs;
 		const auto& multiply_colour = data->multiply_colour.top();
 
 		data->vertex_data.emplace_back( glm::vec3{ location.x + min.x, location.y + 0.f, location.z + min.y }, multiply_colour, glm::vec2( uvs.GetLeft(), uvs.GetTop() ), texture_id ); // top left

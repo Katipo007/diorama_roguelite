@@ -5,6 +5,7 @@
 #include "Visual/Plugins/SDL2/SystemSDL2.hpp"
 #include "Visual/Plugins/DearImGUI/DearImGuiPlugin.hpp"
 #include "Visual/Graphics/Texture.hpp"
+#include "Visual/Resources/SpriteSheet.hpp"
 
 #include "Common/Core/Base.hpp"
 #include "Common/Core/Core.hpp"
@@ -79,6 +80,8 @@ int main( int argc, char** argv )
 		const auto resource_initaliser = []( ResourceManager& manager )
 		{
 			manager.Init<Graphics::Texture>();
+			manager.Init<Graphics::SpriteSheet>();
+			manager.Init<Graphics::Sprite>();
 		};
 
 		core = std::make_unique<Core>( std::make_unique<Game::ClientGame>(), resource_initaliser, plugin_factories );

@@ -46,6 +46,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\SDL2\WindowSDL2.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Renderer.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)RendererAPIs.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Resources\SpriteSheet.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Window.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Resources\Image.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Resources\ImageResourceManager.hpp" />
@@ -73,6 +74,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Renderer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Resources\Image.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Resources\ImageResourceManager.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Resources\SpriteSheet.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)SpriteBatcher.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Utility\StbImage.cpp" />
   </ItemGroup>
