@@ -6,21 +6,19 @@
 namespace Resources
 {
 	enum class AssetType;
-	class IResourceLoader;
 
 	// baseclass for resources
 	class Resource
 	{
-		friend class IResourceLoader; // to set the resource id
 		friend class BaseResourceCache; // to handle generations
 
 	public:
-		virtual ~Resource() {}
+		virtual ~Resource() = default;
 		
-		std::string_view GetResourceId() const { return resource_id; }
+		std::string_view GetResourceId() const noexcept { return resource_id; }
 	
 	protected:
-		Resource() {}
+		Resource() = default;
 
 	private:
 		std::string resource_id;

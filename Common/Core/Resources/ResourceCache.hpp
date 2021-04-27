@@ -74,12 +74,12 @@ namespace Resources
 
 		ResourcePtr Get( std::string_view resource_id ) const
 		{
-			return std::dynamic_pointer_cast<RESOURCE>(GetUntyped( resource_id ));
+			return std::dynamic_pointer_cast<const RESOURCE>(GetUntyped( resource_id ));
 		}
 
 		virtual UntypedResourcePtr LoadResource( ResourceLoader& loader ) const override
 		{
-			return std::dynamic_pointer_cast<Resource>( RESOURCE::LoadResource( loader ) );
+			return std::dynamic_pointer_cast<const Resource>( RESOURCE::LoadResource( loader ) );
 		}
 	};
 }

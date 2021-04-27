@@ -6,6 +6,10 @@
 namespace Resources
 {
 	template<typename RESOURCE>
+	using ResourceHandle = std::shared_ptr<const RESOURCE>;
+
+#if 0
+	template<typename RESOURCE>
 	class ResourceHandle
 	{
 	public:
@@ -40,4 +44,5 @@ namespace Resources
 	protected:
 		std::shared_ptr<const RESOURCE> ptr;
 	};
+#endif
 }

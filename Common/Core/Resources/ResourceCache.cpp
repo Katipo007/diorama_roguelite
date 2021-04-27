@@ -56,9 +56,12 @@ namespace Resources
 		auto loader = ResourceLoader( _resource_id, non_const_this->manager );
 		auto loaded_resource = LoadResource( loader );
 		if (loaded_resource)
+		{
+			ASSERT( !loaded_resource->GetResourceId().empty() );
 			non_const_this->AddResource( loaded_resource );
+		}
 
-		ASSERT( !loaded_resource );
+		ASSERT( !loaded_resource ); // unique_ptr should have been moved
 
 		return UntypedResourcePtr();
 	}

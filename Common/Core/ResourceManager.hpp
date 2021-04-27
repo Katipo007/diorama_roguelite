@@ -9,7 +9,6 @@ namespace Resources
 {
 	enum class AssetType;
 	class BaseResourceCache;
-	class IResourceLoader;
 	class Resource;
 }
 
@@ -42,7 +41,7 @@ public:
 	bool IsLoaded( std::string_view resource_id ) const { return GetCache<RESOURCE>().IsLoaded( resource_id ); }
 
 	template<typename RESOURCE>
-	Resources::ResourceHandle<RESOURCE> Get( std::string_view resource_id ) const { return Resources::ResourceHandle<RESOURCE>( GetCache<RESOURCE>().Get( resource_id ) ); }
+	Resources::ResourceHandle<const RESOURCE> Get( std::string_view resource_id ) const { return Resources::ResourceHandle<const RESOURCE>( GetCache<RESOURCE>().Get( resource_id ) ); }
 
 	template<typename RESOURCE>
 	void Unload( std::string_view resource_id ) { GetCache<RESOURCE>().Unload( resource_id ); }
@@ -54,8 +53,9 @@ public:
 	const Resources::ResourceCache<RESOURCE>& GetCache() const
 	{
 		static_assert(std::is_base_of<Resources::Resource, RESOURCE>::value, "Provided type must derive from Resources::Resource");
-		if (const auto* cache = GetCacheInternal( RESOURCE::GetResourceType() ))
-			return *dynamic_cast<Resources::ResourceCache<RESOURCE>*>(cache);
+		constexpr Resources::AssetType type = RESOURCE::GetResourceType();
+		if (const auto* cache = GetCacheInternal( type ))
+			return *dynamic_cast<const Resources::ResourceCache<RESOURCE>*>(cache);
 
 		throw std::runtime_error( "Given resource type is not initialised for this ResourceManager" );
 	}
