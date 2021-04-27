@@ -65,6 +65,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Utility\StateMachine\OnEvent.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Utility\StateMachine\Will.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Utility\StateMachine\StateMachine.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Utility\StringHashMap.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Utility\Timestep.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\enumclassbitset\EnumClassBitset.hpp" />
   </ItemGroup>
