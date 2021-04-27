@@ -3,6 +3,18 @@
 #include <algorithm>
 #include <functional>
 
+template<class T, typename Value>
+auto Find( T& container, const Value& value ) -> decltype(T::iterator)
+{
+	return std::find( std::begin( container ), std::end( container ), value );
+}
+
+template<class T, typename Value>
+auto Find( const T& container, const Value& value ) -> decltype(T::const_iterator)
+{
+	return std::find( std::begin( container ), std::end( container ), value );
+}
+
 template<class T, typename Pred>
 auto FindIf( T& container, const Pred& pred ) -> decltype(T::iterator)
 {
