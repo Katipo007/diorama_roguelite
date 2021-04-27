@@ -16,6 +16,8 @@ struct Point2D
 
 	static const Point2D empty;
 
+	constexpr Point2D operator-() const { return { -x, -y }; }
+
 	constexpr bool operator==( const Point2D& rhs ) const { return (this->x == rhs.x) && (this->y == rhs.y); }
 	constexpr bool operator!=( const Point2D& rhs ) const { return !(*this == rhs); }
 };
