@@ -5,8 +5,10 @@
 #include "Common/Utility/Math/Mat4.hpp"
 #include "Visual/Colour.hpp"
 
+#include "Common/Core/Resources/ResourceHandle.hpp"
+
 namespace API { class VideoAPI; }
-namespace Graphics { class Texture; }
+namespace Graphics { class Texture; class Sprite; }
 namespace Resources { class Image; }
 
 
@@ -48,7 +50,7 @@ namespace Visual
 #pragma endregion
 
 #pragma region Submission
-		void DrawStandingImage( const Resources::Image& img, glm::vec3 location, glm::vec2 pivot = { 0.5f, 1.f } );
+		void DrawStandingSprite( const Resources::ResourceHandle<Graphics::Sprite>& sprite, glm::vec3 location );
 #pragma endregion
 
 		const Statistics& GetStatistics() const { return statistics; }

@@ -3,7 +3,8 @@
 #include <memory>
 
 #include "Common/Core/Resources/ResourceHandle.hpp"
-#include "Visual/Resources/Image.hpp"
+
+namespace Graphics { class Sprite; }
 
 class ResourceManager;
 
@@ -20,9 +21,9 @@ namespace Game
 		PlayerObject( ResourceManager& resources );
 		virtual ~PlayerObject();
 
-		const Resources::ResourceHandle<Resources::Image>& GetImage() const { return image; }
+		const Resources::ResourceHandle<Graphics::Sprite>& GetSprite() const { return sprite; }
 
 	protected:
-		Resources::ResourceHandle<Resources::Image> image;
+		Resources::ResourceHandle<Graphics::Sprite> sprite;
 	};
 }

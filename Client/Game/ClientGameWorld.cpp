@@ -63,8 +63,7 @@ namespace Game
 		/// Draw player specificly
 		{
 			ASSERT( player );
-			if (const auto& img = player->GetImage(); !img.IsNull())
-				sprite_renderer->DrawStandingImage( *img, { 0.f, 0.f, 0.f } );
+			sprite_renderer->DrawStandingSprite( player->GetSprite(), { 0.f, 0.f, 0.f } );
 		}
 	}
 }

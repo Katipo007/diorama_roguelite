@@ -44,6 +44,9 @@ public:
 	Resources::ResourceHandle<const RESOURCE> Get( std::string_view resource_id ) const { return Resources::ResourceHandle<const RESOURCE>( GetCache<RESOURCE>().Get( resource_id ) ); }
 
 	template<typename RESOURCE>
+	bool Preload( std::string_view resource_id ) const { return GetCache<RESOURCE>().Preload( resource_id ); }
+
+	template<typename RESOURCE>
 	void Unload( std::string_view resource_id ) { GetCache<RESOURCE>().Unload( resource_id ); }
 
 	template<typename RESOURCE>

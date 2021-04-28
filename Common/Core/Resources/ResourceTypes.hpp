@@ -6,7 +6,9 @@
 #pragma push_macro("ASSET_TYPES")
 #define ASSET_TYPES \
 	X( Texture ) \
-	X( Shader )
+	X( Shader ) \
+	X( SpriteSheet ) \
+	X( Sprite )
 
 namespace Resources
 {
