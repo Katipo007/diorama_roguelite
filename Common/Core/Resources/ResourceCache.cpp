@@ -6,19 +6,6 @@
 #include "Resource.hpp"
 #include "ResourceLoader.hpp"
 
-namespace
-{
-	thread_local static std::string temp_str;
-}
-
-#define TEMP_STR_FROM_VIEW( str_view ) { temp_str.reserve( std::max( temp_str.capacity(), str_view.size() ) ); temp_str.assign( std::begin( str_view ), std::end( str_view ) ); }
-
-#ifdef ENABLE_ASSERTS
-#define TEMP_STR_UNCHANGED_TEST( str_view ) { ASSERT( temp_str == str_view ); }
-#else
-#define TEMP_STR_UNCHANGED_TEST
-#endif
-
 namespace Resources
 {
 	BaseResourceCache::BaseResourceCache( ResourceManager& _manager, const AssetType _type )
@@ -32,44 +19,54 @@ namespace Resources
 		resources.clear();
 	}
 
-	bool BaseResourceCache::Exists( std::string_view _resource_id ) const
+	bool BaseResourceCache::Exists( std::string_view resource_id_ ) const
 	{
-		TEMP_STR_FROM_VIEW( _resource_id );
-		const auto it = resources.find( temp_str );
+		const auto it = resources.find( resource_id_ );
 		if (it != std::end( resources ))
 			return true;
 
 		return false;
 	}
 
-	BaseResourceCache::UntypedResourcePtr BaseResourceCache::GetUntyped( std::string_view _resource_id ) const
+	BaseResourceCache::UntypedResourcePtr BaseResourceCache::GetUntyped( std::string_view resource_id_ ) const
 	{
-		TEMP_STR_FROM_VIEW( _resource_id );
-
-		const auto it = resources.find( temp_str );
+		const auto it = resources.find( resource_id_ );
 		if (it != std::end( resources ))
 			return it->second.resource;
 
 		auto* non_const_this = const_cast<BaseResourceCache*>(this);
+		UntypedResourcePtr result;
 
 		// not in the cache, try loading
-		auto loader = ResourceLoader( _resource_id, non_const_this->manager );
+		auto loader = ResourceLoader( resource_id_, non_const_this->manager );
 		auto loaded_resource = LoadResource( loader );
 		if (loaded_resource)
 		{
+			loaded_resource->resource_id = std::string{ resource_id_ };
 			ASSERT( !loaded_resource->GetResourceId().empty() );
-			non_const_this->AddResource( loaded_resource );
+			result = non_const_this->AddResource( loaded_resource );
 		}
 
-		ASSERT( !loaded_resource ); // unique_ptr should have been moved
-
-		return UntypedResourcePtr();
+		if constexpr (std::is_same<UntypedResourcePtr, std::unique_ptr<const Resource>>::value)
+			ASSERT( !loaded_resource ); // unique_ptr should have been moved
+		
+		return result;
 	}
 
-	void BaseResourceCache::Unload( std::string_view _resource_id )
+	bool BaseResourceCache::Preload( std::string_view resource_id_ ) const
 	{
-		TEMP_STR_FROM_VIEW( _resource_id );
-		resources.erase( temp_str );
+		auto result = GetUntyped( resource_id_ );
+		if (!result)
+			LOG_WARN( Application, "Preloading resource '{}' (type: {}) failed", resource_id_, GetAssetTypeName( type ) );
+
+		return result != nullptr;
+	}
+
+	void BaseResourceCache::Unload( std::string_view resource_id_ )
+	{
+		const auto it = resources.find( resource_id_ );
+		if (it != std::end( resources ))
+			resources.erase( it );
 	}
 
 	void BaseResourceCache::Purge( size_t _min_generations )
@@ -97,17 +94,54 @@ namespace Resources
 			} );
 	}
 
-	void BaseResourceCache::AddResource( UntypedResourcePtr& _new_resource )
+	BaseResourceCache::UntypedResourcePtr BaseResourceCache::AddResource( UntypedResourcePtr& new_resource )
 	{
-		ASSERT( _new_resource );
-		if (!_new_resource)
-			return;
+		ASSERT( new_resource );
+		if (!new_resource)
+			return nullptr;
 
-		const auto resource_id = _new_resource->GetResourceId();
+		const auto resource_id = std::string{ new_resource->GetResourceId() };
 		ASSERT( !resource_id.empty() );
-		TEMP_STR_FROM_VIEW( resource_id );
+		if (resource_id.empty())
+			return nullptr;
 
-		auto [it, success] = resources.try_emplace( temp_str, _new_resource, current_generation );
-		ASSERT( success );
+		auto [it, success] = resources.try_emplace( resource_id, new_resource, current_generation );
+		if (success)
+			return it->second.resource;
+
+		ASSERT( false, "Failed to add resource, does a resource with the given id already exist?" );
+		return nullptr;
+	}
+
+	BaseResourceCache::UntypedResourcePtr BaseResourceCache::AddResource( UntypedNonConstResourcePtr& new_resource )
+	{
+		ASSERT( new_resource );
+		if (!new_resource)
+			return nullptr;
+
+		const auto resource_id = std::string{ new_resource->GetResourceId() };
+		ASSERT( !resource_id.empty() );
+		if (resource_id.empty())
+			return nullptr;
+
+		auto [it, success] = resources.try_emplace( resource_id, new_resource, current_generation );
+		if (success)
+			return it->second.resource;
+
+		ASSERT( false, "Failed to add resource, does a resource with the given id already exist?" );
+		return nullptr;
+	}
+
+	BaseResourceCache::UntypedResourcePtr BaseResourceCache::FindIf( const std::function<bool( const Resource& )>& pred ) const
+	{
+		const auto pred_wrapper = [&]( const ResourceHashmap_T::value_type& entry ) -> bool
+		{
+			return pred( *entry.second.resource );
+		};
+		auto it = std::find_if( resources.begin(), resources.end(), pred_wrapper );
+		if (it != std::end( resources ))
+			return it->second.resource;
+
+		return nullptr;
 	}
 }

@@ -65,7 +65,7 @@ namespace Graphics
 		: public ::Resources::Resource
 	{
 	public:
-		Sprite( std::shared_ptr<const SpriteSheet> parent_sprite_sheet, SpriteSheet::SpriteIdx_T idx );
+		Sprite( std::shared_ptr<const SpriteSheet> parent, SpriteSheet::SpriteIdx_T idx );
 
 		const SpriteSheetEntry& GetSprite() const;
 		SpriteSheet::SpriteIdx_T GetIndex() const noexcept;

@@ -15,7 +15,9 @@ namespace Graphics
 		auto video = core.GetAPI<::API::VideoAPI>();
 		ASSERT( video );
 
-		Filepath filepath = std::string( loader.GetAssetId() ) + ".png";
+		Filepath filepath = loader.GetAssetId();
+
+		// TODO: some way of storing/fetching metadata
 
 		TextureLoadProperties props;
 		texture = video->CreateTexture( filepath, props );

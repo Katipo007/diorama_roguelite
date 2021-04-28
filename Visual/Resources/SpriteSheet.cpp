@@ -8,9 +8,13 @@
 
 #include "Visual/Graphics/Texture.hpp"
 
+#ifdef _DEBUG
+#	define DEBUG_SPRITESHEET_LOADING 1
+#endif
+
 namespace
 {
-	bool ParseFreeTexPackerSpritesheetJson( const nlohmann::json& json, const Filepath& filepath_prefix, std::vector<std::pair<std::string, Graphics::SpriteSheetEntry>>& out, std::string& texture_filename_out )
+	bool ParseFreeTexPackerSpritesheetJson( const nlohmann::json& json, const Filepath& filepath_prefix, std::vector<std::pair<std::string, Graphics::SpriteSheetEntry>>& out, Filepath& texture_filename_out )
 	{
 		ASSERT( std::filesystem::is_directory( filepath_prefix ) );
 
@@ -47,8 +51,11 @@ namespace
 
 			// pivot
 			auto pivot = Point2D<float>{ 0, 0 };
-			if (const auto pivot_obj = obj.at( "pivot" ))
+			if (obj.contains( "pivot" ))
+			{
+				const auto& pivot_obj = obj.at( "pivot" );
 				pivot = { pivot_obj["x"].get<float>(), pivot_obj["y"].get<float>() };
+			}
 
 			Graphics::SpriteSheetEntry entry;
 			entry.size = { rect.w, rect.h };
@@ -65,14 +72,15 @@ namespace
 		{
 			auto texture_filename = meta.at( "image" ).get<std::string>();
 			if (!texture_filename.empty())
-				texture_filename_out.assign( texture_filename );
+				texture_filename_out = filepath_prefix / texture_filename;
 			else
 			{
 				LOG_WARN( Application, "Spritesheet JSON didn't supply a texture filename" );
 				texture_filename_out = "";
 			}
 
-			texture_size = { meta.at( "size.w" ).get<float>(), meta.at( "size.h" ).get<float>() };
+			const auto& size_obj = meta.at( "size" );
+			texture_size = { size_obj.at( "w" ).get<float>(), size_obj.at( "h" ).get<float>() };
 			ASSERT( texture_size.width > 0 && texture_size.height > 0 );
 		}
 
@@ -86,6 +94,9 @@ namespace
 			}
 			catch( std::runtime_error& )
 			{
+#if DEBUG_SPRITESHEET_LOADING
+				ASSERT( false );
+#endif
 				continue;
 			}
 		}
@@ -142,20 +153,25 @@ namespace Graphics
 		auto j = nlohmann::json::parse( json_string );
 		bool handled = false;
 
-		std::string texture_filename;
+		Filepath texture_filename;
 		std::vector<std::pair<std::string, SpriteSheetEntry>> entries;
 		try
 		{
 			if (j.contains( "frames" ) && j.contains( "meta" ) && j["meta"]["app"].is_string() && j["meta"]["app"].get<std::string>() == "http://free-tex-packer.com")
 				handled = ParseFreeTexPackerSpritesheetJson( j, filepath_prefix, entries, texture_filename );
 		}
-		catch (std::exception& e)
+		catch (nlohmann::json::exception& e)
 		{
-			LOG_ERROR( Application, "Exception while parsing images from json: '{}'", e.what() );
+			LOG_ERROR( Application, "Exception while parsing spritesheet json: '{}'", e.what() );
+			handled = false;
+		}
+		catch (std::runtime_error& e)
+		{
+			LOG_ERROR( Application, "Exception while parsing spritesheet:'{}'", e.what() );
 			handled = false;
 		}
 
-		texture_id = Filepath( texture_filename ).replace_extension().string();
+		texture_id = Filepath( texture_filename ).lexically_normal().generic_string();
 		ASSERT( !texture_id.empty() );
 		for (auto& entry : entries)
 			AddSprite( entry.first, entry.second );
@@ -183,7 +199,7 @@ namespace Graphics
 
 		auto sheet = std::make_shared<SpriteSheet>( loader.GetManager() );
 		
-		const Filepath filepath = std::string{ loader.GetAssetId() } + (".json");
+		const Filepath filepath = loader.GetAssetId();
 		std::string file_contents;
 		if (FileOps::ReadFile( filepath, file_contents ))
 			sheet->LoadFromJson( file_contents, FileOps::GetFileDirectory( filepath ) );
@@ -196,5 +212,49 @@ namespace Graphics
 	void SpriteSheet::ReloadTexture( ResourceManager& manager_ ) const
 	{
 		texture = manager_.Get<Texture>( texture_id );
+	}
+
+
+	/// 
+	/// Sprite
+	/// 
+
+	Sprite::Sprite( std::shared_ptr<const SpriteSheet> parent_, SpriteSheet::SpriteIdx_T idx_ )
+		: parent_spritesheet( parent_ )
+		, index( idx_ )
+	{
+	}
+
+	const SpriteSheetEntry& Sprite::GetSprite() const
+	{
+		if( auto sheet = GetSpriteSheet() )
+			return sheet->GetSprite( index );
+
+		throw std::runtime_error( "Spritesheet has expired" );
+	}
+
+	SpriteSheet::SpriteIdx_T Sprite::GetIndex() const noexcept
+	{
+		return index;
+	}
+
+	std::shared_ptr<const SpriteSheet> Sprite::GetSpriteSheet() const
+	{
+		return parent_spritesheet.lock();
+	}
+
+	std::shared_ptr<Sprite> Sprite::LoadResource( ::Resources::ResourceLoader& loader )
+	{
+		auto& manager = loader.GetManager();
+		auto& spritesheets = manager.GetCache<SpriteSheet>();
+		const auto the_sheet = spritesheets.FindIf( [&loader]( const SpriteSheet& entry ) -> bool
+			{
+				return entry.HasSprite( loader.GetAssetId() );
+			} );
+
+		if (the_sheet)
+			return std::make_shared<Sprite>( the_sheet, the_sheet->GetSpriteIndex( loader.GetAssetId() ) );
+
+		return nullptr;
 	}
 }
