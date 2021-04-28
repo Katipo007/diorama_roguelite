@@ -176,6 +176,12 @@ void Core::DoVariableUpdate( const PreciseTimestep& ts )
 	if( dearimgui_api )
 		dearimgui_api->OnFrameBegin();
 
+	if (game->GetExitCode())
+	{
+		exit_code = game->GetExitCode().value();
+		is_running = false;
+	}
+
 	if (is_running)
 		game->OnVariableUpdate( ts );
 

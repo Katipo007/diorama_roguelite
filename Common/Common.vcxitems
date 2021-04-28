@@ -70,6 +70,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\enumclassbitset\EnumClassBitset.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Core\AbstractGame.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Core\Core.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Core\Resources\ResourceCache.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Core\ResourceManager.cpp" />

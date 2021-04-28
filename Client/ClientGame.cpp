@@ -88,11 +88,6 @@ namespace Game
         client_data.reset();
     }
 
-    void ClientGame::Exit()
-    {
-        user_requested_exit = true;
-    }
-
     void ClientGame::ConnectionStateChangedHandler( Sessions::ClientServerSession& sender )
     {
         ASSERT( client_server_session != nullptr );

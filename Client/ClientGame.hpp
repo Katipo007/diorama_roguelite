@@ -35,8 +35,6 @@ namespace Game
 		explicit ClientGame();
 		~ClientGame();
 
-		void Exit();
-
 		Core& GetCore() const { return *core; }
 		ResourceManager& GetResourceManager() const { return *resource_manager; }
 
@@ -63,8 +61,6 @@ namespace Game
 		std::unique_ptr<Sessions::ClientServerSession> client_server_session;
 
 		::API::DearImGuiAPI* dearimgui = nullptr;
-
-		bool user_requested_exit = false;
 
 	private:
 		struct ClientData;
