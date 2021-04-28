@@ -53,7 +53,7 @@ public:
 	void Purge( size_t min_generations = 3 ) { GetCache<RESOURCE>().Purge( min_generations ); }
 
 	template<typename RESOURCE>
-	const Resources::ResourceCache<RESOURCE>& GetCache() const
+	[[nodiscard]] const Resources::ResourceCache<RESOURCE>& GetCache() const
 	{
 		static_assert(std::is_base_of<Resources::Resource, RESOURCE>::value, "Provided type must derive from Resources::Resource");
 		constexpr Resources::AssetType type = RESOURCE::GetResourceType();

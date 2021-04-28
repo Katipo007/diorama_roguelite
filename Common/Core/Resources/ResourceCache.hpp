@@ -26,7 +26,7 @@ namespace Resources
 
 		AssetType GetResourceType() const { return type; }
 
-		bool Exists( std::string_view resource_id ) const;
+		[[nodiscard]] bool Exists( std::string_view resource_id ) const;
 		[[nodiscard]] UntypedResourcePtr GetUntyped( std::string_view resource_id ) const;
 
 		bool Preload( std::string_view resource_id ) const;
@@ -42,9 +42,9 @@ namespace Resources
 	protected:
 		UntypedResourcePtr AddResource( UntypedResourcePtr& new_resource );
 		UntypedResourcePtr AddResource( UntypedNonConstResourcePtr& new_resource );
-		virtual UntypedNonConstResourcePtr LoadResource( ResourceLoader& loader ) const = 0;
+		[[nodiscard]] virtual UntypedNonConstResourcePtr LoadResource( ResourceLoader& loader ) const = 0;
 
-		UntypedResourcePtr FindIf( const std::function<bool( const Resource& )>& pred ) const;
+		[[nodiscard]] UntypedResourcePtr FindIf( const std::function<bool( const Resource& )>& pred ) const;
 
 	private:
 		ResourceManager& manager;
@@ -78,12 +78,12 @@ namespace Resources
 		{}
 		virtual ~ResourceCache() {}
 
-		ResourcePtr Get( std::string_view resource_id ) const
+		[[nodiscard]] ResourcePtr Get( std::string_view resource_id ) const
 		{
 			return std::dynamic_pointer_cast<const RESOURCE>(GetUntyped( resource_id ));
 		}
 
-		ResourcePtr FindIf( const std::function<bool( const RESOURCE& )>& pred ) const
+		[[nodiscard]] ResourcePtr FindIf( const std::function<bool( const RESOURCE& )>& pred ) const
 		{
 			const auto predicate_wrapper = [&pred]( const Resource& entry ) -> bool
 			{
@@ -96,7 +96,7 @@ namespace Resources
 			return nullptr;
 		}
 
-		virtual UntypedNonConstResourcePtr LoadResource( ResourceLoader& loader ) const override
+		[[nodiscard]] virtual UntypedNonConstResourcePtr LoadResource( ResourceLoader& loader ) const override
 		{
 			auto loaded_resource = RESOURCE::LoadResource( loader );
 			static_assert(std::is_same<decltype(loaded_resource), std::shared_ptr<RESOURCE>>::value, "RESOURCE::LoadResource() returns the wrong type, expected a std::shared_ptr<const RESOURCE>");
