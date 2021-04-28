@@ -20,6 +20,7 @@ namespace Graphics
 		// TODO: some way of storing/fetching metadata
 
 		TextureLoadProperties props;
+		props.y_flip = false;
 		texture = video->CreateTexture( filepath, props );
 
 		return texture;

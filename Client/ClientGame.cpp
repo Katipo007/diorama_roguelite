@@ -17,6 +17,7 @@
 #include "Client/States/InGameState.hpp"
 
 #include "Visual/Window.hpp"
+#include "Visual/Resources/SpriteSheet.hpp"
 
 namespace ClientStates
 {
@@ -159,6 +160,9 @@ namespace Game
         ASSERT( video != nullptr );
         dearimgui = core->GetAPI<API::DearImGuiAPI>();
 
+        // Preload sprite sheets
+        resource_manager->Preload<Graphics::SpriteSheet>( "Art/2DArt/texture.json" );
+            
         Graphics::WindowDefinition window_def;
         window_def.title = "Diorama Roguelite";
         window_def.size = { 800, 600 };
