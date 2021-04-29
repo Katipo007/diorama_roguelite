@@ -42,7 +42,7 @@ namespace ClientStates
 			}
 
 			if (ImGui::Button( "Exit" ))
-			{
+			{ 
 				client.Exit( 0 );
 			}
 

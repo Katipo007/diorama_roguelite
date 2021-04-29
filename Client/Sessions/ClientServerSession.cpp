@@ -111,7 +111,7 @@ namespace Sessions
 			std::string content = p->message;
 
 			LOG_INFO( Client, "Chat message received from '{}': {}", sender, content );
-			// TODO: emit event
+			ChatMessageReceived( sender, content );
 		}
 		break;
 		}

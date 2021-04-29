@@ -56,6 +56,7 @@ namespace ClientStates
 		void OnRender() const;
 
 		void ChatWindowSendMessageHandler( std::string_view msg );
+		void ChatMessageReceivedHandler( const std::string& sender, const std::string& message );
 
 		Game::ClientGame& client;
 		Sessions::ClientServerSession* client_server_session = nullptr;

@@ -32,6 +32,7 @@ namespace Sessions
 		void Disconnect();
 
 		sigslot::signal<ClientServerSession&> ConnectionStateChanged;
+		sigslot::signal<const std::string&, const std::string&> ChatMessageReceived;
 
 		//
 		// Message sending

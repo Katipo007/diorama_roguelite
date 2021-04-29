@@ -59,9 +59,17 @@ namespace ClientStates
 			return fsm::Actions::TransitionTo<MainMenuState>{};
 		}
 
+		//
+		// initalise
+		//
 		auto* video = client.GetCore().GetAPI<API::VideoAPI>();
 		ASSERT( video != nullptr );
 		gameworld = std::make_unique<Game::ClientGameWorld>( *video, client.GetResourceManager() );
+
+		//
+		// connect to session events
+		//
+		client_server_session->ChatMessageReceived.connect( &InGameState::ChatMessageReceivedHandler, this );
 
 		return fsm::Actions::NoAction();
 	}
@@ -109,6 +117,15 @@ namespace ClientStates
 	{
 		(void)e;
 		ASSERT( !client_server_session || client_server_session == e.session );
+
+		//
+		// disconnect events
+		//
+		client_server_session->ChatMessageReceived.disconnect( &InGameState::ChatMessageReceivedHandler, this );
+
+		//
+		// clear
+		//
 		client_server_session = nullptr;
 
 		LOG_INFO( Client, "Lost connection to server, returning to main menu" );
@@ -128,5 +145,11 @@ namespace ClientStates
 
 		LOG_INFO( Client, "Sending chat message '{}'", (std::string)msg );
 		client_server_session->SendChatMessage( msg );
+	}
+
+	void InGameState::ChatMessageReceivedHandler( const std::string& sender, const std::string& message )
+	{
+		std::string to_display = "[" + sender + "] " + message;
+		chat_window.AddMessage( to_display );
 	}
 }
