@@ -2,7 +2,7 @@
 
 #include "Common/Networking/Types.hpp"
 
-namespace Networking
+namespace Game::ClientServerConnection
 {
-	extern const Key_T DefaultPrivateKey;
+	extern const Networking::Key_T DefaultPrivateKey;
 }

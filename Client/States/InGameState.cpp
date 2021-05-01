@@ -10,7 +10,6 @@
 #include "Client/ClientGame.hpp"
 #include "Client/Game/ClientGameWorld.hpp"
 #include "Client/Game/PlayerObject.hpp"
-#include "Client/Sessions/ClientServerSession.hpp"
 
 namespace ClientStates
 {
@@ -34,7 +33,6 @@ namespace ClientStates
 	{
 		std::swap( main_camera, to_move.main_camera );
 		std::swap( gameworld, to_move.gameworld );
-		std::swap( client_server_session, to_move.client_server_session );
 
 		chat_window.EnteredMessage.disconnect( &InGameState::ChatWindowSendMessageHandler, &to_move );
 		chat_window.EnteredMessage.connect( &InGameState::ChatWindowSendMessageHandler, this );
@@ -50,9 +48,7 @@ namespace ClientStates
 
 	fsm::Actions::Might<fsm::Actions::TransitionTo<MainMenuState>> InGameState::OnEnter()
 	{
-		client_server_session = client.GetClientServerSession();
-
-		if (client_server_session == nullptr)
+		if (!client.GetClientServerSession())
 		{
 			LOG_ERROR( Client, "Expected to have a session when entering InGameState!" );
 			client.DisconnectFromServer();
@@ -69,7 +65,7 @@ namespace ClientStates
 		//
 		// connect to session events
 		//
-		client_server_session->ChatMessageReceived.connect( &InGameState::ChatMessageReceivedHandler, this );
+		// TODO: connect to chat recieved event
 
 		return fsm::Actions::NoAction();
 	}
@@ -116,12 +112,13 @@ namespace ClientStates
 	fsm::Actions::TransitionTo<MainMenuState> InGameState::HandleEvent( const DisconnectedFromServerEvent& e )
 	{
 		(void)e;
-		ASSERT( !client_server_session || client_server_session == e.session );
+		auto* client_server_session = client.GetClientServerSession();
+		ASSERT( !client_server_session || (client_server_session == &e.session) );
 
 		//
 		// disconnect events
 		//
-		client_server_session->ChatMessageReceived.disconnect( &InGameState::ChatMessageReceivedHandler, this );
+		// TODO: disconnect chat message received event
 
 		//
 		// clear
@@ -139,12 +136,13 @@ namespace ClientStates
 
 	void InGameState::ChatWindowSendMessageHandler( std::string_view msg )
 	{
+		auto* client_server_session = client.GetClientServerSession();
 		ASSERT( client_server_session );
 		if (!client_server_session)
 			return;
 
 		LOG_INFO( Client, "Sending chat message '{}'", (std::string)msg );
-		client_server_session->SendChatMessage( msg );
+		// TODO: send chat message
 	}
 
 	void InGameState::ChatMessageReceivedHandler( const std::string& sender, const std::string& message )

@@ -6,11 +6,6 @@
 #include "Common/Utility/StateMachine/Actions/TransitionTo.hpp"
 #include "Common/Utility/NonCopyable.hpp"
 
-namespace Sessions
-{
-	class ClientServerSession;
-}
-
 namespace ClientStates
 {
 	class MainMenuState;

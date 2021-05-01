@@ -7,12 +7,8 @@
 
 #include "Utility/Timestep.hpp"
 
-namespace Sessions
-{
-	class ClientServerSession;
-}
-
 namespace API { class DearImGuiAPI; }
+namespace Networking { class Client; }
 
 namespace ClientStates
 {
@@ -27,7 +23,10 @@ namespace ClientStates
 		Timestep timestep;
 	};
 
-	struct RenderEvent {};
+	struct RenderEvent
+	{
+	};
+
 	struct DearImGuiFrameEvent
 	{
 		explicit DearImGuiFrameEvent( ::API::DearImGuiAPI& dearimgui_ )
@@ -39,18 +38,19 @@ namespace ClientStates
 
 	struct ConnectedToServerEvent
 	{
-		explicit ConnectedToServerEvent( Sessions::ClientServerSession* session )
+		explicit ConnectedToServerEvent( Networking::Client& session )
 			: session( session )
-		{}
+		{
+		}
 
-		Sessions::ClientServerSession* session;
+		Networking::Client& session;
 	};
 
 	struct DisconnectedFromServerEvent
 	{
 		static const size_t MaxReasonLength = 128;
 
-		explicit DisconnectedFromServerEvent( Sessions::ClientServerSession* session, std::string_view reason = "" )
+		explicit DisconnectedFromServerEvent( Networking::Client& session, std::string_view reason = "" )
 			: session( session )
 		{
 			ASSERT( reason.length() < MaxReasonLength );
@@ -58,7 +58,7 @@ namespace ClientStates
 			this->reason[MaxReasonLength - 1] = '\n';
 		}
 
-		Sessions::ClientServerSession* session;
+		Networking::Client& session;
 		char reason[MaxReasonLength];
 	};
 }

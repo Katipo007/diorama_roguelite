@@ -96,7 +96,6 @@
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Level4</WarningLevel>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Level4</WarningLevel>
     </ClCompile>
-    <ClCompile Include="Sessions\ClientServerSession.cpp" />
     <ClCompile Include="States\InGameState.cpp" />
     <ClCompile Include="States\JoinMultiplayerState.cpp" />
     <ClCompile Include="States\LoadingState.cpp" />
@@ -110,7 +109,6 @@
     <ClInclude Include="Game\PlayerObject.hpp" />
     <ClInclude Include="Graphical\UI\ChatWindow.hpp" />
     <ClInclude Include="Precompiled\pch.hpp" />
-    <ClInclude Include="Sessions\ClientServerSession.hpp" />
     <ClInclude Include="States\Events.hpp" />
     <ClInclude Include="States\InGameState.hpp" />
     <ClInclude Include="States\JoinMultiplayerState.hpp" />

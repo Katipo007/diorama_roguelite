@@ -1,8 +1,9 @@
 #include "JoinMultiplayerState.hpp"
 
 #include "Client/ClientGame.hpp"
-#include "Client/Sessions/ClientServerSession.hpp"
 #include "Visual/DearImGui/DearImGui.hpp"
+
+#include "Common/Networking/Client.hpp"
 
 namespace ClientStates
 {
@@ -21,18 +22,18 @@ namespace ClientStates
 
 		if (const auto* client_server_session = client.GetClientServerSession())
 		{
-			const auto connection_state = client_server_session->GetConnectionState();
+			const auto connection_state = client_server_session->GetState();
 			switch (connection_state)
 			{
-			case Sessions::ClientServerSession::ConnectionState::Connected:
+			case Networking::Client::ConnectionState::Connected:
 				status_message = "Connected";
 				break;
 
-			case Sessions::ClientServerSession::ConnectionState::Connecting:
+			case Networking::Client::ConnectionState::Connecting:
 				status_message = "Connecting...";
 				break;
 
-			case Sessions::ClientServerSession::ConnectionState::Disconnected:
+			case Networking::Client::ConnectionState::Disconnected:
 				LOG_INFO( Client, "Failed to connect to server" );
 				status_message = "Connection failed.";
 				break;
@@ -114,8 +115,7 @@ namespace ClientStates
 		if (session != nullptr)
 			return;
 
-		auto address = yojimbo::Address( address_str.c_str() );
-		client.ConnectToServer( address );
+		client.ConnectToServer( Networking::Address( address_str.c_str() ) );
 	}
 
 	void JoinMultiplayerState::CancelConnection()

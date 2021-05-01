@@ -36,9 +36,6 @@
     <ClCompile Include="States\PreGameState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sessions\ClientServerSession.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="States\MainMenuState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -75,9 +72,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="States\PreGameState.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Sessions\ClientServerSession.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="States\MainMenuState.hpp">

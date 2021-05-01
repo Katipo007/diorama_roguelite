@@ -2,15 +2,16 @@
 #include <iostream>
 
 #include "Common/Core/Base.hpp"
+#include "Common/Core/Core.hpp"
+#include "Common/Core/ResourceManager.hpp"
 #include "Common/Utility/OsAbstraction.hpp"
 #include "Common/Utility/Timestep.hpp"
 
-#include "Common/Networking/Server.hpp"
+#include "ClientServerCommon/Plugins/Yojimbo/NetworkYojimbo.hpp"
 
-std::unique_ptr<Networking::Server> game_server;
+#include "Server/ServerGame.hpp"
 
-bool running = true;
-bool user_wants_to_exit = false;
+std::unique_ptr<Core> core;
 
 int main( int argc, char** argv )
 {
@@ -22,67 +23,44 @@ int main( int argc, char** argv )
 
 	LOG_INFO( Application, "Dedicated server starting" );
 
-	//
-	// Setup
-	//
-	game_server.reset( new Server::GameServer( yojimbo::Address( "127.0.0.1", 42777 ) ) ); // TODO: allow setting bind address/port and NumMaxClients via commandline
 
+	// ============================================
+	// construct core
+	// ============================================
+	{
+		// TODO: swap plugins based on system
+
+		using APIFactory_T = std::function<API::BaseAPI* (API::SystemAPI*, API::VideoAPI*)>;
+		std::unordered_map<API::APIType, APIFactory_T> plugin_factories = {
+			//{ API::APIType::System, []( API::SystemAPI*, API::VideoAPI* ) { return new SystemCLI(); } }, // TODO
+			{ API::APIType::Network, []( API::SystemAPI* system, API::VideoAPI* ) { ASSERT( system ); return new Plugins::NetworkYojimbo(); } },
+		};
+
+		const auto resource_initaliser = []( ResourceManager& manager )
+		{
+			(void)manager;
+			// TODO
+		};
+
+		core = std::make_unique<Core>( std::make_unique<Game::ServerGame>(), resource_initaliser, plugin_factories );
+		core->Init();
+	}
 
 	// ============================================
 	// main loop
 	// ============================================
-
-	LOG_INFO( Application, "Dedicated server application complete, starting main loop" );
-
-	constexpr size_t TargetFramesPerSecond = 30;
-	static double next_step = yojimbo_time();
-	constexpr double FixedDt = 1.0 / TargetFramesPerSecond;
-
-	constexpr size_t MaxStepsPerFrame = 10;
-	size_t steps_this_frame = 0;
-	while (running)
+	int exit_code = 0;
 	{
-		double current_time = yojimbo_time();
-		if (steps_this_frame >= MaxStepsPerFrame)
-		{
-			LOG_WARN( Server, "Max steps per frame exceeded, is the server overloaded?" );
-			next_step = current_time + FixedDt;
-			yojimbo_sleep( next_step - current_time );
-			steps_this_frame = 0;
-		}
-		else if (next_step <= current_time )
-		{
-			// do event
-			PreciseTimestep timestep( current_time, FixedDt );
-			game_server->Update( timestep );
-
-			// track time
-			next_step += FixedDt;
-			++steps_this_frame;
-
-			// exit
-			if (!game_server->IsRunning())
-			{
-				running = false;
-				continue;
-			}
-		}
-		else
-		{
-			yojimbo_sleep( next_step - current_time );
-			steps_this_frame = 0;
-		}
+		exit_code = core->Dispatch();
 	}
 
-	LOG_INFO( Application, "Dedicated application loop finished, exiting" );
-
-	//
-	// clear
-	//
+	// ============================================
+	// cleanup
+	// ============================================
 	{
-		game_server.reset();
+		core.reset();
 	}
 
 	LOG_INFO( Application, "Dedicated server finished" );
-	return 0;
+	return exit_code;
 }

@@ -39,7 +39,7 @@ int main( int argc, char** argv )
 		std::unordered_map<API::APIType, APIFactory_T> plugin_factories = {
 			{ API::APIType::System, []( API::SystemAPI*, API::VideoAPI* ) { return new Graphics::API::SystemSDL2(); } },
 			{ API::APIType::Video, []( API::SystemAPI* system, API::VideoAPI* ) { ASSERT( system ); return new Graphics::API::VideoOpenGL( *system ); } },
-			{ API::APIType::Network, []( API::SystemAPI* system, API::VideoAPI* ) { ASSERT( system ); return new API::NetworkYojimbo(); } },
+			{ API::APIType::Network, []( API::SystemAPI* system, API::VideoAPI* ) { ASSERT( system ); return new Plugins::NetworkYojimbo(); } },
 
 #if (DEVELOPER_TOOLS == 1)
 			{ API::APIType::DearImGui, []( API::SystemAPI* system, API::VideoAPI* video ) { ASSERT( system && video ); return new Graphics::API::DearImGuiPlugin( *system, *video ); } },
@@ -60,8 +60,9 @@ int main( int argc, char** argv )
 	// ============================================
 	// main loop
 	// ============================================
+	int exit_code = 0;
 	{
-		core->Dispatch();
+		exit_code = core->Dispatch();
 	}
 
 	// ============================================
@@ -72,5 +73,5 @@ int main( int argc, char** argv )
 	}
 
 	LOG_INFO( Application, "Client finished" );
-	return 0;
+	return exit_code;
 }

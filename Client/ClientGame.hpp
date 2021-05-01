@@ -7,21 +7,13 @@
 #include "Common/Core/AbstractGame.hpp"
 #include "Common/Utility/NonCopyable.hpp"
 #include "Common/Utility/Timestep.hpp"
+#include "Common/Networking/Address.hpp"
 
 class Core;
 class ResourceManager;
 
-namespace yojimbo
-{
-	class Address;
-}
-
-namespace Sessions
-{
-	class ClientServerSession;
-}
-
 namespace API { class DearImGuiAPI; }
+namespace Networking { class Client; }
 
 namespace Game
 {
@@ -41,9 +33,9 @@ namespace Game
 		//
 		// Client server session management
 		//
-		Sessions::ClientServerSession* GetClientServerSession() { return client_server_session.get(); }
-		const Sessions::ClientServerSession* GetClientServerSession() const { return client_server_session.get(); }
-		void ConnectToServer( const yojimbo::Address& address );
+		Networking::Client* GetClientServerSession();
+		Networking::Client* GetClientServerSession() const;
+		void ConnectToServer( const ::Networking::Address& address );
 		void DisconnectFromServer();
 
 	protected:
@@ -55,10 +47,10 @@ namespace Game
 		virtual void OnRender( const PreciseTimestep& ts ) override;
 		void DoDearImGuiFrame();
 
-		void ConnectionStateChangedHandler( Sessions::ClientServerSession& sender );
+		void ConnectionStateChangedHandler( Networking::Client& sender );
 
 	protected:
-		std::unique_ptr<Sessions::ClientServerSession> client_server_session;
+		std::unique_ptr<Networking::Client> client_server_session;
 
 		::API::DearImGuiAPI* dearimgui = nullptr;
 

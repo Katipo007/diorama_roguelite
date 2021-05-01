@@ -3,11 +3,10 @@
 #include "Common/Core/Core.hpp"
 #include "Common/Core/ResourceManager.hpp"
 #include "Common/Core/API/DearImGuiAPI.hpp"
+#include "Common/Core/API/NetworkAPI.hpp"
 #include "Common/Core/API/VideoAPI.hpp"
 #include "Common/Utility/StateMachine/StateMachine.hpp"
 #include "Common/Utility/Timestep.hpp"
-
-#include "Client/Sessions/ClientServerSession.hpp"
 
 #include "Client/States/Events.hpp"
 #include "Client/States/PreGameState.hpp"
@@ -18,6 +17,9 @@
 
 #include "Visual/Window.hpp"
 #include "Visual/Resources/SpriteSheet.hpp"
+
+#include "ClientServerCommon/Networking/ClientServerConfig.hpp"
+#include "Common/Networking/Client.hpp"
 
 namespace ClientStates
 {
@@ -88,27 +90,28 @@ namespace Game
         client_data.reset();
     }
 
-    void ClientGame::ConnectionStateChangedHandler( Sessions::ClientServerSession& sender )
+    void ClientGame::ConnectionStateChangedHandler( Networking::Client& sender )
     {
         ASSERT( client_server_session != nullptr );
         ASSERT( &sender == client_server_session.get() );
 
-        switch (sender.GetConnectionState())
+        switch (sender.GetState())
         {
-        case Sessions::ClientServerSession::ConnectionState::Connected:
-            client_data->state_machine.Handle( ClientStates::ConnectedToServerEvent( &sender ) );
+        case Networking::Client::ConnectionState::Connected:
+            client_data->state_machine.Handle( ClientStates::ConnectedToServerEvent( sender ) );
             break;
 
-        case Sessions::ClientServerSession::ConnectionState::Connecting:
+        case Networking::Client::ConnectionState::Connecting:
+            // TODO: show some indicator
             break;
 
-        case Sessions::ClientServerSession::ConnectionState::Disconnected:
+        case Networking::Client::ConnectionState::Disconnected:
             // NOTHING, will get caught in the new Update() event
             break;
         }
     }
 
-    void ClientGame::ConnectToServer( const yojimbo::Address& address )
+    void ClientGame::ConnectToServer( const ::Networking::Address& address )
     {
         if (client_server_session)
         {
@@ -118,15 +121,20 @@ namespace Game
 
         try
         {
-            client_server_session = std::make_unique<Sessions::ClientServerSession>( address );
+            auto* network = core->GetAPI<API::NetworkAPI>();
+            if (!network)
+                throw std::runtime_error( "No networking API initialised" );
+
+            Networking::ClientProperties properties;
+            properties.target_address = address;
+            properties.private_key = Game::ClientServerConnection::DefaultPrivateKey;
+
+            client_server_session = network->CreateClient( std::move( properties ) );
             client_server_session->ConnectionStateChanged.connect( &ClientGame::ConnectionStateChangedHandler, this );
         }
         catch (std::exception& e)
         {
-            char address_str[128];
-            address.ToString( address_str, sizeof( address_str ) );
-
-            LOG_ERROR( Client, "Failed to initalise the connection to '{}'. What: {}", address_str, e.what() );
+            LOG_ERROR( Client, "Failed to initalise the connection to '{}'. What: {}", address, e.what() );
         }
     }
 
@@ -139,11 +147,10 @@ namespace Game
         // disconnect handler before disconnecting
         client_server_session->ConnectionStateChanged.disconnect( this );
 
-        if (!client_server_session->IsDisconnected())
+        if (client_server_session->GetState() != Networking::Client::ConnectionState::Disconnected)
             client_server_session->Disconnect();
 
-
-        auto e = ClientStates::DisconnectedFromServerEvent( client_server_session.get() );
+        auto e = ClientStates::DisconnectedFromServerEvent( *client_server_session.get() );
         client_data->state_machine.Handle( e );
         client_server_session.reset();
     }
@@ -172,13 +179,9 @@ namespace Game
 
     void ClientGame::OnFixedUpdate( const PreciseTimestep& ts )
     {
-        if (client_server_session)
-        {
-            if (client_server_session->IsDisconnected())
-                DisconnectFromServer();
-            else
-                client_server_session->Update( ts );
-        }
+        // Destroy the connection object if it isn't connected
+        if (client_server_session && (client_server_session->GetState() == Networking::Client::ConnectionState::Disconnected))
+            DisconnectFromServer();
 
         client_data->state_machine.Handle( ClientStates::FrameEvent( ts ) );
     }
