@@ -1,5 +1,7 @@
 #include "ClientConnection.hpp"
+
 #include "Server.hpp"
+#include "Message.hpp"
 
 namespace Networking
 {

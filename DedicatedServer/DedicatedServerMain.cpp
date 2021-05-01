@@ -5,27 +5,12 @@
 #include "Common/Utility/OsAbstraction.hpp"
 #include "Common/Utility/Timestep.hpp"
 
-#include "Server/GameServer.hpp"
+#include "Common/Networking/Server.hpp"
 
-std::unique_ptr<Server::GameServer> game_server;
+std::unique_ptr<Networking::Server> game_server;
 
 bool running = true;
 bool user_wants_to_exit = false;
-
-static int YojimboLoggingRoute( const char* fmt, ... )
-{
-	char buffer[4 * 1024];
-	va_list args;
-	va_start( args, fmt );
-	vsprintf_s( buffer, fmt, args );
-	va_end( args );
-	const size_t length = strlen( buffer );
-	if (buffer[length - 1] == '\n')
-		buffer[length - 1] = '\0';
-
-	LOG_INFO( Server, "[yojimbo] {}", buffer );
-	return 0;
-}
 
 int main( int argc, char** argv )
 {
@@ -36,22 +21,6 @@ int main( int argc, char** argv )
 	Logging::InitDefaultServerSinks();
 
 	LOG_INFO( Application, "Dedicated server starting" );
-
-	//
-	// Setup Yojimbo
-	//
-	{
-		if (!InitializeYojimbo())
-		{
-			LOG_CRITICAL( Client, "Critical Error: failed to initialize Yojimbo!" );
-			return 1;
-		}
-
-#ifdef _DEBUG
-		yojimbo_log_level( YOJIMBO_LOG_LEVEL_INFO );
-#endif
-		yojimbo_set_printf_function( YojimboLoggingRoute );
-	}
 
 	//
 	// Setup
@@ -113,11 +82,6 @@ int main( int argc, char** argv )
 	{
 		game_server.reset();
 	}
-
-	//
-	// Shutdown Yojimbo
-	//
-	ShutdownYojimbo();
 
 	LOG_INFO( Application, "Dedicated server finished" );
 	return 0;

@@ -15,11 +15,20 @@ namespace API { class NetworkAPI; }
 
 namespace Networking
 {
+	class ClientConnection;
+
 	class Message;
-	using ServerMessageHandlerFunc_T = std::function<void( const Message& )>;
+	using ServerMessageHandlerFunc_T = std::function<void( ClientConnection&, const Message& )>;
 	class IMessageFactory;
 
-	class ClientConnection;
+	struct ServerProperties
+	{
+		Address host_address;
+		Key_T private_key;
+		size_t max_num_clients;
+		std::unique_ptr<IMessageFactory> message_factory;
+		ServerMessageHandlerFunc_T message_handler_func;
+	};
 
 	class Server
 	{

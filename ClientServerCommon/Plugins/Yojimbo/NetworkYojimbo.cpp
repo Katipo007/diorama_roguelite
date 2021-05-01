@@ -6,6 +6,7 @@
 
 #include "YojimboHeader.hpp"
 #include "ClientYojimbo.hpp"
+#include "ServerYojimbo.hpp"
 #include "YojimboNetworkAdapters.hpp"
 
 namespace
@@ -76,9 +77,11 @@ namespace Plugins
 			InitDefaultUnreliableChannel( config.channel[static_cast<size_t>(::Networking::ChannelType::Unreliable)] );
 		}
 
+		// Setup factory
 		std::shared_ptr<::Networking::IMessageFactory> message_factory;
 		message_factory.reset( properties.message_factory.release() );
 
+		// Create the client
 		std::unique_ptr<ClientYojimbo> client;
 		try
 		{
@@ -94,9 +97,43 @@ namespace Plugins
 
 	std::unique_ptr<::Networking::Server> NetworkYojimbo::CreateServer( ::Networking::ServerProperties&& properties )
 	{
-		(void)properties;
-		NOT_IMPLEMENTED;
-		return std::unique_ptr<::Networking::Server>();
+		if (!properties.message_factory)
+			throw std::runtime_error( "No message factory specified" );
+
+		if (!properties.message_handler_func)
+			throw std::runtime_error( "No message handler specified" );
+
+		yojimbo::Address host_address( properties.host_address.value.c_str(), static_cast<uint16_t>(properties.host_address.port) );
+		if (!host_address.IsValid())
+			throw std::runtime_error( "Invalid connection address" );
+
+		// Setup config
+		yojimbo::ClientServerConfig config;
+		{
+			static_assert(static_cast<size_t>(::Networking::ChannelType::NumChannelTypes) == 2, "Needs updating");
+			config.networkSimulator = false;
+
+			config.numChannels = 2;
+			InitDefaultReliableChannel( config.channel[static_cast<size_t>(::Networking::ChannelType::Reliable)] );
+			InitDefaultUnreliableChannel( config.channel[static_cast<size_t>(::Networking::ChannelType::Unreliable)] );
+		}
+
+		// Setup factory
+		std::shared_ptr<::Networking::IMessageFactory> message_factory;
+		message_factory.reset( properties.message_factory.release() );
+
+		// Create the server
+		std::unique_ptr<ServerYojimbo> server;
+		try
+		{
+			server.reset( new ServerYojimbo( std::move( host_address ), properties.max_num_clients, properties.private_key, std::move( config ), ServerAdapter( message_factory ) ) );
+		}
+		catch (std::runtime_error& e)
+		{
+			LOG_CRITICAL( Application, "Exception trying to create yojimbo server: {}", e.what() );
+		}
+
+		return server;
 	}
 
 	void NetworkYojimbo::Init()

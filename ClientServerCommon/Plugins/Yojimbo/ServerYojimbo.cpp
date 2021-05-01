@@ -77,13 +77,13 @@ namespace Plugins::Network::Yojimbo
 			adapter.ClientConnectionLost.connect( [this]( ServerAdapter&, int index )
 				{
 					// may not exist if there was a probleem during ClientConnectionEstablished
-					auto it = std::find_if( std::begin( clients ), std::end( clients ), [&index]( const ClientEntry& entry )
+					auto it = std::find_if( std::begin( clients ), std::end( clients ), [&index]( const ClientContainer_T::value_type& entry )
 						{
-							return entry.yojimbo_index == index;
+							return entry.second.yojimbo_index == index;
 						} );
 					if (it != std::end( clients ))
 					{
-						ClientDisconnected( *this, it->second.connection );
+						ClientDisconnected( *this, it->second.connection, it->second.state );
 						clients.erase( it );
 					}
 
@@ -231,7 +231,7 @@ namespace Plugins::Network::Yojimbo
 
 		for (auto& [id, entry] : clients)
 		{
-			if (entry.is_disconnecting || (entry.state != ::Networking::ClientConnectionState::Accepted))
+			if (entry.is_disconnecting || (entry.state != ::Networking::ClientConnectionState::Accepted) || !predicate( entry.connection ))
 				continue;
 
 			if (SendMessage( std::move( message ), channel, entry.connection )) // TODO: make this not a unique_ptr for obvious reasons
@@ -300,12 +300,15 @@ namespace Plugins::Network::Yojimbo
 					yojimbo_message = server.ReceiveMessage( index, channel );
 					while (yojimbo_message != nullptr && server.IsClientConnected( index ) && !entry.is_disconnecting)
 					{
+						::Networking::Message message; // TODO:
+						NOT_IMPLEMENTED;
+
 						const bool handled = entry.connection.ProcessMessage( message );
 						if (!handled)
 							DisconnectClient( entry.connection, "Unhandled message", true ); // sever
 
 						server.ReleaseMessage( index, yojimbo_message );
-						message = server.ReceiveMessage( index, channel );
+						yojimbo_message = server.ReceiveMessage( index, channel );
 					}
 				}
 			}
@@ -341,9 +344,9 @@ namespace Plugins::Network::Yojimbo
 
 	::Networking::ClientConnection* ServerYojimbo::FindClient( ::Networking::ClientConnectionState state, const std::function<bool( const::Networking::ClientConnection& )>& predicate )
 	{
-		auto it = std::find_if( std::begin( clients ), std::end( clients ), [&]( const ClientEntry& entry )
+		auto it = std::find_if( std::begin( clients ), std::end( clients ), [&]( const ClientContainer_T::value_type& entry )
 			{
-				return (entry.state == state) && !entry.is_disconnecting && predicate( entry.connection );
+				return (entry.second.state == state) && !entry.second.is_disconnecting && predicate( entry.second.connection );
 			} );
 		if (it != std::end( clients ))
 			return &(it->second.connection);
@@ -353,9 +356,9 @@ namespace Plugins::Network::Yojimbo
 
 	const::Networking::ClientConnection* ServerYojimbo::FindClient( ::Networking::ClientConnectionState state, const std::function<bool( const::Networking::ClientConnection& )>& predicate ) const
 	{
-		auto it = std::find_if( std::begin( clients ), std::end( clients ), [&]( const ClientEntry& entry )
+		auto it = std::find_if( std::begin( clients ), std::end( clients ), [&]( const ClientContainer_T::value_type& entry )
 			{
-				return (entry.state == state) && !entry.is_disconnecting && predicate( entry.connection );
+				return (entry.second.state == state) && !entry.second.is_disconnecting && predicate( entry.second.connection );
 			} );
 		if (it != std::end( clients ))
 			return &(it->second.connection);

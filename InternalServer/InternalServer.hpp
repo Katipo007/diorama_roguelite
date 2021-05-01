@@ -1,13 +1,11 @@
 #pragma once
 
-#include "Server/GameServer.hpp"
-
-class InternalGameServer
-	: public Server::GameServer
+class InternalGameServer final
+	//: public Server::GameServer
 {
 public:
 	explicit InternalGameServer( const uint16_t port );
-	virtual ~InternalGameServer() override;
+	~InternalGameServer();
 
 	// TODO
 
