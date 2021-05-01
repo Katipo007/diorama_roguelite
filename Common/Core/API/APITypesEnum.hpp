@@ -10,6 +10,7 @@ namespace API
 		System,
 		Input,
 		Video,
+		Network,
 		DearImGui,
 
 		NumAPITypes

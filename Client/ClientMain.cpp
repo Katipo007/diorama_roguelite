@@ -13,26 +13,11 @@
 #include "Common/Utility/OsAbstraction.hpp"
 #include "Common/Utility/Timestep.hpp"
 
+#include "ClientServerCommon/Plugins/Yojimbo/NetworkYojimbo.hpp"
+
 #include "Client/ClientGame.hpp"
-#include "ClientServerCommon/Vendor/Wrappers/Networking.hpp"
 
 std::unique_ptr<Core> core;
-
-
-static int YojimboLoggingRoute( const char* fmt, ... )
-{
-	char buffer[4 * 1024];
-	va_list args;
-	va_start( args, fmt );
-	vsprintf_s( buffer, fmt, args );
-	va_end( args );
-	const size_t length = strlen( buffer );
-	if (buffer[length - 1] == '\n')
-		buffer[length - 1] = '\0';
-
-	LOG_INFO( Client, "[yojimbo] {}", buffer );
-	return 0;
-}
 
 int main( int argc, char** argv )
 {
@@ -43,23 +28,6 @@ int main( int argc, char** argv )
 	Logging::InitDefaultClientSinks(); // TODO: move logging into a plugin
 
 	LOG_INFO( Application, "Client starting" );
-
-	//
-	// Setup Yojimbo
-	//
-	{
-		// TODO: move Yojimbo into a plugin
-		if (!InitializeYojimbo())
-		{
-			LOG_CRITICAL( Client, "Critical Error: failed to initialize Yojimbo!" );
-			return 1;
-		}
-
-#ifdef _DEBUG
-		yojimbo_log_level( YOJIMBO_LOG_LEVEL_INFO );
-#endif
-		yojimbo_set_printf_function( YojimboLoggingRoute );
-	}
 	
 	// ============================================
 	// construct core
@@ -71,6 +39,7 @@ int main( int argc, char** argv )
 		std::unordered_map<API::APIType, APIFactory_T> plugin_factories = {
 			{ API::APIType::System, []( API::SystemAPI*, API::VideoAPI* ) { return new Graphics::API::SystemSDL2(); } },
 			{ API::APIType::Video, []( API::SystemAPI* system, API::VideoAPI* ) { ASSERT( system ); return new Graphics::API::VideoOpenGL( *system ); } },
+			{ API::APIType::Network, []( API::SystemAPI* system, API::VideoAPI* ) { ASSERT( system ); return new API::NetworkYojimbo(); } },
 
 #if (DEVELOPER_TOOLS == 1)
 			{ API::APIType::DearImGui, []( API::SystemAPI* system, API::VideoAPI* video ) { ASSERT( system && video ); return new Graphics::API::DearImGuiPlugin( *system, *video ); } },
@@ -101,11 +70,6 @@ int main( int argc, char** argv )
 	{
 		core.reset();
 	}
-
-	//
-	// Shutdown Yojimbo
-	//
-	ShutdownYojimbo();
 
 	LOG_INFO( Application, "Client finished" );
 	return 0;

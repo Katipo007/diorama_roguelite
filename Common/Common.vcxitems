@@ -19,6 +19,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\API\BaseAPI.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\API\DearImGuiAPI.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\API\InputAPI.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\API\NetworkAPI.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\API\SystemAPI.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\Base.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\Core.hpp" />
@@ -38,6 +39,13 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Geometry\Point2D.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Geometry\Rect.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Geometry\Size.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Networking\Address.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Networking\ChannelTypesEnum.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Networking\Client.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Networking\Message.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Networking\MessageDispatcher.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Networking\MessageFactory.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Networking\Types.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Utility\CompileTime\Unreachable.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Utility\Containers.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Utility\EnumClassBitset.hpp" />
@@ -78,6 +86,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Core\Resources\StandardResources.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)File\FileOps.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Core\Logging.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Networking\tests.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Utility\StateMachine\example.cpp" />
   </ItemGroup>
 </Project>

@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Common/Core/Base.hpp"
-
 #pragma warning(push, 0)
 #include "Common/Vendor/yojimbo/yojimbo.h"
 #pragma warning(pop)
@@ -15,3 +13,4 @@
 #else
 #error Haven't setup lib paths for yojimbo.lib on x86 (if yojimbo even supports x86)
 #endif
+
