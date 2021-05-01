@@ -42,9 +42,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Networking\Address.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Networking\ChannelTypesEnum.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Networking\Client.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Networking\ClientConnection.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Networking\ClientConnectionStateEnum.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Networking\Message.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Networking\MessageDispatcher.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Networking\MessageFactory.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Networking\Server.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Networking\Types.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Utility\CompileTime\Unreachable.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Utility\Containers.hpp" />
@@ -86,6 +89,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Core\Resources\StandardResources.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)File\FileOps.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Core\Logging.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Networking\ClientConnection.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Networking\tests.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Utility\StateMachine\example.cpp" />
   </ItemGroup>

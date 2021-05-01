@@ -1,19 +1,27 @@
 #pragma once
 
-#include "YojimboHeader.hpp"
-
 #include "Common/Networking/Client.hpp"
 
-namespace API
+#include "YojimboHeader.hpp"
+#include "YojimboNetworkAdapters.hpp"
+
+namespace Networking { class IMessageFactory; }
+
+namespace Plugins { class NetworkYojimbo; }
+
+namespace Plugins::Network::Yojimbo
 {
 	class ClientYojimbo final
 		: public ::Networking::Client
 	{
+		friend class ::Plugins::NetworkYojimbo;
+
 	public:
-		ClientYojimbo( yojimbo::Address&& address
+		ClientYojimbo(
+			yojimbo::Address&& address
 			, const std::array<uint8_t, yojimbo::KeyBytes>& private_key
 			, yojimbo::ClientServerConfig&& config
-			, yojimbo::Adapter&& adapter
+			, ClientAdapter&& adapter
 		);
 		~ClientYojimbo();
 
@@ -30,7 +38,7 @@ namespace API
 		bool wants_to_disconnect = false;
 		yojimbo::ClientState previous_connection_state = yojimbo::ClientState::CLIENT_STATE_DISCONNECTED;
 
-		yojimbo::Adapter adapter;
+		ClientAdapter adapter;
 		yojimbo::ClientServerConfig config;
 		yojimbo::Client server_connection;
 	};

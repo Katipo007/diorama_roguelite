@@ -1,6 +1,7 @@
 #include "ClientYojimbo.hpp"
 
 #include "Common/Networking/Message.hpp"
+#include "Common/Networking/MessageFactory.hpp"
 
 namespace
 {
@@ -12,13 +13,13 @@ namespace
 	};
 }
 
-namespace API
+namespace Plugins::Network::Yojimbo
 {
 	ClientYojimbo::ClientYojimbo( 
 		yojimbo::Address&& address_to_connect_to_
 		, const std::array<uint8_t, yojimbo::KeyBytes>& private_key_
 		, yojimbo::ClientServerConfig&& config_
-		, yojimbo::Adapter&& adapter_
+		, ClientAdapter&& adapter_
 	)
 		: adapter( std::move( adapter_ ) )
 		, config( std::move( config_ ) )
@@ -87,8 +88,10 @@ namespace API
 			{
 				if (message_handler_func)
 				{
-					const auto type = static_cast<::Networking::MessageType>(yojimbo_msg->GetType());
-					 message_handler_func( ::Networking::Message{ type } );
+					auto message = adapter.GetFactory().CreateUntypedMessage( static_cast<::Networking::MessageType>(yojimbo_msg->GetType()) );
+					// TODO: feed data into the message
+					if (message)
+						message_handler_func( *message );
 				}
 
 				// move to the next message

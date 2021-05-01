@@ -23,8 +23,8 @@ namespace API
 
 		static constexpr APIType GetType() noexcept { return APIType::Network; }
 
-		virtual std::unique_ptr<::Networking::Client> CreateClient( const ::Networking::ClientProperties& properties ) = 0;
-		virtual std::unique_ptr<::Networking::Server> CreateServer( const ::Networking::ServerProperties& properties ) = 0;
+		virtual std::unique_ptr<::Networking::Client> CreateClient( ::Networking::ClientProperties&& properties ) = 0;
+		virtual std::unique_ptr<::Networking::Server> CreateServer( ::Networking::ServerProperties&& properties ) = 0;
 
 	private:
 		virtual void Update( const PreciseTimestep& ts ) = 0;

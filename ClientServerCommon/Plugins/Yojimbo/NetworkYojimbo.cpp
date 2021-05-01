@@ -1,10 +1,12 @@
 #include "NetworkYojimbo.hpp"
-#include "YojimboHeader.hpp"
 
 #include "Common/Networking/ChannelTypesEnum.hpp"
 #include "Common/Networking/Message.hpp"
 #include "Common/Networking/MessageFactory.hpp"
+
+#include "YojimboHeader.hpp"
 #include "ClientYojimbo.hpp"
+#include "YojimboNetworkAdapters.hpp"
 
 namespace
 {
@@ -32,45 +34,12 @@ namespace
 	{
 		channel.type = yojimbo::ChannelType::CHANNEL_TYPE_UNRELIABLE_UNORDERED;
 	}
-	
-	class MessageFactoryWrapper final
-		: public yojimbo::MessageFactory
-	{
-	public:
-		MessageFactoryWrapper( yojimbo::Allocator& allocator, std::unique_ptr<::Networking::IMessageFactory> factory_impl_ )
-			: MessageFactory( allocator, factory_impl_->GetNumMessageTypes() )
-			, factory_impl( std::move( factory_impl_ ) )
-		{
-			ASSERT( factory_impl );
-		}
-
-		yojimbo::Message* CreateMessageInternal( int type_idx )
-		{
-			ASSERT( factory_impl );
-
-			// Get information about the message type
-			const size_t message_size = factory_impl->GetSizeOfMessageType( static_cast<::Networking::MessageType>(type_idx) );
-			ASSERT( message_size > 0 );
-			if (message_size <= 0)
-				return NULL;
-
-			// Allocate the yojimbo memory
-			yojimbo::Allocator& allocator = GetAllocator();
-			auto* yojimbo_message = static_cast<yojimbo::Message*>(allocator.Allocate( message_size, __FILE__, __LINE__ ));
-			if (!yojimbo_message)
-				return NULL;
-			SetMessageType( yojimbo_message, type_idx );
-
-			return yojimbo_message;
-		}
-
-	private:
-		std::unique_ptr<::Networking::IMessageFactory> factory_impl;
-	};
 }
 
-namespace API
+namespace Plugins
 {
+	using namespace ::Plugins::Network::Yojimbo;
+
 	NetworkYojimbo::NetworkYojimbo()
 	{
 	}
@@ -84,7 +53,7 @@ namespace API
 		return "Yojimbo";
 	}
 
-	std::unique_ptr<::Networking::Client> NetworkYojimbo::CreateClient( const::Networking::ClientProperties& properties )
+	std::unique_ptr<::Networking::Client> NetworkYojimbo::CreateClient( ::Networking::ClientProperties&& properties )
 	{
 		if (!properties.message_factory)
 			throw std::runtime_error( "No message factory specified" );
@@ -107,24 +76,13 @@ namespace API
 			InitDefaultUnreliableChannel( config.channel[static_cast<size_t>(::Networking::ChannelType::Unreliable)] );
 		}
 
-		// Setup adaptor
-		class ClientAdapter
-			: public yojimbo::Adapter
-		{
-		public:
-			ClientAdapter( std::shared_ptr<> )
-
-			yojimbo::MessageFactory* CreateMessageFactory( yojimbo::Allocator& allocator ) override
-			{
-				return YOJIMBO_NEW( allocator, MessageFactoryWrapper, allocator, std::move( properties.message_factory ) );
-			}
-
-		};
+		std::shared_ptr<::Networking::IMessageFactory> message_factory;
+		message_factory.reset( properties.message_factory.release() );
 
 		std::unique_ptr<ClientYojimbo> client;
 		try
 		{
-			client.reset( new ClientYojimbo( std::move( target ), properties.private_key, std::move( config ), std::move( adapter ) ) );
+			client.reset( new ClientYojimbo( std::move( target ), properties.private_key, std::move( config ), ClientAdapter( message_factory ) ) );
 		}
 		catch ( std::runtime_error& e )
 		{
@@ -134,8 +92,9 @@ namespace API
 		return client;
 	}
 
-	std::unique_ptr<::Networking::Server> NetworkYojimbo::CreateServer( const::Networking::ServerProperties& properties )
+	std::unique_ptr<::Networking::Server> NetworkYojimbo::CreateServer( ::Networking::ServerProperties&& properties )
 	{
+		(void)properties;
 		NOT_IMPLEMENTED;
 		return std::unique_ptr<::Networking::Server>();
 	}

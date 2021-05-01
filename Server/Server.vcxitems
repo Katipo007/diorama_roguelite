@@ -13,13 +13,4 @@
   <ItemGroup>
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)Sessions\ActiveClientSession.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)GameServer.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)ServerTypedefs.hpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)GameServer.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Sessions\ActiveClientSession.cpp" />
-  </ItemGroup>
 </Project>
