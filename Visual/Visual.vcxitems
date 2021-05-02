@@ -40,14 +40,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Input\Input.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Input\Keycodes.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Input\MouseCodes.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)OpenGLContext.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\DearImGUI\DearImGuiPlugin.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\OpenGL\VideoOpenGL.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\SDL2\WindowSDL2.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Renderer.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)RendererAPIs.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Resources\SpriteSheet.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Window.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Resources\Image.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Resources\ImageResourceManager.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)SpriteBatcher.hpp" />

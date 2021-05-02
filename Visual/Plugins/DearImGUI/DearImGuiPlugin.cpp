@@ -2,6 +2,7 @@
 
 #include "Common/Core/API/SystemAPI.hpp"
 #include "Common/Core/API/VideoAPI.hpp"
+#include "Common/Core/Graphics/Window.hpp"
 
 #include "Visual/Plugins/OpenGL/OpenGLHeader.hpp"
 #include "Visual/DearImGui/DearImGui.hpp"
@@ -10,7 +11,6 @@
 #include "Visual/Vendor/dearimgui/backends/imgui_impl_sdl.h"
 
 #include "Visual/Plugins/SDL2/WindowSDL2.hpp"
-#include "Visual/Window.hpp"
 
 using namespace std::string_literals;
 

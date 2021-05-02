@@ -5,6 +5,7 @@
 #include "Common/Core/API/DearImGuiAPI.hpp"
 #include "Common/Core/API/NetworkAPI.hpp"
 #include "Common/Core/API/VideoAPI.hpp"
+#include "Common/Core/Graphics/Window.hpp"
 #include "Common/Utility/StateMachine/StateMachine.hpp"
 #include "Common/Utility/Timestep.hpp"
 
@@ -15,7 +16,6 @@
 #include "Client/States/LoadingState.hpp"
 #include "Client/States/InGameState.hpp"
 
-#include "Visual/Window.hpp"
 #include "Visual/Resources/SpriteSheet.hpp"
 
 #include "ClientServerCommon/Networking/ClientServerConfig.hpp"

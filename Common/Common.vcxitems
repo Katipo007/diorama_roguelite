@@ -25,6 +25,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\Core.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\AbstractGame.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\API\VideoAPI.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\Graphics\OpenGLContext.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\Graphics\Window.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\Resources\ResourceLoader.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\Resources\Resource.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\Resources\ResourceCache.hpp" />

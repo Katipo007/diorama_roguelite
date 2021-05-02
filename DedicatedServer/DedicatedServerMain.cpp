@@ -10,6 +10,7 @@
 #include "ClientServerCommon/Plugins/Yojimbo/NetworkYojimbo.hpp"
 
 #include "Server/ServerGame.hpp"
+#include "Server/Plugins/CLI/SystemCLI.hpp"
 
 std::unique_ptr<Core> core;
 
@@ -32,7 +33,7 @@ int main( int argc, char** argv )
 
 		using APIFactory_T = std::function<API::BaseAPI* (API::SystemAPI*, API::VideoAPI*)>;
 		std::unordered_map<API::APIType, APIFactory_T> plugin_factories = {
-			//{ API::APIType::System, []( API::SystemAPI*, API::VideoAPI* ) { return new SystemCLI(); } }, // TODO
+			{ API::APIType::System, []( API::SystemAPI*, API::VideoAPI* ) { return new Plugins::SystemCLI(); } },
 			{ API::APIType::Network, []( API::SystemAPI* system, API::VideoAPI* ) { ASSERT( system ); return new Plugins::NetworkYojimbo(); } },
 		};
 

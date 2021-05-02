@@ -14,9 +14,11 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\CLI\SystemCLI.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)ServerGame.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\CLI\SystemCLI.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)ServerGame.cpp" />
   </ItemGroup>
 </Project>
