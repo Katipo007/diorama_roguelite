@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+#include <memory>
 #include <optional>
 #include <string>
 
@@ -28,6 +30,9 @@ namespace Networking
 		size_t max_num_clients;
 		std::unique_ptr<IMessageFactory> message_factory;
 		ServerMessageHandlerFunc_T message_handler_func;
+
+		ServerProperties();
+		~ServerProperties();
 	};
 
 	class Server

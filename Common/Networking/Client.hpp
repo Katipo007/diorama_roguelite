@@ -1,5 +1,8 @@
 #pragma once
 
+#include <functional>
+#include <memory>
+
 #include "Common/Utility/Timestep.hpp"
 #include "Common/Utility/Signal.hpp"
 
@@ -20,6 +23,9 @@ namespace Networking
 		Key_T private_key;
 		std::unique_ptr<IMessageFactory> message_factory;
 		ClientMessageHandlerFunc_T message_handler_func;
+
+		ClientProperties();
+		~ClientProperties();
 	};
 
 	class Client

@@ -111,6 +111,22 @@ namespace Game
         }
     }
 
+    Networking::Client* ClientGame::GetClientServerSession()
+    {
+        if (client_server_session)
+            return client_server_session.get();
+        
+        return nullptr;
+    }
+
+    Networking::Client* ClientGame::GetClientServerSession() const
+    {
+        if (client_server_session)
+            return client_server_session.get();
+
+        return nullptr;
+    }
+
     void ClientGame::ConnectToServer( const ::Networking::Address& address )
     {
         if (client_server_session)
@@ -134,7 +150,7 @@ namespace Game
         }
         catch (std::exception& e)
         {
-            LOG_ERROR( Client, "Failed to initalise the connection to '{}'. What: {}", address, e.what() );
+            LOG_ERROR( Client, "Failed to initalise the connection to '{}'. What: {}", address.value, e.what() );
         }
     }
 
