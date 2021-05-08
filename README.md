@@ -45,7 +45,7 @@ I have different types of plugins (system, input, graphics, etc) which is design
 In the `networking-plugin` branch I am currently working on moving yojimbo to be provided as a plugin but I might ultimately just incorporate it as a core part of the engine.
 
 ## Where do I even start??
-`Client/ClienMain.cpp` and `DedicatedServerMain.cpp` act as entry points, initialise the core, plugins and `ClientGame` `ServerGame` respectfully.
+`Client/ClientMain.cpp` and `DedicatedServerMain.cpp` act as entry points, initialise the core, plugins and `ClientGame` `ServerGame` respectfully.
 From here it should be fairly straight forward to follow any particular class to see how everything works but as a quick run-down:
 - Core manages the main loop, storing plugins and the resource manager.
 - Plugins are written to meet an API (see headers in `Common/Core/API/*`)
