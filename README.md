@@ -1,9 +1,12 @@
 # diorama roguelite
-A top-down, action rogue-lite game I'm making in a dedicated C++ engine I'm writing.
+A 3d, 3/4 view, action rogue-lite game I'm making in a dedicated C++ engine I'm writing.
 The game is being designed for up to 4 players with a server-client architecture.
 
 There is a bit of separation between game and engine code and I plan on splitting it fully at some point but not for some time.
-Haven't decided on a license for this project yet but will probably license the game separately to the engine. Currently not for public release but I'm happy to share access with people I personally know.
+
+# License
+Haven't decided on a license for this project yet but will probably license the game source separately to the engine. Currently not for public release/use but I'm happy to share access with people I personally know.
+The engine source will probably end up releasing under the MIT license.
 
 # State of the Project
 A bit sad at the moment, currently the 'game' consists of a chatbox and a character displayed on screen, that is it.
