@@ -198,6 +198,63 @@
 					"display": null
 				}
 			]
+		},
+		{
+			"name": "NPCs",
+			"columns": [
+				{
+					"typeStr": "0",
+					"name": "Id"
+				},
+				{
+					"typeStr": "1",
+					"name": "Name",
+					"display": null
+				},
+				{
+					"typeStr": "1",
+					"name": "Short Name",
+					"display": null
+				}
+			],
+			"lines": [
+				{
+					"Id": "Fisherman",
+					"Name": "Baelin the Fisherman",
+					"Short Name": "Baelin"
+				}
+			],
+			"separators": [],
+			"props": {}
+		},
+		{
+			"name": "NPCDialogue",
+			"columns": [
+				{
+					"typeStr": "6:NPCs",
+					"name": "NPC",
+					"opt": true,
+					"display": null
+				},
+				{
+					"typeStr": "3",
+					"name": "Index"
+				},
+				{
+					"typeStr": "1",
+					"name": "Text",
+					"display": null
+				}
+			],
+			"lines": [
+				{
+					"Index": 0,
+					"Text": "Morning! Nice day for fishing ain't it! Hu ha!",
+					"NPC": "Fisherman"
+				}
+			],
+			"separators": [],
+			"props": {}
 		}
 	],
 	"customTypes": [
