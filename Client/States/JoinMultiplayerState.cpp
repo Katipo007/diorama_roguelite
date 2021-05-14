@@ -3,7 +3,7 @@
 #include "Client/ClientGame.hpp"
 #include "Visual/DearImGui/DearImGui.hpp"
 
-#include "Common/Networking/Client.hpp"
+#include "ClientServerCommon/Plugins/Yojimbo/Client.hpp"
 
 namespace ClientStates
 {
@@ -25,15 +25,15 @@ namespace ClientStates
 			const auto connection_state = client_server_session->GetState();
 			switch (connection_state)
 			{
-			case Networking::Client::ConnectionState::Connected:
+			case YojimboPlugin::Client::ConnectionState::Connected:
 				status_message = "Connected";
 				break;
 
-			case Networking::Client::ConnectionState::Connecting:
+			case YojimboPlugin::Client::ConnectionState::Connecting:
 				status_message = "Connecting...";
 				break;
 
-			case Networking::Client::ConnectionState::Disconnected:
+			case YojimboPlugin::Client::ConnectionState::Disconnected:
 				LOG_INFO( Client, "Failed to connect to server" );
 				status_message = "Connection failed.";
 				break;
@@ -115,7 +115,7 @@ namespace ClientStates
 		if (session != nullptr)
 			return;
 
-		client.ConnectToServer( Networking::Address( address_str.c_str() ) );
+		client.ConnectToServer( YojimboPlugin::Address( address_str.c_str() ) );
 	}
 
 	void JoinMultiplayerState::CancelConnection()

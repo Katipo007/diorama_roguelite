@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Common/Networking/Types.hpp"
+#include "ClientServerCommon/Plugins/Yojimbo/Types.hpp"
 
 namespace Game::ClientServerConnection
 {
-	extern const Networking::Key_T DefaultPrivateKey;
+	extern const YojimboPlugin::Key_T DefaultPrivateKey;
 }

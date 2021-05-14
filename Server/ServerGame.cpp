@@ -1,10 +1,12 @@
 #include "ServerGame.hpp"
 
 #include "Common/Core/Core.hpp"
-#include "Common/Core/API/NetworkAPI.hpp"
-#include "Common/Networking/Server.hpp"
 
+#include "ClientServerCommon/Plugins/PluginTypes.hpp"
+#include "ClientServerCommon/Plugins/Yojimbo/YojimboPlugin.hpp"
+#include "ClientServerCommon/Plugins/Yojimbo/Basic/BasicServer.hpp"
 #include "ClientServerCommon/Networking/ClientServerConfig.hpp"
+#include "ClientServerCommon/Networking/MessageFactory.hpp"
 
 namespace Game
 {
@@ -28,13 +30,13 @@ namespace Game
 		data.reset();
 	}
 
-	::Networking::Server* ServerGame::GetServer()
+	YojimboPlugin::Server* ServerGame::GetServer()
 	{
 		ASSERT( server );
 		return server.get();
 	}
 
-	const::Networking::Server* ServerGame::GetServer() const
+	const YojimboPlugin::Server* ServerGame::GetServer() const
 	{
 		ASSERT( server );
 		return server.get();
@@ -43,18 +45,12 @@ namespace Game
 	void ServerGame::Init()
 	{
 		// get the network API
-		auto* network = core->GetAPI<API::NetworkAPI>();
+		auto* network = core->GetAPI<Plugins::YojimboPlugin>();
 		if (!network)
-			throw std::runtime_error( "No network library initalised" );
+			throw std::runtime_error( "Yojimbo plugin not initialised" );
 
 		// initialise server
-		{
-			::Networking::ServerProperties properties;
-			properties.host_address = ::Networking::Address( "127.0.0.1:42777" );
-			properties.max_num_clients = 16;
-			properties.private_key = ClientServerConnection::DefaultPrivateKey;
-			server = network->CreateServer( std::move( properties ) );
-		}
+		server.reset( new YojimboPlugin::BasicServer( yojimbo::Address( "127.0.0.1:42777" ), 16, ClientServerConnection::DefaultPrivateKey, {}, YojimboPlugin::BasicAdapter( std::make_shared<Game::Networking::GameMessageFactory>() ) ) );
 	}
 
 	void ServerGame::OnGameEnd()

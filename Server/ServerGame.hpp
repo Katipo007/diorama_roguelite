@@ -11,7 +11,7 @@
 class Core;
 class ResourceManager;
 
-namespace Networking { class Server; }
+namespace YojimboPlugin { class Server; }
 
 namespace Game
 {
@@ -28,8 +28,8 @@ namespace Game
 		Core& GetCore() const { return *core; }
 		ResourceManager& GetResourceManager() const { return *resource_manager; }
 
-		::Networking::Server* GetServer();
-		const ::Networking::Server* GetServer() const;
+		YojimboPlugin::Server* GetServer();
+		const YojimboPlugin::Server* GetServer() const;
 
 	protected:
 		virtual void Init() override;
@@ -40,7 +40,7 @@ namespace Game
 		virtual void OnRender( const PreciseTimestep& ) override {}
 
 	private:
-		std::unique_ptr<Networking::Server> server;
+		std::unique_ptr<YojimboPlugin::Server> server;
 
 		struct Data; // doing this so we don't pollute namespace of things which need to reference ServerGame
 		std::unique_ptr<Data> data;

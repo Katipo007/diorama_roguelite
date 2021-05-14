@@ -11,7 +11,7 @@
 
 #include "Common/Core/Resources/StandardResources.hpp"
 
-Core::Core( std::unique_ptr<AbstractGame> game_, const ResourceManagerInitaliserFunc_T& resource_initaliser_func_, PluginFactoryMap_T& plugin_factories_ )
+Core::Core( std::unique_ptr<AbstractGame> game_, const ResourceManagerInitaliserFunc_T& resource_initaliser_func_, const PluginFactoryFunc_T& plugin_factory_ )
 	: game( std::move( game_ ) )
 	, resource_initaliser_func( resource_initaliser_func_ )
 	, target_fps( 60 )
@@ -22,29 +22,16 @@ Core::Core( std::unique_ptr<AbstractGame> game_, const ResourceManagerInitaliser
 	///
 	/// initialise plugins
 	///
+	for (APIType t = 0; t < std::numeric_limits<APIType>::max(); t++)
 	{
-		API::SystemAPI* system = nullptr;
-		API::VideoAPI* video = nullptr;
-		for (auto i = 0; i < static_cast<size_t>(API::APIType::NumAPITypes); i++)
+		auto plugin = plugin_factory_( *this, t );
+		if (plugin == nullptr)
 		{
-			const auto api_t = static_cast<API::APIType>(i);
-			if (plugin_factories_.count( api_t ) > 0)
-			{
-				const auto& factory = plugin_factories_[api_t];
-				apis[i].reset( factory( system, video ) );
-				ASSERT( apis[i] != nullptr );
-
-				LOG_INFO( Application, "Added '{}'", apis[i]->GetName() );
-				
-				if (api_t == API::APIType::System)
-					system = dynamic_cast<API::SystemAPI*>( apis[i].get() );
-				else if (api_t == API::APIType::Video)
-					video = dynamic_cast<API::VideoAPI*>(apis[i].get());
-			}
+			LOG_INFO( Application, "{} plugins initalised", t );
+			break;
 		}
 
-		if (!system)
-			FATAL( "No system interface was provided" );
+		apis.emplace_back( std::move( plugin ) );
 	}
 }
 

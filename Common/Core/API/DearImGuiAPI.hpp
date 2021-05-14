@@ -1,6 +1,6 @@
 #pragma once
 
-#include "APITypesEnum.hpp"
+#include "CoreAPIsEnum.hpp"
 #include "BaseAPI.hpp"
 
 #include "Common/Geometry/Size.hpp"
@@ -17,7 +17,7 @@ namespace API
 	public:
 		virtual ~DearImGuiAPI() {}
 
-		static constexpr APIType GetType() noexcept { return APIType::DearImGui; }
+		static constexpr APIType GetType() noexcept { return CoreAPIs::DearImGui; }
 
 		virtual void SetEnabled( const bool enable ) = 0;
 		virtual bool GetEnabled() const noexcept = 0;

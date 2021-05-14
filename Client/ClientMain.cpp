@@ -13,11 +13,9 @@
 #include "Common/Utility/OsAbstraction.hpp"
 #include "Common/Utility/Timestep.hpp"
 
-#include "ClientServerCommon/Plugins/Yojimbo/NetworkYojimbo.hpp"
+#include "ClientServerCommon/Plugins/Yojimbo/YojimboPlugin.hpp"
 
 #include "Client/ClientGame.hpp"
-
-std::unique_ptr<Core> core;
 
 int main( int argc, char** argv )
 {
@@ -32,30 +30,33 @@ int main( int argc, char** argv )
 	// ============================================
 	// construct core
 	// ============================================
+
+	const Core::PluginFactoryFunc_T PluginFactory = []( Core& core, APIType type ) -> std::unique_ptr<API::BaseAPI>
 	{
-		// TODO: swap plugins based on system
-
-		using APIFactory_T = std::function<API::BaseAPI* ( API::SystemAPI*, API::VideoAPI*)>;
-		std::unordered_map<API::APIType, APIFactory_T> plugin_factories = {
-			{ API::APIType::System, []( API::SystemAPI*, API::VideoAPI* ) { return new Graphics::API::SystemSDL2(); } },
-			{ API::APIType::Video, []( API::SystemAPI* system, API::VideoAPI* ) { ASSERT( system ); return new Graphics::API::VideoOpenGL( *system ); } },
-			{ API::APIType::Network, []( API::SystemAPI* system, API::VideoAPI* ) { ASSERT( system ); return new Plugins::NetworkYojimbo(); } },
-
-#if (DEVELOPER_TOOLS == 1)
-			{ API::APIType::DearImGui, []( API::SystemAPI* system, API::VideoAPI* video ) { ASSERT( system && video ); return new Graphics::API::DearImGuiPlugin( *system, *video ); } },
-#endif
-		};
-
-		const auto resource_initaliser = []( ResourceManager& manager )
+		switch (type)
 		{
-			manager.Init<Graphics::Texture>();
-			manager.Init<Graphics::SpriteSheet>();
-			manager.Init<Graphics::Sprite>();
-		};
+		case CoreAPIs::System: return std::make_unique<Graphics::API::SystemSDL2>();
+		case CoreAPIs::Video: return std::make_unique<Graphics::API::VideoOpenGL>( core.GetRequiredAPI<API::SystemAPI>() );
+#if (DEVELOPER_TOOLS == 1)
+		case CoreAPIs::DearImGui: return std::make_unique<Graphics::API::DearImGuiPlugin>( core.GetRequiredAPI<API::SystemAPI>(), core.GetRequiredAPI<API::VideoAPI>() );
+#endif
 
-		core = std::make_unique<Core>( std::make_unique<Game::ClientGame>(), resource_initaliser, plugin_factories );
-		core->Init();
-	}
+		case ClientServerCommonPlugins::Yojimbo: return std::make_unique<Plugins::YojimboPlugin>();
+
+		default: return nullptr;
+		}
+	};
+	static_assert(std::is_convertible<Core::PluginFactoryFunc_T, decltype(PluginFactory)>::value, "Plugin factory type is not compatable");
+
+	const auto ResourceInitaliser = []( ResourceManager& manager )
+	{
+		manager.Init<Graphics::Texture>();
+		manager.Init<Graphics::SpriteSheet>();
+		manager.Init<Graphics::Sprite>();
+	};
+
+	auto core = std::make_unique<Core>( std::make_unique<Game::ClientGame>(), ResourceInitaliser, PluginFactory );
+	core->Init();
 
 	// ============================================
 	// main loop

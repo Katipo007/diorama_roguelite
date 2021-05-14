@@ -7,12 +7,10 @@
 #include "Common/Utility/OsAbstraction.hpp"
 #include "Common/Utility/Timestep.hpp"
 
-#include "ClientServerCommon/Plugins/Yojimbo/NetworkYojimbo.hpp"
+#include "ClientServerCommon/Plugins/Yojimbo/YojimboPlugin.hpp"
 
 #include "Server/ServerGame.hpp"
 #include "Server/Plugins/CLI/SystemCLI.hpp"
-
-std::unique_ptr<Core> core;
 
 int main( int argc, char** argv )
 {
@@ -28,39 +26,39 @@ int main( int argc, char** argv )
 	// ============================================
 	// construct core
 	// ============================================
+	const Core::PluginFactoryFunc_T PluginFactory = []( Core& core, APIType type ) -> std::unique_ptr<API::BaseAPI>
 	{
+		(void)core;
+
 		// TODO: swap plugins based on system
-
-		using APIFactory_T = std::function<API::BaseAPI* (API::SystemAPI*, API::VideoAPI*)>;
-		std::unordered_map<API::APIType, APIFactory_T> plugin_factories = {
-			{ API::APIType::System, []( API::SystemAPI*, API::VideoAPI* ) { return new Plugins::SystemCLI(); } },
-			{ API::APIType::Network, []( API::SystemAPI* system, API::VideoAPI* ) { ASSERT( system ); return new Plugins::NetworkYojimbo(); } },
-		};
-
-		const auto resource_initaliser = []( ResourceManager& manager )
+		switch (type)
 		{
-			(void)manager;
-			// TODO
-		};
+		case CoreAPIs::System: return std::make_unique<Plugins::SystemCLI>();
+		case ClientServerCommonPlugins::Yojimbo: return std::make_unique<Plugins::YojimboPlugin>();
 
-		core = std::make_unique<Core>( std::make_unique<Game::ServerGame>(), resource_initaliser, plugin_factories );
-		core->Init();
-	}
+		default: return nullptr;
+		}
+	};
+	static_assert(std::is_convertible<Core::PluginFactoryFunc_T, decltype(PluginFactory)>::value, "Plugin factory type is not compatable");
+	
+	const auto ResourceInitaliser = []( ResourceManager& manager )
+	{
+		(void)manager;
+		// TODO
+	};
+
+	auto core = std::make_unique<Core>( std::make_unique<Game::ServerGame>(), ResourceInitaliser, PluginFactory );
+	core->Init();
 
 	// ============================================
 	// main loop
 	// ============================================
-	int exit_code = 0;
-	{
-		exit_code = core->Dispatch();
-	}
+	const int exit_code = core->Dispatch();
 
 	// ============================================
 	// cleanup
 	// ============================================
-	{
-		core.reset();
-	}
+	core.reset();
 
 	LOG_INFO( Application, "Dedicated server finished" );
 	return exit_code;

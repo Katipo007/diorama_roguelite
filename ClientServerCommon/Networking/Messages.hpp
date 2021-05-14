@@ -1,19 +1,23 @@
 #pragma once
 
-#include "ClientServerCommon/Vendor/Wrappers/Networking.hpp"
-#include "ClientServerCommon/ChatConstants.hpp"
-#include "ClientServerCommon/Game/Constants.hpp"
+#include "ClientServerCommon/Plugins/Yojimbo/Message.hpp"
+
+#define BASIC_MESSAGE( message_name ) struct message_name : public ::YojimboPlugin::Message { \
+	static constexpr std::string_view GetName() noexcept { return #message_name; } \
+	template<typename STREAM> bool Serialize( STREAM& ) { return true; } \
+	YOJIMBO_VIRTUAL_SERIALIZE_FUNCTIONS(); \
+};
 
 
-#define GENERATE_MESSAGES_IMPL
-#define REGISTER_CLIENT_SERVER_MESSAGE( name, comment ) 
-#define REGISTER_SERVER_CLIENT_MESSAGE( name, comment ) 
+/////////////////////////////////////////////////////////////
 
-namespace Networking::Message
+namespace Game::Networking
 {
-#include "Messages.def"
+
+	BASIC_MESSAGE( Dummy );
+
 }
 
-#undef REGISTER_CLIENT_SERVER_MESSAGE
-#undef REGISTER_SERVER_CLIENT_MESSAGE
-#undef GENERATE_MESSAGES_IMPL
+/////////////////////////////////////////////////////////////
+
+#undef BASIC_MESSAGE

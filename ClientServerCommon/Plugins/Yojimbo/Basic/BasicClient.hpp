@@ -1,33 +1,32 @@
 #pragma once
 
-#include "Common/Networking/Client.hpp"
+#include "../Client.hpp"
+#include "BasicAdapter.hpp"
 
-#include "YojimboHeader.hpp"
-#include "YojimboNetworkAdapters.hpp"
+#include "../impl/YojimboHeader.hpp"
 
-namespace Networking { class IMessageFactory; }
+namespace Plugins { class YojimboPlugin; }
 
-namespace Plugins { class NetworkYojimbo; }
-
-namespace Plugins::Network::Yojimbo
+namespace YojimboPlugin
 {
-	class ClientYojimbo final
-		: public ::Networking::Client
+	class BasicClient final
+		: public Client
 	{
-		friend class ::Plugins::NetworkYojimbo;
-
 	public:
-		ClientYojimbo(
-			yojimbo::Address&& address
+		BasicClient(
+			const Address& address
 			, const std::array<uint8_t, yojimbo::KeyBytes>& private_key
 			, yojimbo::ClientServerConfig&& config
-			, ClientAdapter&& adapter
+			, BasicAdapter&& adapter
 		);
-		~ClientYojimbo();
+		~BasicClient();
 
 		ConnectionState GetState() const noexcept override;
 
 		void Disconnect() override;
+
+	public: // events
+		sigslot::signal<Client&> ConnectionStateChanged;
 
 	private:
 		void Update( const PreciseTimestep& timestep ) override;
@@ -38,8 +37,8 @@ namespace Plugins::Network::Yojimbo
 		bool wants_to_disconnect = false;
 		yojimbo::ClientState previous_connection_state = yojimbo::ClientState::CLIENT_STATE_DISCONNECTED;
 
-		ClientAdapter adapter;
-		yojimbo::ClientServerConfig config;
+		const yojimbo::ClientServerConfig config;
+		BasicAdapter adapter;
 		yojimbo::Client server_connection;
 	};
 }

@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "APITypesEnum.hpp"
+#include "CoreAPIsEnum.hpp"
 #include "BaseAPI.hpp"
 #include "Common/File/Filepath.hpp"
 #include "Common/Geometry/Size.hpp"
@@ -37,7 +37,7 @@ namespace API
 	public:
 		virtual ~VideoAPI() {}
 
-		static constexpr APIType GetType() noexcept { return APIType::Video; }
+		static constexpr APIType GetType() noexcept { return CoreAPIs::Video; }
 
 		virtual void BeginRender() = 0;
 		virtual void EndRender() = 0;

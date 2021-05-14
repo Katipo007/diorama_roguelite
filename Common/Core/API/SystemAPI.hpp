@@ -1,6 +1,6 @@
 #pragma once
 
-#include "APITypesEnum.hpp"
+#include "CoreAPIsEnum.hpp"
 #include "BaseAPI.hpp"
 #include "Common/Geometry/Size.hpp"
 #include "Common/File/Filepath.hpp"
@@ -26,7 +26,7 @@ namespace API
 	public:
 		virtual ~SystemAPI() {}
 
-		static constexpr APIType GetType() noexcept { return APIType::System; }
+		static constexpr APIType GetType() noexcept { return CoreAPIs::System; }
 
 		virtual const Filepath& GetAssetsFilepath() const = 0;
 

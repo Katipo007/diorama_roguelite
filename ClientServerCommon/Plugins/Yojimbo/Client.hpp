@@ -6,31 +6,24 @@
 #include "Common/Utility/Timestep.hpp"
 #include "Common/Utility/Signal.hpp"
 
-#include "Address.hpp"
 #include "Types.hpp"
 
-namespace API { class NetworkAPI; }
+namespace Plugins { class YojimboPlugin; }
 
-namespace Networking
+namespace YojimboPlugin
 {
-	class Message;
-	using ClientMessageHandlerFunc_T = std::function<void( const Message& )>;
-	class IMessageFactory;
+	struct Message;
 
 	struct ClientProperties
 	{
 		Address target_address;
 		Key_T private_key;
-		std::unique_ptr<IMessageFactory> message_factory;
-		ClientMessageHandlerFunc_T message_handler_func;
-
-		ClientProperties();
-		~ClientProperties();
 	};
 
 	class Client
 	{
-		friend class API::NetworkAPI;
+		friend class ::Plugins::YojimboPlugin;
+		using MessageHandlerFunc_T = std::function<bool( Client&, const Message& )>;
 
 	public:
 		enum class ConnectionState { Disconnected, Connecting, Connected };
@@ -42,11 +35,16 @@ namespace Networking
 
 		virtual void Disconnect() = 0;
 
+		bool HasMessageHandler() const noexcept { return (bool)message_handler; }
+		void SetMessageHandler( MessageHandlerFunc_T handler ) noexcept { message_handler = handler; }
+
+	public: // events
 		sigslot::signal<Client&> ConnectionStateChanged;
 
 	protected:
 		virtual void Update( const PreciseTimestep& timestep ) = 0;
 
-		ClientMessageHandlerFunc_T message_handler_func;
+	protected:
+		MessageHandlerFunc_T message_handler;
 	};
 }

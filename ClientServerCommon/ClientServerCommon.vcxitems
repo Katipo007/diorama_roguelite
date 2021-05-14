@@ -20,26 +20,26 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\ZoneCommon.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)ChatConstants.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Networking\ClientServerConfig.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Networking\MessageFactory.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Networking\MessageId.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Networking\Messages.def" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Networking\Messages.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\ClientConnectionYojimbo.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\ClientYojimbo.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\NetworkYojimbo.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\ServerYojimbo.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\YojimboHeader.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\YojimboNetworkAdapters.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\PluginTypes.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\Basic\Client.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\IMessageFactory.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\Message.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\Basic\MessageFactory.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\Types.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\YojimboPlugin.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\Basic\BasicServer.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\impl\YojimboHeader.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\Basic\BasicAdapter.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Wrappers\entt.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)Game\ZoneCommon.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Networking\ClientServerConfig.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Networking\MessageFactory.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\ClientConnectionYojimbo.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\ClientYojimbo.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\NetworkYojimbo.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\ServerYojimbo.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\YojimboNetworkAdapters.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\Basic\BasicClient.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\impl\tests.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\Message.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\YojimboPlugin.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\Basic\BasicServer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\Basic\BasicAdapter.cpp" />
   </ItemGroup>
 </Project>
