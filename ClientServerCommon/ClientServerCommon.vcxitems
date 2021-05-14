@@ -45,7 +45,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Networking\ClientServerConfig.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\Basic\BasicClient.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\ClientConnection.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\impl\tests.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\Message.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\Server.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\YojimboPlugin.cpp" />

@@ -23,10 +23,11 @@ BASIC_MESSAGE( Msg3 );
 BASIC_MESSAGE( MsgOther );
 
 using TestFactory_T = TemplateMessageFactory< Msg1, Msg2, Msg3 >;
-TestFactory_T factory;
 
 void Test1()
 {
+	TestFactory_T factory;
+
 	auto msg1 = factory.CreateMessage<Msg1>();
 	assert( msg1 != nullptr );
 	auto msg2 = factory.CreateMessage<Msg2>();
