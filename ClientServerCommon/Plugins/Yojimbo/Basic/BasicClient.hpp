@@ -25,9 +25,6 @@ namespace YojimboPlugin
 
 		void Disconnect() override;
 
-	public: // events
-		sigslot::signal<Client&> ConnectionStateChanged;
-
 	private:
 		void Update( const PreciseTimestep& timestep ) override;
 

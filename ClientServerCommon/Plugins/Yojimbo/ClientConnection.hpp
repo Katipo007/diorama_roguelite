@@ -22,11 +22,11 @@ namespace YojimboPlugin
 		using MessageHandler_T = std::function<bool( const Message& )>;
 
 	public:
-		ClientConnection( Server& owner );
+		ClientConnection( Server& owner, ClientId_T id );
 		virtual ~ClientConnection() {}
 
 		Server& GetOwner() const noexcept { return owner; }
-		[[nodiscard]] ClientId_T GetId() const noexcept;
+		ClientId_T GetId() const noexcept { return id; }
 		time_t GetConnectedTimestamp() const noexcept { return connected_at; }
 
 		bool IsDisconnecting() const;
@@ -39,6 +39,7 @@ namespace YojimboPlugin
 
 	private:
 		Server& owner;
+		const ClientId_T id;
 		const time_t connected_at;
 		MessageHandler_T message_handler;
 	};

@@ -6,3 +6,14 @@ const YojimboPlugin::Key_T Game::ClientServerConnection::DefaultPrivateKey = {
 	0x23, 0x0e, 0x6c, 0xa5, 0xa8, 0xaa, 0xd0, 0xc5,
 	0x88, 0xe2, 0x45, 0xcd, 0xaa, 0xa6, 0x03, 0x58
 };
+
+yojimbo::ClientServerConfig Game::ClientServerConnection::MakeConfiguration()
+{
+	auto config = yojimbo::ClientServerConfig();
+
+	config.protocolId = 1;
+	config.timeout = 6; // seconds
+	config.networkSimulator = false;
+
+	return config;
+}

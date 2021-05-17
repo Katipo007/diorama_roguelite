@@ -63,9 +63,8 @@ namespace Plugins
 		return true;
 	}
 
-	void SystemCLI::Update( const PreciseTimestep& ts )
+	void SystemCLI::OnVariableUpdate( const PreciseTimestep&, const StepType )
 	{
-		(void)ts;
 	}
 
 	std::string_view SystemCLI::GetName() const noexcept

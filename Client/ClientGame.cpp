@@ -139,16 +139,19 @@ namespace Game
 
         try
         {
-            auto* network = core->GetAPI<Plugins::YojimboPlugin>();
-            if (!network)
-                throw std::runtime_error( "No networking API initialised" );
+            auto& yojimbo = core->GetRequiredAPI<Plugins::YojimboPlugin>(); (void)yojimbo;
 
             YojimboPlugin::ClientProperties properties;
             properties.target_address = address;
             properties.private_key = Game::ClientServerConnection::DefaultPrivateKey;
 
-            client_server_session.reset( new YojimboPlugin::BasicClient( address, Game::ClientServerConnection::DefaultPrivateKey, {}, YojimboPlugin::BasicAdapter( std::make_shared<Game::Networking::GameMessageFactory>() ) ) );
+            auto message_factory = std::make_shared<Game::Networking::GameMessageFactory>();
+            auto adapter = YojimboPlugin::BasicAdapter( message_factory );
+            auto config = ClientServerConnection::MakeConfiguration();
+
+            client_server_session.reset( new YojimboPlugin::BasicClient( address, Game::ClientServerConnection::DefaultPrivateKey, std::move( config ), std::move( adapter ) ) );
             client_server_session->ConnectionStateChanged.connect( &ClientGame::ConnectionStateChangedHandler, this );
+            yojimbo.Add( *client_server_session );
         }
         catch (std::exception& e)
         {
@@ -170,14 +173,15 @@ namespace Game
 
         auto e = ClientStates::DisconnectedFromServerEvent( *client_server_session.get() );
         client_data->state_machine.Handle( e );
+        auto& yojimbo = core->GetRequiredAPI<Plugins::YojimboPlugin>();
+        yojimbo.Remove( *client_server_session );
         client_server_session.reset();
     }
 
     void ClientGame::Init()
     {
         ASSERT( core != nullptr );
-        auto* video = core->GetAPI<API::VideoAPI>();
-        ASSERT( video != nullptr );
+        auto& video = core->GetRequiredAPI<API::VideoAPI>();
         dearimgui = core->GetAPI<API::DearImGuiAPI>();
 
         // Preload sprite sheets
@@ -186,9 +190,9 @@ namespace Game
         Graphics::WindowDefinition window_def;
         window_def.title = "Diorama Roguelite";
         window_def.size = { 800, 600 };
-        video->SetWindow( std::move( window_def ) );
+        video.SetWindow( std::move( window_def ) );
 
-        ASSERT( video->HasWindow() );
+        ASSERT( video.HasWindow() );
     }
 
     void ClientGame::OnGameEnd()

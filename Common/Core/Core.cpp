@@ -11,28 +11,29 @@
 
 #include "Common/Core/Resources/StandardResources.hpp"
 
-Core::Core( std::unique_ptr<AbstractGame> game_, const ResourceManagerInitaliserFunc_T& resource_initaliser_func_, const PluginFactoryFunc_T& plugin_factory_ )
+Core::Core( CoreProperties&& props, std::unique_ptr<AbstractGame> game_ )
 	: game( std::move( game_ ) )
-	, resource_initaliser_func( resource_initaliser_func_ )
-	, target_fps( 60 )
+	, resource_initaliser_func( props.resource_initaliser_func )
+	, target_fps( std::max( 0, props.fps ) )
 {
+	ASSERT( props.IsValid() );
+	if (!props.IsValid())
+		throw std::runtime_error( "Bad core properties" );
+
 	if (!game)
 		throw std::runtime_error( "Where yo game at? (Game object was null at Core construction)" );
 
 	///
 	/// initialise plugins
 	///
-	for (APIType t = 0; t < std::numeric_limits<APIType>::max(); t++)
+	apis.resize( props.max_plugins );
+	for (APIType t = 0; t < props.max_plugins; t++)
 	{
-		auto plugin = plugin_factory_( *this, t );
-		if (plugin == nullptr)
-		{
-			LOG_INFO( Application, "{} plugins initalised", t );
-			break;
-		}
-
-		apis.emplace_back( std::move( plugin ) );
+		auto plugin = props.plugin_factory( *this, t );
+		if (plugin != nullptr)
+			apis[t] = std::move( plugin );
 	}
+	LOG_INFO( Application, "{} plugins initalised", std::count_if( std::begin( apis ), std::end( apis ), []( const auto& entry ) { return entry != nullptr; } ) );
 }
 
 Core::~Core()
@@ -108,7 +109,10 @@ int Core::Dispatch()
 			{
 				constexpr double Max_DeltaTimeSeconds = 0.1;
 				const double seconds_since_last_frame = std::chrono::duration_cast<std::chrono::milliseconds>(current_time - last_time).count() / 1000.0;
-				DoVariableUpdate( PreciseTimestep( current_time_seconds, std::min( seconds_since_last_frame, Max_DeltaTimeSeconds ) ) );
+				if (seconds_since_last_frame > 0)
+					DoVariableUpdate( PreciseTimestep( current_time_seconds, std::min( seconds_since_last_frame, Max_DeltaTimeSeconds ) ) );
+				else
+					LOG_WARN( Application, "Skipped DoVariableUpdate: delta-time was 0" );
 			}
 
 			last_time = current_time;
@@ -152,16 +156,25 @@ void Core::Shutdown()
 
 void Core::DoFixedUpdate( const PreciseTimestep& ts )
 {
+	assert( ts.delta > 0 );
+
+	for (auto& plugin : active_apis)
+		plugin->OnFixedUpdate( ts, StepType::PreGameStep );
+
 	if (is_running)
 		game->OnFixedUpdate( ts );
+
+	for (auto& plugin : active_apis)
+		plugin->OnFixedUpdate( ts, StepType::PostGameStep );
 }
 
 void Core::DoVariableUpdate( const PreciseTimestep& ts )
 {
+	assert( ts.delta > 0 );
 	PumpEvents( ts );
-	const auto& dearimgui_api = GetAPI<API::DearImGuiAPI>();
-	if( dearimgui_api )
-		dearimgui_api->OnFrameBegin();
+
+	for (auto& plugin : active_apis)
+		plugin->OnVariableUpdate( ts, StepType::PreGameStep );
 
 	if (game->GetExitCode())
 	{
@@ -172,11 +185,8 @@ void Core::DoVariableUpdate( const PreciseTimestep& ts )
 	if (is_running)
 		game->OnVariableUpdate( ts );
 
-	if (dearimgui_api)
-		dearimgui_api->OnFrameEnd();
-
-	if (const auto& system_api = GetAPI<API::SystemAPI>())
-		system_api->Update( ts );
+	for (auto& plugin : active_apis)
+		plugin->OnVariableUpdate( ts, StepType::PostGameStep );
 
 	DoRender( ts );
 }
@@ -187,11 +197,14 @@ void Core::DoRender( const PreciseTimestep& ts )
 	{
 		video_api->BeginRender();
 
+		for (auto& plugin : active_apis)
+			plugin->OnRender( ts, StepType::PreGameStep );
+
 		if (is_running)
 			game->OnRender( ts );
 
-		if (const auto& dearimgui_api = GetAPI<API::DearImGuiAPI>())
-			dearimgui_api->DoRender();
+		for (auto& plugin : active_apis)
+			plugin->OnRender( ts, StepType::PostGameStep );
 
 		video_api->EndRender();
 	}
@@ -218,10 +231,14 @@ void Core::InitAPIs()
 {
 	// order is important
 
-	std::for_each( std::begin( apis ), std::end( apis ), []( const std::unique_ptr<API::BaseAPI>& entry )
+	active_apis.clear();
+	std::for_each( std::begin( apis ), std::end( apis ), [this]( const std::unique_ptr<API::BaseAPI>& entry )
 		{
-			if( entry )
+			if (entry)
+			{
 				entry->Init();
+				active_apis.push_back( entry.get() );
+			}
 		} );
 }
 
@@ -229,6 +246,7 @@ void Core::ShutdownAPIs()
 {
 	// order is important and should be done in reverse of that in InitAPIs()
 
+	active_apis.clear();
 	std::for_each( std::rbegin( apis ), std::rend( apis ), []( const std::unique_ptr<API::BaseAPI>& entry )
 		{
 			if( entry )

@@ -17,21 +17,13 @@
 
 #include "Client/ClientGame.hpp"
 
-int main( int argc, char** argv )
+CoreProperties GenerateCoreProperties()
 {
-	// TODO: use application parameters
-	(void)argc;
-	(void)argv;
+	CoreProperties props;
+	props.fps = 60;
+	props.max_plugins = ClientServerCommonPlugins::NumClientServerCommonPlugins;
 
-	Logging::InitDefaultClientSinks(); // TODO: move logging into a plugin
-
-	LOG_INFO( Application, "Client starting" );
-	
-	// ============================================
-	// construct core
-	// ============================================
-
-	const Core::PluginFactoryFunc_T PluginFactory = []( Core& core, APIType type ) -> std::unique_ptr<API::BaseAPI>
+	props.plugin_factory = []( Core& core, APIType type ) -> std::unique_ptr<API::BaseAPI>
 	{
 		switch (type)
 		{
@@ -46,16 +38,31 @@ int main( int argc, char** argv )
 		default: return nullptr;
 		}
 	};
-	static_assert(std::is_convertible<Core::PluginFactoryFunc_T, decltype(PluginFactory)>::value, "Plugin factory type is not compatable");
 
-	const auto ResourceInitaliser = []( ResourceManager& manager )
+	props.resource_initaliser_func = []( ResourceManager& manager )
 	{
 		manager.Init<Graphics::Texture>();
 		manager.Init<Graphics::SpriteSheet>();
 		manager.Init<Graphics::Sprite>();
 	};
 
-	auto core = std::make_unique<Core>( std::make_unique<Game::ClientGame>(), ResourceInitaliser, PluginFactory );
+	return props;
+}
+
+int main( int argc, char** argv )
+{
+	// TODO: use application parameters
+	(void)argc;
+	(void)argv;
+
+	Logging::InitDefaultClientSinks(); // TODO: move logging into a plugin
+
+	LOG_INFO( Application, "Client starting" );
+	
+	// ============================================
+	// construct core
+	// ============================================
+	auto core = std::make_unique<Core>( GenerateCoreProperties(), std::make_unique<Game::ClientGame>() );
 	core->Init();
 
 	// ============================================

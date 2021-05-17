@@ -3,8 +3,15 @@
 #include <memory>
 #include <string_view>
 
+#include "Common/Utility/Signal.hpp"
 #include "Common/Core/API/BaseAPI.hpp"
 #include "ClientServerCommon/Plugins/PluginTypes.hpp"
+
+namespace YojimboPlugin
+{
+	class Server;
+	class Client;
+}
 
 namespace Plugins
 {
@@ -13,14 +20,24 @@ namespace Plugins
 	{
 	public:
 		explicit YojimboPlugin();
-		virtual ~YojimboPlugin();
+		~YojimboPlugin();
 
 		static constexpr APIType GetType() noexcept { return ClientServerCommonPlugins::Yojimbo; }
-		virtual std::string_view GetName() const noexcept override { return "Yojimbo"; }
+		std::string_view GetName() const noexcept override { return "Yojimbo"; }
+
+		void Add( ::YojimboPlugin::Server& server );
+		void Add( ::YojimboPlugin::Client& client );
+		void Remove( ::YojimboPlugin::Server& server );
+		void Remove( ::YojimboPlugin::Client& client );
 
 	protected:
-		virtual void Init() override;
-		virtual void Shutdown() override;
-		virtual void Update( const PreciseTimestep& ts ) override;
+		void Init() override;
+		void Shutdown() override;
+		void OnVariableUpdate( const PreciseTimestep& ts, const StepType type ) override;
+
+	protected:
+		bool initialised = false;
+		std::vector<::YojimboPlugin::Client*> clients;
+		std::vector<::YojimboPlugin::Server*> servers;
 	};
 }

@@ -232,8 +232,7 @@ namespace Graphics::API
         return "SDL2";
     }
 
-    void SystemSDL2::Update( const PreciseTimestep& ts )
+    void SystemSDL2::OnVariableUpdate( const PreciseTimestep&, const StepType )
     {
-        (void)ts;
     }
 }

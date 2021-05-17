@@ -58,7 +58,7 @@ namespace YojimboPlugin
 
 					try
 					{
-						auto new_connection = ClientConnection( *this );// , client_id, index );
+						auto new_connection = ClientConnection( *this, client_id );// , client_id, index );
 						auto [it, success] = clients.try_emplace( client_id, ClientEntry( index, client_id, std::move( new_connection ) ) );
 						if (!success)
 							throw std::runtime_error( "Failed to emplace new client connection in container" );
@@ -236,7 +236,7 @@ namespace YojimboPlugin
 		}
 
 		// tick server
-		ASSERT( timestep.delta >= 0.0 );
+		ASSERT( timestep.delta > 0 );
 		server.AdvanceTime( timestep.delta );
 	}
 
@@ -354,7 +354,15 @@ namespace YojimboPlugin
 
 	const BasicServer::ClientEntry* BasicServer::FindClientEntry( const ClientConnection& client ) const
 	{
-		ASSERT( OwnsConnection( client ) );
-		return FindClientEntryById( client.GetId() );
+		auto entry_it = clients.find( client.GetId() );
+
+		if ((entry_it != std::end( clients )))
+		{
+			auto& entry = entry_it->second;
+			if (&entry.connection == &client)
+				return &entry;
+		}
+
+		return nullptr;
 	}
 }

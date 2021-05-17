@@ -58,9 +58,8 @@ namespace ClientStates
 		//
 		// initalise
 		//
-		auto* video = client.GetCore().GetAPI<API::VideoAPI>();
-		ASSERT( video != nullptr );
-		gameworld = std::make_unique<Game::ClientGameWorld>( *video, client.GetResourceManager() );
+		auto& video = client.GetCore().GetRequiredAPI<API::VideoAPI>();
+		gameworld = std::make_unique<Game::ClientGameWorld>( video, client.GetResourceManager() );
 
 		//
 		// connect to session events

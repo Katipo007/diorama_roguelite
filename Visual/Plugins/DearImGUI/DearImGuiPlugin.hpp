@@ -30,12 +30,11 @@ namespace Graphics::API
 		void Init() override;
 		void Shutdown() override;
 
-		virtual void OnFrameBegin() override;
-		virtual void OnFrameEnd() override;
-		virtual void DoRender() override;
+		void OnVariableUpdate( const PreciseTimestep&, const StepType ) override;
+		void OnRender( const PreciseTimestep&, const StepType ) override;
 
-		virtual void ProcessSystemEvent( void* e ) override;
-		virtual void OnWindowResized( Size<uint32_t> new_window_size ) override;
+		void ProcessSystemEvent( void* e ) override;
+		void OnWindowResized( Size<uint32_t> new_window_size ) override;
 
 	private:
 		::API::SystemAPI& system;

@@ -66,62 +66,67 @@ namespace Graphics::API
 
 	DearImGuiPlugin::~DearImGuiPlugin() = default;
 
-	void DearImGuiPlugin::OnFrameBegin()
+	void DearImGuiPlugin::OnVariableUpdate( const PreciseTimestep&, const StepType type )
 	{
 		if (!enabled)
 			return;
 
-		if (!data->implementation_initalised)
+		switch (type)
 		{
-			ASSERT( video.HasWindow() );
-			switch (data->impl)
+		case StepType::PreGameStep:
+		{
+			if (!data->implementation_initalised)
 			{
-			case Impl::SDL2_OpenGL:
+				ASSERT( video.HasWindow() );
+				switch (data->impl)
+				{
+				case Impl::SDL2_OpenGL:
+				{
+					auto* sdl_window = static_cast<const WindowSDL2&>(video.GetWindow()).GetSDLWindow();
+					ASSERT( sdl_window );
+					ImGui_ImplSDL2_InitForOpenGL( sdl_window, NULL /*temp*/ );
+					ImGui_ImplOpenGL3_Init( "#version 410" );
+					break;
+				}
+				}
+				data->implementation_initalised = true;
+			}
+
+			if (data->implementation_initalised)
 			{
-				auto* sdl_window = static_cast<const WindowSDL2&>(video.GetWindow()).GetSDLWindow();
-				ASSERT( sdl_window );
-				ImGui_ImplSDL2_InitForOpenGL( sdl_window, NULL /*temp*/ );
-				ImGui_ImplOpenGL3_Init( "#version 410" );
-				break;
+				switch (data->impl)
+				{
+				case Impl::SDL2_OpenGL:
+				{
+					auto* sdl_window = static_cast<const WindowSDL2&>(video.GetWindow()).GetSDLWindow();
+					ASSERT( sdl_window );
+					ImGui_ImplOpenGL3_NewFrame();
+					ImGui_ImplSDL2_NewFrame( sdl_window );
+
+
+					const auto window_size = video.GetWindow().GetSize();
+					auto& io = ImGui::GetIO();
+					io.DisplaySize = ImVec2( (float)window_size.width, (float)window_size.height );
+					break;
+				}
+				}
 			}
-			}
-			data->implementation_initalised = true;
+
+			ImGui::NewFrame();
+			break;
 		}
 
-		if (data->implementation_initalised)
+		case StepType::PostGameStep:
 		{
-			switch (data->impl)
-			{
-			case Impl::SDL2_OpenGL:
-			{
-				auto* sdl_window = static_cast<const WindowSDL2&>(video.GetWindow()).GetSDLWindow();
-				ASSERT( sdl_window );
-				ImGui_ImplOpenGL3_NewFrame();
-				ImGui_ImplSDL2_NewFrame( sdl_window );
-
-
-				const auto window_size = video.GetWindow().GetSize();
-				auto& io = ImGui::GetIO();
-				io.DisplaySize = ImVec2( (float)window_size.width, (float)window_size.height );
-				break;
-			}
-			}
+			ImGui::Render();
+			break;
 		}
-
-		ImGui::NewFrame();
+		}
 	}
 
-	void DearImGuiPlugin::OnFrameEnd()
+	void DearImGuiPlugin::OnRender( const PreciseTimestep&, const StepType type )
 	{
-		if (!enabled)
-			return;
-
-		ImGui::Render();
-	}
-
-	void DearImGuiPlugin::DoRender()
-	{
-		if (!enabled)
+		if (!enabled || (type != StepType::PostGameStep))
 			return;
 
 		if (data->implementation_initalised)

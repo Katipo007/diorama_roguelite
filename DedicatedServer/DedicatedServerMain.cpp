@@ -12,6 +12,34 @@
 #include "Server/ServerGame.hpp"
 #include "Server/Plugins/CLI/SystemCLI.hpp"
 
+CoreProperties GenerateCoreProperties()
+{
+	CoreProperties props;
+	props.fps = 0;
+	props.max_plugins = ClientServerCommonPlugins::NumClientServerCommonPlugins;
+
+	props.plugin_factory = []( Core& core, APIType type ) -> std::unique_ptr<API::BaseAPI>
+	{
+		(void)core;
+
+		switch (type)
+		{
+		case CoreAPIs::System: return std::make_unique<Plugins::SystemCLI>();
+		case ClientServerCommonPlugins::Yojimbo: return std::make_unique<Plugins::YojimboPlugin>();
+
+		default: return nullptr;
+		}
+	};
+
+	props.resource_initaliser_func = []( ResourceManager& manager )
+	{
+		(void)manager;
+		// TODO
+	};
+
+	return props;
+}
+
 int main( int argc, char** argv )
 {
 	// TODO: use application parameters
@@ -26,28 +54,7 @@ int main( int argc, char** argv )
 	// ============================================
 	// construct core
 	// ============================================
-	const Core::PluginFactoryFunc_T PluginFactory = []( Core& core, APIType type ) -> std::unique_ptr<API::BaseAPI>
-	{
-		(void)core;
-
-		// TODO: swap plugins based on system
-		switch (type)
-		{
-		case CoreAPIs::System: return std::make_unique<Plugins::SystemCLI>();
-		case ClientServerCommonPlugins::Yojimbo: return std::make_unique<Plugins::YojimboPlugin>();
-
-		default: return nullptr;
-		}
-	};
-	static_assert(std::is_convertible<Core::PluginFactoryFunc_T, decltype(PluginFactory)>::value, "Plugin factory type is not compatable");
-	
-	const auto ResourceInitaliser = []( ResourceManager& manager )
-	{
-		(void)manager;
-		// TODO
-	};
-
-	auto core = std::make_unique<Core>( std::make_unique<Game::ServerGame>(), ResourceInitaliser, PluginFactory );
+	auto core = std::make_unique<Core>( GenerateCoreProperties(), std::make_unique<Game::ServerGame>() );
 	core->Init();
 
 	// ============================================

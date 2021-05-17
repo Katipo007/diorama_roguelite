@@ -4,15 +4,11 @@
 
 namespace YojimboPlugin
 {
-	ClientConnection::ClientConnection( Server& owner_ )
+	ClientConnection::ClientConnection( Server& owner_, const ClientId_T id_ )
 		: owner( owner_ )
+		, id( id_ )
 		, connected_at( time( NULL ) )
 	{
-	}
-
-	ClientId_T ClientConnection::GetId() const noexcept
-	{
-		return owner.GetClientId( *this );
 	}
 
 	bool ClientConnection::IsDisconnecting() const

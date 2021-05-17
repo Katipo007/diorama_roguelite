@@ -32,30 +32,37 @@ namespace Game
 
 	YojimboPlugin::Server* ServerGame::GetServer()
 	{
-		ASSERT( server );
 		return server.get();
 	}
 
 	const YojimboPlugin::Server* ServerGame::GetServer() const
 	{
-		ASSERT( server );
 		return server.get();
 	}
 
 	void ServerGame::Init()
 	{
 		// get the network API
-		auto* network = core->GetAPI<Plugins::YojimboPlugin>();
-		if (!network)
-			throw std::runtime_error( "Yojimbo plugin not initialised" );
+		auto& yojimbo = core->GetRequiredAPI<Plugins::YojimboPlugin>(); (void)yojimbo;
 
 		// initialise server
-		server.reset( new YojimboPlugin::BasicServer( yojimbo::Address( "127.0.0.1:42777" ), 16, ClientServerConnection::DefaultPrivateKey, {}, YojimboPlugin::BasicAdapter( std::make_shared<Game::Networking::GameMessageFactory>() ) ) );
+		auto message_factory = std::make_shared<Game::Networking::GameMessageFactory>();
+		auto adapter = YojimboPlugin::BasicAdapter( message_factory );
+		auto config = ClientServerConnection::MakeConfiguration();
+		server.reset( new YojimboPlugin::BasicServer( yojimbo::Address( "127.0.0.1:42777" ), 16, ClientServerConnection::DefaultPrivateKey, std::move( config ), std::move( adapter ) ) );
+		server->ClientConnected.connect( &ServerGame::ClientConnectedHandler, this );
+		server->ClientDisconnected.connect( &ServerGame::ClientDisconnectedHandler, this );
+		yojimbo.Add( *server );
 	}
 
 	void ServerGame::OnGameEnd()
 	{
-		server.reset();
+		if (server)
+		{
+			auto& yojimbo = core->GetRequiredAPI<Plugins::YojimboPlugin>();
+			yojimbo.Remove( *server );
+			server = nullptr;
+		}
 	}
 
 	void ServerGame::OnFixedUpdate( const PreciseTimestep& ts )
@@ -68,5 +75,15 @@ namespace Game
 	void ServerGame::OnVariableUpdate( const PreciseTimestep& ts )
 	{
 		(void)ts;
+	}
+
+	void ServerGame::ClientConnectedHandler( YojimboPlugin::Server&, YojimboPlugin::ClientConnection& client )
+	{
+		LOG_INFO( Server, "Client '{}' connected at {}", client.GetId(), client.GetConnectedTimestamp() );
+	}
+
+	void ServerGame::ClientDisconnectedHandler( YojimboPlugin::Server&, YojimboPlugin::ClientConnection& client )
+	{
+		LOG_INFO( Server, "Client '{}' disconnected", client.GetId() );
 	}
 }

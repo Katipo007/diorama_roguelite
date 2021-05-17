@@ -11,7 +11,11 @@
 class Core;
 class ResourceManager;
 
-namespace YojimboPlugin { class Server; }
+namespace YojimboPlugin
+{
+	class Server;
+	class ClientConnection;
+}
 
 namespace Game
 {
@@ -32,12 +36,15 @@ namespace Game
 		const YojimboPlugin::Server* GetServer() const;
 
 	protected:
-		virtual void Init() override;
-		virtual void OnGameEnd() override;
+		void Init() override;
+		void OnGameEnd() override;
 
-		virtual void OnFixedUpdate( const PreciseTimestep& ts ) override;
-		virtual void OnVariableUpdate( const PreciseTimestep& ts ) override;
-		virtual void OnRender( const PreciseTimestep& ) override {}
+		void OnFixedUpdate( const PreciseTimestep& ts ) override;
+		void OnVariableUpdate( const PreciseTimestep& ts ) override;
+		void OnRender( const PreciseTimestep& ) override {}
+
+		void ClientConnectedHandler( YojimboPlugin::Server&, YojimboPlugin::ClientConnection& );
+		void ClientDisconnectedHandler( YojimboPlugin::Server&, YojimboPlugin::ClientConnection& );
 
 	private:
 		std::unique_ptr<YojimboPlugin::Server> server;

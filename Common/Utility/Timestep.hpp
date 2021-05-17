@@ -20,3 +20,9 @@ struct PreciseTimestep
 	operator Timestep() const { return Timestep( (float)time, (float)delta ); }
 };
 
+enum class StepType : unsigned char
+{
+	PreGameStep = 0,
+	//GameStep = 1,
+	PostGameStep = 2,
+};

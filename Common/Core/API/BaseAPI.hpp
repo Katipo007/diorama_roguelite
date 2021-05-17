@@ -18,6 +18,8 @@ namespace API
 	private:
 		virtual void Init() = 0;
 		virtual void Shutdown() = 0;
-		virtual void Update( const PreciseTimestep& ) {}
+		virtual void OnFixedUpdate( const PreciseTimestep&, const StepType ) {}
+		virtual void OnVariableUpdate( const PreciseTimestep&, const StepType ) {}
+		virtual void OnRender( const PreciseTimestep&, const StepType ) {}
 	};
 }

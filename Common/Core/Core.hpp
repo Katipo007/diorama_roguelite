@@ -8,6 +8,7 @@
 #include "Common/Utility/Timestep.hpp"
 
 class AbstractGame;
+class Core;
 class ResourceManager;
 
 namespace API
@@ -17,17 +18,33 @@ namespace API
 	class VideoAPI;
 }
 
+struct CoreProperties
+{
+	int fps = 60;
+
+	std::function<void( ResourceManager& )> resource_initaliser_func;
+
+	unsigned max_plugins = 0;
+	std::function<std::unique_ptr<API::BaseAPI>( Core&, APIType )> plugin_factory;
+
+	bool IsValid() const noexcept
+	{
+		return true
+			&& (fps >= 0)
+			&& (max_plugins >= CoreAPIs::Type::User)
+			&& (bool)resource_initaliser_func
+			&& (bool)plugin_factory
+			;
+	}
+};
+
 /// <summary>
 /// The be all container for the application
 /// </summary>
 class Core final
 {
 public:
-	using ResourceManagerInitaliserFunc_T = std::function<void( ResourceManager& )>;
-	using PluginFactoryFunc_T = std::function<std::unique_ptr<API::BaseAPI>( Core&, APIType )>;
-
-public:
-	explicit Core( std::unique_ptr<AbstractGame> game, const ResourceManagerInitaliserFunc_T& resource_initaliser_func, const PluginFactoryFunc_T& plugin_factory );
+	explicit Core( CoreProperties&&, std::unique_ptr<AbstractGame> game );
 	~Core();
 
 	void Init();
@@ -57,8 +74,8 @@ public:
 		return dynamic_cast<const API_T&>(GetRequiredAPI( type ));
 	}
 
-	inline API::BaseAPI* GetAPI( const APIType type ) noexcept { return apis[type].get(); }
-	inline const API::BaseAPI* GetAPI( const APIType type ) const noexcept { return apis[type].get(); }
+	inline API::BaseAPI* GetAPI( const APIType type ) noexcept { return (type < apis.size()) ? apis[type].get() : nullptr; }
+	inline const API::BaseAPI* GetAPI( const APIType type ) const noexcept { return (type < apis.size()) ? apis[type].get() : nullptr; }
 	inline API::BaseAPI& GetRequiredAPI( const APIType type ) { if (auto* api = GetAPI( type )) return *api; throw std::runtime_error( "Missing required API" ); }
 	inline const API::BaseAPI& GetRequiredAPI( const APIType type ) const { if (auto* api = GetAPI( type )) return *api; throw std::runtime_error( "Missing required API" ); }
 
@@ -89,7 +106,8 @@ private:
 	std::unique_ptr<AbstractGame> game;
 	std::unique_ptr<ResourceManager> resource_manager;
 
-	ResourceManagerInitaliserFunc_T resource_initaliser_func;
+	const std::function<void( ResourceManager& )> resource_initaliser_func;
 
 	std::vector<std::unique_ptr<API::BaseAPI>> apis;
+	std::vector<API::BaseAPI*> active_apis;
 };

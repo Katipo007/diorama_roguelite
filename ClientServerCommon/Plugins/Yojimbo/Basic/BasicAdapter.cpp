@@ -12,16 +12,19 @@ namespace YojimboPlugin
 		: public LibraryFactory_T
 	{
 	public:
-		BasicMessageFactoryWrapper( yojimbo::Allocator& allocator, std::shared_ptr<PluginFactory_T> our_factory_ )
-			: LibraryFactory_T( allocator, static_cast<int>( our_factory->GetNumMessageTypes() ) )
-			, our_factory( our_factory_ )
-		{}
+		BasicMessageFactoryWrapper( yojimbo::Allocator& allocator, std::shared_ptr<PluginFactory_T> factory_ )
+			: LibraryFactory_T( allocator, static_cast<int>(factory_->GetNumMessageTypes()) )
+			, our_factory( factory_ )
+		{
+			ASSERT( our_factory );
+		}
 		~BasicMessageFactoryWrapper() = default;
 
 	private:
 		yojimbo::Message* CreateMessageInternal( int type ) override
 		{
-			return our_factory->CreateUntypedMessage( type );
+			ASSERT( our_factory );
+			return our_factory ? our_factory->CreateUntypedMessage( type ) : NULL;
 		}
 
 	private:
@@ -32,10 +35,12 @@ namespace YojimboPlugin
 		: yojimbo::Adapter()
 		, message_factory( message_factory_ )
 	{
+		ASSERT( message_factory );
 	}
 
 	yojimbo::MessageFactory* BasicAdapter::CreateMessageFactory( yojimbo::Allocator& allocator )
 	{
+		ASSERT( message_factory );
 		return YOJIMBO_NEW( allocator, BasicMessageFactoryWrapper, allocator, message_factory );
 	}
 
