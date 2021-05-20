@@ -10,13 +10,14 @@
 #include "ClientServerCommon/Plugins/Yojimbo/YojimboPlugin.hpp"
 
 #include "Server/ServerGame.hpp"
+#include "Server/PluginTypes.hpp"
 #include "Server/Plugins/CLI/SystemCLI.hpp"
 
 CoreProperties GenerateCoreProperties()
 {
 	CoreProperties props;
 	props.fps = 0;
-	props.max_plugins = ClientServerCommonPlugins::NumClientServerCommonPlugins;
+	props.max_plugins = ServerPlugins::NumServerPlugins;
 
 	props.plugin_factory = []( Core& core, APIType type ) -> std::unique_ptr<API::BaseAPI>
 	{
