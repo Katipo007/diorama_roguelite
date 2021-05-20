@@ -38,7 +38,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\Basic\BasicServer.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\impl\YojimboHeader.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\Basic\BasicAdapter.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Wrappers\entt.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)Game\ZoneCommon.cpp" />
