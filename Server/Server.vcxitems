@@ -15,6 +15,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\CLI\SystemCLI.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)PluginTypes.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)ServerGame.hpp" />
   </ItemGroup>
   <ItemGroup>
