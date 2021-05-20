@@ -22,3 +22,6 @@
 [submodule "nlohmann/json"]
 	path = Common/Vendor/nlohmann/json
 	url = https://github.com/nlohmann/json
+[submodule "magic_enum"]
+	path = Common/Vendor/magic_enum
+	url = https://github.com/Neargye/magic_enum.git
