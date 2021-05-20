@@ -25,15 +25,15 @@ namespace ClientStates
 			const auto connection_state = client_server_session->GetState();
 			switch (connection_state)
 			{
-			case YojimboPlugin::Client::ConnectionState::Connected:
+			case YojimboPlugin::BaseClient::ConnectionState::Connected:
 				status_message = "Connected";
 				break;
 
-			case YojimboPlugin::Client::ConnectionState::Connecting:
+			case YojimboPlugin::BaseClient::ConnectionState::Connecting:
 				status_message = "Connecting...";
 				break;
 
-			case YojimboPlugin::Client::ConnectionState::Disconnected:
+			case YojimboPlugin::BaseClient::ConnectionState::Disconnected:
 				LOG_INFO( Client, "Failed to connect to server" );
 				status_message = "Connection failed.";
 				break;

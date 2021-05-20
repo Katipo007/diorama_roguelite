@@ -20,7 +20,7 @@ namespace
 		if (buffer[length - 1] == '\n')
 			buffer[length - 1] = '\0';
 
-		LOG_INFO( Client, "[yojimbo] {}", buffer );
+		LOG_INFO( Application, "[yojimbo] {}", buffer );
 		return 0;
 	}
 }
@@ -85,7 +85,7 @@ namespace Plugins
 		}
 	}
 
-	void YojimboPlugin::Add( ::YojimboPlugin::Server& server )
+	void YojimboPlugin::Add( ::YojimboPlugin::BaseServer& server )
 	{
 		auto it = std::find_if( std::begin( servers ), std::end( servers ), [&server]( const decltype(servers)::value_type& entry ) { return entry == &server; } );
 		if (it != std::end( servers ))
@@ -94,7 +94,7 @@ namespace Plugins
 		servers.push_back( &server );
 	}
 
-	void YojimboPlugin::Add( ::YojimboPlugin::Client& client )
+	void YojimboPlugin::Add( ::YojimboPlugin::BaseClient& client )
 	{
 		auto it = std::find_if( std::begin( clients ), std::end( clients ), [&client]( const decltype(clients)::value_type& entry ) { return entry == &client; } );
 		if (it != std::end( clients ))
@@ -103,7 +103,7 @@ namespace Plugins
 		clients.push_back( &client );
 	}
 
-	void YojimboPlugin::Remove( ::YojimboPlugin::Server& server )
+	void YojimboPlugin::Remove( ::YojimboPlugin::BaseServer& server )
 	{
 		auto it = std::find_if( std::begin( servers ), std::end( servers ), [&server]( const decltype(servers)::value_type& entry ) { return entry == &server; } );
 		if (it == std::end( servers ))
@@ -112,7 +112,7 @@ namespace Plugins
 		servers.erase( it );
 	}
 
-	void YojimboPlugin::Remove( ::YojimboPlugin::Client& client )
+	void YojimboPlugin::Remove( ::YojimboPlugin::BaseClient& client )
 	{
 		auto it = std::find_if( std::begin( clients ), std::end( clients ), [&client]( const decltype(clients)::value_type& entry ) { return entry == &client; } );
 		if (it == std::end( clients ))

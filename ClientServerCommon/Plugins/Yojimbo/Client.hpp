@@ -14,22 +14,16 @@ namespace YojimboPlugin
 {
 	struct Message;
 
-	struct ClientProperties
-	{
-		Address target_address;
-		Key_T private_key;
-	};
-
-	class Client
+	class BaseClient
 	{
 		friend class ::Plugins::YojimboPlugin;
-		using MessageHandlerFunc_T = std::function<bool( Client&, const Message& )>;
+		using MessageHandlerFunc_T = std::function<bool( BaseClient&, const Message& )>;
 
 	public:
 		enum class ConnectionState { Disconnected, Connecting, Connected };
 
 	public:
-		virtual ~Client() {}
+		virtual ~BaseClient() {}
 
 		virtual ConnectionState GetState() const noexcept = 0;
 
@@ -39,7 +33,7 @@ namespace YojimboPlugin
 		void SetMessageHandler( MessageHandlerFunc_T handler ) noexcept { message_handler = handler; }
 
 	public: // events
-		sigslot::signal<Client&> ConnectionStateChanged;
+		sigslot::signal<BaseClient&> ConnectionStateChanged;
 
 	protected:
 		virtual void Update( const PreciseTimestep& timestep ) = 0;

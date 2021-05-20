@@ -4,7 +4,7 @@
 
 namespace YojimboPlugin
 {
-	ClientConnection::ClientConnection( Server& owner_, const ClientId_T id_ )
+	ClientConnection::ClientConnection( BaseServer& owner_, const ClientId_T id_ )
 		: owner( owner_ )
 		, id( id_ )
 		, connected_at( time( NULL ) )

@@ -9,8 +9,8 @@
 
 namespace YojimboPlugin
 {
-	class Server;
-	class Client;
+	class BaseServer;
+	class BaseClient;
 }
 
 namespace Plugins
@@ -25,10 +25,10 @@ namespace Plugins
 		static constexpr APIType GetType() noexcept { return ClientServerCommonPlugins::Yojimbo; }
 		std::string_view GetName() const noexcept override { return "Yojimbo"; }
 
-		void Add( ::YojimboPlugin::Server& server );
-		void Add( ::YojimboPlugin::Client& client );
-		void Remove( ::YojimboPlugin::Server& server );
-		void Remove( ::YojimboPlugin::Client& client );
+		void Add( ::YojimboPlugin::BaseServer& server );
+		void Add( ::YojimboPlugin::BaseClient& client );
+		void Remove( ::YojimboPlugin::BaseServer& server );
+		void Remove( ::YojimboPlugin::BaseClient& client );
 
 	protected:
 		void Init() override;
@@ -37,7 +37,7 @@ namespace Plugins
 
 	protected:
 		bool initialised = false;
-		std::vector<::YojimboPlugin::Client*> clients;
-		std::vector<::YojimboPlugin::Server*> servers;
+		std::vector<::YojimboPlugin::BaseClient*> clients;
+		std::vector<::YojimboPlugin::BaseServer*> servers;
 	};
 }

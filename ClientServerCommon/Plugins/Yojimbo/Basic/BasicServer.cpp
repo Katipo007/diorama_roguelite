@@ -4,6 +4,7 @@
 
 #include "../MessageFactory.hpp"
 #include "../Message.hpp"
+#include "../YojimboPlugin.hpp"
 
 namespace YojimboPlugin
 {
@@ -15,28 +16,21 @@ namespace YojimboPlugin
 	}
 
 
-	BasicServer::BasicServer(
-		yojimbo::Address&& host_address_
-		, size_t max_connected_clients_
-		, const std::array<uint8_t, yojimbo::KeyBytes>& private_key_
-		, yojimbo::ClientServerConfig&& config_
-		, BasicAdapter&& adapter_
-	)
-		: config( std::move( config_ ) )
-		, adapter( std::move( adapter_ ) )
-		, server( yojimbo::GetDefaultAllocator(), private_key_.data(), host_address_, config, adapter, 0.0 )
+	BasicServer::BasicServer( Definition&& definition_ )
+		: definition( std::move( definition_ ) )
+		, server( yojimbo::GetDefaultAllocator(), definition.private_key.data(), yojimbo::Address( definition.host_address.data() ), definition.config, definition.adapter, 0.0 )
 	{
 		///
 		/// Setup memory
 		/// 
-		ASSERT( max_connected_clients_ > 0 );
-		ASSERT( max_connected_clients_ < std::numeric_limits<int>::max() );
-		clients.reserve( max_connected_clients_ );
+		ASSERT( definition.max_num_clients > 0 );
+		ASSERT( definition.max_num_clients < std::numeric_limits<int>::max() );
+		clients.reserve( definition.max_num_clients );
 
 		///
 		/// Start the yojimbo server
 		/// 
-		server.Start( static_cast<int>(max_connected_clients_) );
+		server.Start( static_cast<int>(definition.max_num_clients) );
 		char server_address_buffer[256] = "\0";
 
 		// check the yojimbo server started
@@ -51,7 +45,7 @@ namespace YojimboPlugin
 		/// Hookup event handlers
 		///
 		{
-			adapter.ServerClientConnected.connect( [this]( BasicAdapter&, int index )
+			definition.adapter.ServerClientConnected.connect( [this]( BasicAdapter&, int index )
 				{
 					const auto client_id = static_cast<ClientId_T>(server.GetClientId( index ));
 					LOG_TRACE( Server, "New client connection, Index: '{}', Id: '{}'", index, client_id );
@@ -72,7 +66,7 @@ namespace YojimboPlugin
 					}
 				} );
 
-			adapter.ServerClientDisconnected.connect( [this]( BasicAdapter&, int index )
+			definition.adapter.ServerClientDisconnected.connect( [this]( BasicAdapter&, int index )
 				{
 					// may not exist if there was a probleem during ClientConnectionEstablished
 					auto it = std::find_if( std::begin( clients ), std::end( clients ), [&index]( const ClientContainer_T::value_type& entry )
@@ -91,6 +85,8 @@ namespace YojimboPlugin
 
 		
 		LOG_INFO( Server, "Server started on '{}' (insecure)", server_address_buffer );
+		if (definition.plugin)
+			definition.plugin->Add( *this );
 	}
 
 	BasicServer::~BasicServer()
@@ -100,6 +96,9 @@ namespace YojimboPlugin
 
 		ASSERT( !server.IsRunning() );
 		LOG_INFO( Server, "Server stopped" );
+
+		if (definition.plugin)
+			definition.plugin->Remove( *this );
 	}
 
 	bool BasicServer::IsRunning() const noexcept
@@ -255,7 +254,7 @@ namespace YojimboPlugin
 			const auto index = entry.yojimbo_index;
 			if (server.IsClientConnected( index ) && !entry.is_disconnecting)
 			{
-				for (int channel = 0; channel < config.numChannels; channel++)
+				for (int channel = 0; channel < definition.config.numChannels; channel++)
 				{
 					yojimbo_message = server.ReceiveMessage( index, channel );
 					while (yojimbo_message != nullptr && server.IsClientConnected( index ) && !entry.is_disconnecting)

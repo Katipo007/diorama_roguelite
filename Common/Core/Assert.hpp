@@ -26,4 +26,4 @@
 #	define NOT_IMPLEMENTED { LOG_ERROR( Assert, "Function not implemented!" ); }
 #endif
 
-#define FATAL(msg) { LOG_CRITICAL( Assert, "Application has encountered a fatal error and will abort. {0}", msg ); DEBUGBREAK(); abort(); }
+#define FATAL(msg) do { LOG_CRITICAL( Assert, "Application has encountered a fatal error and will abort. {0}", msg ); DEBUGBREAK(); abort(); } while(0)

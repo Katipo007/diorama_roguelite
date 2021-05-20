@@ -13,7 +13,7 @@ class ResourceManager;
 
 namespace YojimboPlugin
 {
-	class Server;
+	class BaseServer;
 	class ClientConnection;
 }
 
@@ -32,8 +32,8 @@ namespace Game
 		Core& GetCore() const { return *core; }
 		ResourceManager& GetResourceManager() const { return *resource_manager; }
 
-		YojimboPlugin::Server* GetServer();
-		const YojimboPlugin::Server* GetServer() const;
+		YojimboPlugin::BaseServer* GetServer();
+		const YojimboPlugin::BaseServer* GetServer() const;
 
 	protected:
 		void Init() override;
@@ -43,11 +43,11 @@ namespace Game
 		void OnVariableUpdate( const PreciseTimestep& ts ) override;
 		void OnRender( const PreciseTimestep& ) override {}
 
-		void ClientConnectedHandler( YojimboPlugin::Server&, YojimboPlugin::ClientConnection& );
-		void ClientDisconnectedHandler( YojimboPlugin::Server&, YojimboPlugin::ClientConnection& );
+		void ClientConnectedHandler( YojimboPlugin::BaseServer&, YojimboPlugin::ClientConnection& );
+		void ClientDisconnectedHandler( YojimboPlugin::BaseServer&, YojimboPlugin::ClientConnection& );
 
 	private:
-		std::unique_ptr<YojimboPlugin::Server> server;
+		std::unique_ptr<YojimboPlugin::BaseServer> server;
 
 		struct Data; // doing this so we don't pollute namespace of things which need to reference ServerGame
 		std::unique_ptr<Data> data;

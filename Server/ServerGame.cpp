@@ -10,6 +10,25 @@
 
 namespace Game
 {
+	namespace
+	{
+		YojimboPlugin::BasicServer::Definition CreateServerDefinition( Plugins::YojimboPlugin& plugin )
+		{
+			auto message_factory = std::make_shared<Game::Networking::GameMessageFactory>();
+
+			return YojimboPlugin::BasicServer::Definition
+			{
+				.plugin = &plugin,
+				.host_address = "127.0.0.1:42777",
+				.private_key = ClientServerConnection::DefaultPrivateKey,
+				.max_num_clients = 10,
+				.config = ClientServerConnection::MakeConfiguration(),
+				.adapter = YojimboPlugin::BasicAdapter( message_factory ),
+			};
+		}
+	}
+
+
 	struct ServerGame::Data
 	{
 		// TODO
@@ -30,29 +49,24 @@ namespace Game
 		data.reset();
 	}
 
-	YojimboPlugin::Server* ServerGame::GetServer()
+	YojimboPlugin::BaseServer* ServerGame::GetServer()
 	{
 		return server.get();
 	}
 
-	const YojimboPlugin::Server* ServerGame::GetServer() const
+	const YojimboPlugin::BaseServer* ServerGame::GetServer() const
 	{
 		return server.get();
 	}
 
 	void ServerGame::Init()
 	{
-		// get the network API
-		auto& yojimbo = core->GetRequiredAPI<Plugins::YojimboPlugin>(); (void)yojimbo;
+		auto& yojimbo_plugin = core->GetRequiredAPI<Plugins::YojimboPlugin>();
 
 		// initialise server
-		auto message_factory = std::make_shared<Game::Networking::GameMessageFactory>();
-		auto adapter = YojimboPlugin::BasicAdapter( message_factory );
-		auto config = ClientServerConnection::MakeConfiguration();
-		server.reset( new YojimboPlugin::BasicServer( yojimbo::Address( "127.0.0.1:42777" ), 16, ClientServerConnection::DefaultPrivateKey, std::move( config ), std::move( adapter ) ) );
+		server.reset( new YojimboPlugin::BasicServer( CreateServerDefinition( yojimbo_plugin ) ) );
 		server->ClientConnected.connect( &ServerGame::ClientConnectedHandler, this );
 		server->ClientDisconnected.connect( &ServerGame::ClientDisconnectedHandler, this );
-		yojimbo.Add( *server );
 	}
 
 	void ServerGame::OnGameEnd()
@@ -77,12 +91,12 @@ namespace Game
 		(void)ts;
 	}
 
-	void ServerGame::ClientConnectedHandler( YojimboPlugin::Server&, YojimboPlugin::ClientConnection& client )
+	void ServerGame::ClientConnectedHandler( YojimboPlugin::BaseServer&, YojimboPlugin::ClientConnection& client )
 	{
 		LOG_INFO( Server, "Client '{}' connected at {}", client.GetId(), client.GetConnectedTimestamp() );
 	}
 
-	void ServerGame::ClientDisconnectedHandler( YojimboPlugin::Server&, YojimboPlugin::ClientConnection& client )
+	void ServerGame::ClientDisconnectedHandler( YojimboPlugin::BaseServer&, YojimboPlugin::ClientConnection& client )
 	{
 		LOG_INFO( Server, "Client '{}' disconnected", client.GetId() );
 	}

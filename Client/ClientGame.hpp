@@ -14,7 +14,7 @@ class ResourceManager;
 
 namespace API { class DearImGuiAPI; }
 
-namespace YojimboPlugin { class Client; }
+namespace YojimboPlugin { class BaseClient; }
 
 namespace Game
 {
@@ -34,8 +34,8 @@ namespace Game
 		//
 		// Client server session management
 		//
-		YojimboPlugin::Client* GetClientServerSession();
-		YojimboPlugin::Client* GetClientServerSession() const;
+		YojimboPlugin::BaseClient* GetClientServerSession();
+		YojimboPlugin::BaseClient* GetClientServerSession() const;
 		void ConnectToServer( const YojimboPlugin::Address& address );
 		void DisconnectFromServer();
 
@@ -48,10 +48,10 @@ namespace Game
 		virtual void OnRender( const PreciseTimestep& ts ) override;
 		void DoDearImGuiFrame();
 
-		void ConnectionStateChangedHandler( YojimboPlugin::Client& sender );
+		void ConnectionStateChangedHandler( YojimboPlugin::BaseClient& sender );
 
 	protected:
-		std::unique_ptr<YojimboPlugin::Client> client_server_session;
+		std::unique_ptr<YojimboPlugin::BaseClient> client_server_session;
 
 		::API::DearImGuiAPI* dearimgui = nullptr;
 

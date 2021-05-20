@@ -60,6 +60,24 @@ namespace ClientStates
 
 namespace Game
 {
+    namespace
+    {
+        YojimboPlugin::BasicClient::Definition CreateClientDefinition( Plugins::YojimboPlugin& plugin, const YojimboPlugin::Address& target_address )
+        {
+            auto message_factory = std::make_shared<Game::Networking::GameMessageFactory>();
+
+            return YojimboPlugin::BasicClient::Definition
+            {
+                .plugin = &plugin,
+                .target_address = target_address,
+                .private_key = Game::ClientServerConnection::DefaultPrivateKey,
+                .config = ClientServerConnection::MakeConfiguration(),
+                .adapter = YojimboPlugin::BasicAdapter( message_factory ),
+            };
+        }
+    }
+
+
     struct ClientGame::ClientData
     {
         ClientStates::Machine state_machine;
@@ -92,28 +110,28 @@ namespace Game
         client_data.reset();
     }
 
-    void ClientGame::ConnectionStateChangedHandler( YojimboPlugin::Client& sender )
+    void ClientGame::ConnectionStateChangedHandler( YojimboPlugin::BaseClient& sender )
     {
         ASSERT( client_server_session != nullptr );
         ASSERT( &sender == client_server_session.get() );
 
         switch (sender.GetState())
         {
-        case YojimboPlugin::Client::ConnectionState::Connected:
+        case YojimboPlugin::BaseClient::ConnectionState::Connected:
             client_data->state_machine.Handle( ClientStates::ConnectedToServerEvent( sender ) );
             break;
 
-        case YojimboPlugin::Client::ConnectionState::Connecting:
+        case YojimboPlugin::BaseClient::ConnectionState::Connecting:
             // TODO: show some indicator
             break;
 
-        case YojimboPlugin::Client::ConnectionState::Disconnected:
+        case YojimboPlugin::BaseClient::ConnectionState::Disconnected:
             // NOTHING, will get caught in the new Update() event
             break;
         }
     }
 
-    YojimboPlugin::Client* ClientGame::GetClientServerSession()
+    YojimboPlugin::BaseClient* ClientGame::GetClientServerSession()
     {
         if (client_server_session)
             return client_server_session.get();
@@ -121,7 +139,7 @@ namespace Game
         return nullptr;
     }
 
-    YojimboPlugin::Client* ClientGame::GetClientServerSession() const
+    YojimboPlugin::BaseClient* ClientGame::GetClientServerSession() const
     {
         if (client_server_session)
             return client_server_session.get();
@@ -139,19 +157,10 @@ namespace Game
 
         try
         {
-            auto& yojimbo = core->GetRequiredAPI<Plugins::YojimboPlugin>(); (void)yojimbo;
+            auto& yojimbo_plugin = core->GetRequiredAPI<Plugins::YojimboPlugin>();
 
-            YojimboPlugin::ClientProperties properties;
-            properties.target_address = address;
-            properties.private_key = Game::ClientServerConnection::DefaultPrivateKey;
-
-            auto message_factory = std::make_shared<Game::Networking::GameMessageFactory>();
-            auto adapter = YojimboPlugin::BasicAdapter( message_factory );
-            auto config = ClientServerConnection::MakeConfiguration();
-
-            client_server_session.reset( new YojimboPlugin::BasicClient( address, Game::ClientServerConnection::DefaultPrivateKey, std::move( config ), std::move( adapter ) ) );
+            client_server_session.reset( new YojimboPlugin::BasicClient( CreateClientDefinition( yojimbo_plugin, address ) ) );
             client_server_session->ConnectionStateChanged.connect( &ClientGame::ConnectionStateChangedHandler, this );
-            yojimbo.Add( *client_server_session );
         }
         catch (std::exception& e)
         {
@@ -168,7 +177,7 @@ namespace Game
         // disconnect handler before disconnecting
         client_server_session->ConnectionStateChanged.disconnect( this );
 
-        if (client_server_session->GetState() != YojimboPlugin::Client::ConnectionState::Disconnected)
+        if (client_server_session->GetState() != YojimboPlugin::BaseClient::ConnectionState::Disconnected)
             client_server_session->Disconnect();
 
         auto e = ClientStates::DisconnectedFromServerEvent( *client_server_session.get() );
@@ -202,7 +211,7 @@ namespace Game
     void ClientGame::OnFixedUpdate( const PreciseTimestep& ts )
     {
         // Destroy the connection object if it isn't connected
-        if (client_server_session && (client_server_session->GetState() == YojimboPlugin::Client::ConnectionState::Disconnected))
+        if (client_server_session && (client_server_session->GetState() == YojimboPlugin::BaseClient::ConnectionState::Disconnected))
             DisconnectFromServer();
 
         client_data->state_machine.Handle( ClientStates::FrameEvent( ts ) );

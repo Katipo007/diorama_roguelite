@@ -20,21 +20,12 @@ namespace YojimboPlugin
 	using ClientConnectionPredicate_T = std::function<bool( const ClientConnection& )>;
 	inline static const ClientConnectionPredicate_T AllClientConnectionsPredicate = []( const ClientConnection& ) { return true; };
 
-
-	struct ServerProperties
-	{
-		Address host_address;
-		Key_T private_key;
-		size_t max_num_clients;
-	};
-
-
-	class Server
+	class BaseServer
 	{
 		friend class ::Plugins::YojimboPlugin;
 
 	public:
-		virtual ~Server() {}
+		virtual ~BaseServer() {}
 
 		virtual bool IsRunning() const noexcept = 0;
 
@@ -61,8 +52,8 @@ namespace YojimboPlugin
 		virtual size_t BroadcastMessage( MessageType type, ChannelType channel, const MessageInitialiserFunc_T& message_initialiser, const ClientConnectionPredicate_T& predicate = AllClientConnectionsPredicate ) = 0;
 
 	public: // Events
-		sigslot::signal<Server&, ClientConnection&> ClientConnected; // when a client connection is first established
-		sigslot::signal<Server&, ClientConnection&> ClientDisconnected; // when a client has been disconnected (from any state)
+		sigslot::signal<BaseServer&, ClientConnection&> ClientConnected; // when a client connection is first established
+		sigslot::signal<BaseServer&, ClientConnection&> ClientDisconnected; // when a client has been disconnected (from any state)
 
 	protected:
 		virtual void Update( const PreciseTimestep& timestep ) = 0;

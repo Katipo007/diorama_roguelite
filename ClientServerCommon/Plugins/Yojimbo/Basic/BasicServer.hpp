@@ -11,7 +11,7 @@ namespace Plugins { class YojimboPlugin; }
 namespace YojimboPlugin
 {
 	class BasicServer final
-		: public Server
+		: public BaseServer
 	{
 		friend class ::Plugins::YojimboPlugin;
 
@@ -28,13 +28,19 @@ namespace YojimboPlugin
 		using ClientContainer_T = std::unordered_map<ClientId_T, ClientEntry>;
 
 	public:
-		BasicServer(
-			yojimbo::Address&& host_address
-			, size_t max_connected_clients
-			, const std::array<uint8_t, yojimbo::KeyBytes>& private_key
-			, yojimbo::ClientServerConfig&& config
-			, BasicAdapter&& adapter
-		);
+		struct Definition
+		{
+			Plugins::YojimboPlugin* plugin = nullptr;
+
+			Address host_address = {};
+			Key_T private_key = { 0 };
+			size_t max_num_clients = 0;
+			yojimbo::ClientServerConfig config;
+			BasicAdapter adapter;
+		};
+
+	public:
+		BasicServer( Definition&& );
 		~BasicServer();
 
 		bool IsRunning() const noexcept override;
@@ -73,8 +79,7 @@ namespace YojimboPlugin
 	private:
 		ClientContainer_T clients;
 
-		const yojimbo::ClientServerConfig config;
-		BasicAdapter adapter;
+		Definition definition;
 		yojimbo::Server server;
 	};
 }

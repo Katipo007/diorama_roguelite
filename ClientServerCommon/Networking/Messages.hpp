@@ -13,7 +13,6 @@
 
 namespace Game::Networking
 {
-
 	BASIC_MESSAGE( Dummy );
 
 }

@@ -5,7 +5,7 @@
 
 namespace YojimboPlugin
 {
-	bool Server::HandleMessage( ClientConnection& connection, Message& message )
+	bool BaseServer::HandleMessage( ClientConnection& connection, Message& message )
 	{
 		if (connection.message_handler)
 			return connection.message_handler( message );

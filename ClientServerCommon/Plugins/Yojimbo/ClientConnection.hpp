@@ -8,7 +8,7 @@
 namespace YojimboPlugin
 {
 	struct Message;
-	class Server;
+	class BaseServer;
 
 	/// <summary>
 	/// Server-side
@@ -16,16 +16,16 @@ namespace YojimboPlugin
 	/// </summary>
 	class ClientConnection
 	{
-		friend class Server;
+		friend class BaseServer;
 
 	public:
 		using MessageHandler_T = std::function<bool( const Message& )>;
 
 	public:
-		ClientConnection( Server& owner, ClientId_T id );
+		ClientConnection( BaseServer& owner, ClientId_T id );
 		virtual ~ClientConnection() {}
 
-		Server& GetOwner() const noexcept { return owner; }
+		BaseServer& GetOwner() const noexcept { return owner; }
 		ClientId_T GetId() const noexcept { return id; }
 		time_t GetConnectedTimestamp() const noexcept { return connected_at; }
 
@@ -38,7 +38,7 @@ namespace YojimboPlugin
 		virtual void SendMessage( MessageType message, ChannelType channel, const MessageInitialiserFunc_T& initialiser );
 
 	private:
-		Server& owner;
+		BaseServer& owner;
 		const ClientId_T id;
 		const time_t connected_at;
 		MessageHandler_T message_handler;
