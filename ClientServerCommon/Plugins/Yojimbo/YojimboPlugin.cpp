@@ -1,11 +1,6 @@
 #include "YojimboPlugin.hpp"
 
-#include "Message.hpp"
-#include "MessageFactory.hpp"
-
-#include "Impl/YojimboHeader.hpp"
-#include "Client.hpp"
-#include "Server.hpp"
+#include "YojimboHeader.hpp"
 
 namespace
 {
@@ -27,6 +22,8 @@ namespace
 
 namespace Plugins
 {
+	bool YojimboPlugin::s_initialised = false;
+
 	YojimboPlugin::YojimboPlugin()
 	{
 	}
@@ -35,10 +32,15 @@ namespace Plugins
 	{
 	}
 
+	bool YojimboPlugin::IsInitialised() noexcept
+	{
+		return YojimboPlugin::s_initialised;
+	}
+
 	void YojimboPlugin::Init()
 	{
-		ASSERT( !initialised );
-		if (initialised)
+		ASSERT( !IsInitialised() );
+		if (IsInitialised())
 			return;
 
 		if (!InitializeYojimbo())
@@ -49,75 +51,16 @@ namespace Plugins
 #endif
 		yojimbo_set_printf_function( YojimboLoggingRoute );
 
-		initialised = true;
+		s_initialised = true;
 	}
 
 	void YojimboPlugin::Shutdown()
 	{
-		ASSERT( initialised );
-		if (!initialised)
+		ASSERT( IsInitialised() );
+		if (!IsInitialised())
 			return;
 
-		clients.clear();
-		servers.clear();
 		ShutdownYojimbo();
-		initialised = false;
-	}
-
-	void YojimboPlugin::OnVariableUpdate( const PreciseTimestep& ts, const StepType type )
-	{
-		ASSERT( initialised );
-		if (!initialised)
-			return;
-
-		switch (type)
-		{
-		case StepType::PreGameStep:
-			for (auto& server : servers)
-				server->Update( ts );
-			for (auto& client : clients)
-				client->Update( ts );
-			break;
-
-		case StepType::PostGameStep:
-			// null
-			break;
-		}
-	}
-
-	void YojimboPlugin::Add( ::YojimboPlugin::BaseServer& server )
-	{
-		auto it = std::find_if( std::begin( servers ), std::end( servers ), [&server]( const decltype(servers)::value_type& entry ) { return entry == &server; } );
-		if (it != std::end( servers ))
-			return;
-
-		servers.push_back( &server );
-	}
-
-	void YojimboPlugin::Add( ::YojimboPlugin::BaseClient& client )
-	{
-		auto it = std::find_if( std::begin( clients ), std::end( clients ), [&client]( const decltype(clients)::value_type& entry ) { return entry == &client; } );
-		if (it != std::end( clients ))
-			return;
-
-		clients.push_back( &client );
-	}
-
-	void YojimboPlugin::Remove( ::YojimboPlugin::BaseServer& server )
-	{
-		auto it = std::find_if( std::begin( servers ), std::end( servers ), [&server]( const decltype(servers)::value_type& entry ) { return entry == &server; } );
-		if (it == std::end( servers ))
-			return;
-
-		servers.erase( it );
-	}
-
-	void YojimboPlugin::Remove( ::YojimboPlugin::BaseClient& client )
-	{
-		auto it = std::find_if( std::begin( clients ), std::end( clients ), [&client]( const decltype(clients)::value_type& entry ) { return entry == &client; } );
-		if (it == std::end( clients ))
-			return;
-
-		clients.erase( it );
+		s_initialised = false;
 	}
 }

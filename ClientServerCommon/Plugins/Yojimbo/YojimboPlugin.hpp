@@ -25,19 +25,13 @@ namespace Plugins
 		static constexpr APIType GetType() noexcept { return ClientServerCommonPlugins::Yojimbo; }
 		std::string_view GetName() const noexcept override { return "Yojimbo"; }
 
-		void Add( ::YojimboPlugin::BaseServer& server );
-		void Add( ::YojimboPlugin::BaseClient& client );
-		void Remove( ::YojimboPlugin::BaseServer& server );
-		void Remove( ::YojimboPlugin::BaseClient& client );
+		static bool IsInitialised() noexcept;
 
 	protected:
 		void Init() override;
 		void Shutdown() override;
-		void OnVariableUpdate( const PreciseTimestep& ts, const StepType type ) override;
 
 	protected:
-		bool initialised = false;
-		std::vector<::YojimboPlugin::BaseClient*> clients;
-		std::vector<::YojimboPlugin::BaseServer*> servers;
+		static bool s_initialised;
 	};
 }

@@ -8,7 +8,6 @@
 #include "Utility/Timestep.hpp"
 
 namespace API { class DearImGuiAPI; }
-namespace YojimboPlugin { class BaseClient; }
 
 namespace ClientStates
 {
@@ -38,27 +37,18 @@ namespace ClientStates
 
 	struct ConnectedToServerEvent
 	{
-		explicit ConnectedToServerEvent( YojimboPlugin::BaseClient& session )
-			: session( session )
+		explicit ConnectedToServerEvent()
 		{
 		}
-
-		YojimboPlugin::BaseClient& session;
 	};
 
 	struct DisconnectedFromServerEvent
 	{
-		static const size_t MaxReasonLength = 128;
-
-		explicit DisconnectedFromServerEvent( YojimboPlugin::BaseClient& session, std::string_view reason = "" )
-			: session( session )
+		explicit DisconnectedFromServerEvent(std::string_view reason = "" )
+			: reason( reason )
 		{
-			ASSERT( reason.length() < MaxReasonLength );
-			std::copy_n( reason.begin(), std::min( reason.length(), MaxReasonLength - 1 ), this->reason );
-			this->reason[MaxReasonLength - 1] = '\n';
 		}
 
-		YojimboPlugin::BaseClient& session;
-		char reason[MaxReasonLength];
+		std::string reason;
 	};
 }

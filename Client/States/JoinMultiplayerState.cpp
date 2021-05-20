@@ -3,8 +3,6 @@
 #include "Client/ClientGame.hpp"
 #include "Visual/DearImGui/DearImGui.hpp"
 
-#include "ClientServerCommon/Plugins/Yojimbo/Client.hpp"
-
 namespace ClientStates
 {
 	JoinMultiplayerState::JoinMultiplayerState( Game::ClientGame& _client )
@@ -20,25 +18,7 @@ namespace ClientStates
 	{
 		(void)e;
 
-		if (const auto* client_server_session = client.GetClientServerSession())
-		{
-			const auto connection_state = client_server_session->GetState();
-			switch (connection_state)
-			{
-			case YojimboPlugin::BaseClient::ConnectionState::Connected:
-				status_message = "Connected";
-				break;
-
-			case YojimboPlugin::BaseClient::ConnectionState::Connecting:
-				status_message = "Connecting...";
-				break;
-
-			case YojimboPlugin::BaseClient::ConnectionState::Disconnected:
-				LOG_INFO( Client, "Failed to connect to server" );
-				status_message = "Connection failed.";
-				break;
-			}
-		}
+		// TODO: update status message with current connection state
 
 		return fsm::Actions::NoAction{};
 	}
@@ -51,7 +31,8 @@ namespace ClientStates
 		{
 			ImGui::Text( "Join Multiplayer" );
 
-			const bool is_connecting = client.GetClientServerSession() != nullptr;
+			// TODO: check if we are connecting
+			const bool is_connecting = false; // client.GetClientServerSession() != nullptr;
 			if (is_connecting)
 				ImGui::PushStyleVar( ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f );
 
@@ -110,18 +91,11 @@ namespace ClientStates
 
 	void JoinMultiplayerState::InitiateConnection( std::string address_str )
 	{
-		const auto* session = client.GetClientServerSession();
-		ASSERT( session == nullptr );
-		if (session != nullptr)
-			return;
-
-		client.ConnectToServer( YojimboPlugin::Address( address_str.c_str() ) );
+		NOT_IMPLEMENTED;
 	}
 
 	void JoinMultiplayerState::CancelConnection()
 	{
-		const auto* session = client.GetClientServerSession();
-		if (session != nullptr)
-			client.DisconnectFromServer();
+		NOT_IMPLEMENTED;
 	}
 }
