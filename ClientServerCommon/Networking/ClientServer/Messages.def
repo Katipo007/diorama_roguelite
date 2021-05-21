@@ -1,0 +1,22 @@
+
+#define BASIC_MESSAGE( name ) DEFINE_MESSAGE( name, , , )
+#define COMMA ,
+
+///
+/// DEFINE MESSAGES HERE
+///
+
+BASIC_MESSAGE( DummyMessage );
+
+
+DEFINE_MESSAGE( ClientServerChatMessage
+	, std::array<char COMMA 256> message;
+	, serialize_string( stream, &message[0], static_cast<int>(std::size( message )) );
+	);
+
+/// 
+/// STOP DEFINING MESSAGES
+/// 
+
+#undef COMMA
+#undef BASIC_MESSAGE

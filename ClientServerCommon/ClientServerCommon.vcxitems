@@ -23,6 +23,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Networking\ClientServer\Config.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Networking\ClientServer\MessageFactory.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Networking\ClientServer\Messages.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Networking\ClientServer\MessagesForwardDecl.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\PluginTypes.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\Basic\Client.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\IMessageFactory.hpp" />
@@ -39,5 +40,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Networking\ClientServer\Config.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\ServerClientConnection.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\YojimboPlugin.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)Networking\ClientServer\Messages.def" />
   </ItemGroup>
 </Project>
