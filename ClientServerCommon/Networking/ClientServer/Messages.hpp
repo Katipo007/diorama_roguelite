@@ -2,17 +2,17 @@
 
 #include "ClientServerCommon/Plugins/Yojimbo/YojimboHeader.hpp"
 
-#define DEFINE_MESSAGE( name, members, serialise, ... ) \
+#define DEFINE_MESSAGE( name, members, methods, serialise ) \
 	struct name \
 		: public yojimbo::Message \
 	{ \
 		static constexpr std::string_view GetName() { return #name; } \
 		\
+		##members \
+		\
+		##methods \
+		\
 		template<typename STREAM> bool Serialize( STREAM& stream ) { (void)stream; ##serialise return true; } \
-		\
-		members \
-		\
-		__VA_ARGS__ \
 		\
 		YOJIMBO_VIRTUAL_SERIALIZE_FUNCTIONS() \
 	};

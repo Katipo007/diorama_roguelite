@@ -11,6 +11,7 @@ BASIC_MESSAGE( DummyMessage );
 
 DEFINE_MESSAGE( ClientServerChatMessage
 	, std::array<char COMMA 256> message;
+	,
 	, serialize_string( stream, &message[0], static_cast<int>(std::size( message )) );
 	);
 

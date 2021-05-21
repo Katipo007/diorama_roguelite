@@ -2,7 +2,7 @@
 
 #include "ClientServerCommon/Plugins/Yojimbo/YojimboHeader.hpp"
 
-#define DEFINE_MESSAGE( name, members, serialise, ... ) struct name;
+#define DEFINE_MESSAGE( name, members, methods, serialise ) struct name;
 
 namespace Networking::ClientServer
 {
