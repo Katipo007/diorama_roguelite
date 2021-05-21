@@ -46,7 +46,7 @@ namespace Networking::ClientServer
 				return;
 			}
 
-			if (auto* message = GetFactory().CreateMessage<MESSAGE_T>())
+			if (auto* message = GetMessageFactory().CreateMessage<MESSAGE_T>())
 			{
 				initialiser( *message );
 				::yojimbo::Client::SendMessage( static_cast<int>(channel), message );
@@ -57,13 +57,16 @@ namespace Networking::ClientServer
 
 
 	public: // Getters
-		MessageFactory& GetFactory() noexcept;
+		MessageFactory& GetMessageFactory();
 
 
 	public: // Methods
 		void OnFixedUpdate( const PreciseTimestep& ts );
 
 		void Disconnect( const bool immediately = false );
+
+		void SetMessageHandler( MessageHandlerCallback_T new_handler );
+		void ResetMessageHandler() { SetMessageHandler( {} ); }
 
 	public: // Signals
 

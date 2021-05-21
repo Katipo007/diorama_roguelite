@@ -50,6 +50,11 @@ namespace Networking::ClientServer
 		return yojimbo::Client::CanSendMessage( static_cast<int>( type ) );
 	}
 
+	MessageFactory& ServerConnection::GetMessageFactory()
+	{
+		return static_cast<MessageFactory&>(::yojimbo::Client::GetMessageFactory());
+	}
+
 	void ServerConnection::OnFixedUpdate( const PreciseTimestep& ts )
 	{
 		ASSERT( ts.delta > 0 );
@@ -85,6 +90,12 @@ namespace Networking::ClientServer
 			if (!yojimbo::Client::IsDisconnected())
 				yojimbo::Client::Disconnect();
 		}
+	}
+
+
+	void ServerConnection::SetMessageHandler( MessageHandlerCallback_T new_handler )
+	{
+		message_handler_func = new_handler;
 	}
 
 	void ServerConnection::ProcessMessages()
