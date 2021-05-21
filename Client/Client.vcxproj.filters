@@ -51,6 +51,9 @@
     <ClCompile Include="Game\ClientZone.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Networking\ClientServer\ServerConnection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precompiled\pch.hpp">
@@ -90,6 +93,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Plugins\PluginTypes.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Networking\ClientServer\ServerConnection.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
