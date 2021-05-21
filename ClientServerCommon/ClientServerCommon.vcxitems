@@ -22,11 +22,13 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Networking\ClientServer\Adapter.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Networking\ClientServer\Config.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Networking\ClientServer\MessageFactory.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Networking\ClientServer\Messages.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\PluginTypes.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\Basic\Client.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\IMessageFactory.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\Basic\MessageFactory.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\ServerClientConnection.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\TemplateMessageFactory.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\Types.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\YojimboPlugin.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\YojimboHeader.hpp" />
@@ -35,7 +37,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Game\ZoneCommon.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Networking\ClientServer\Adapter.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Networking\ClientServer\Config.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Networking\ClientServer\MessageFactory.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\ServerClientConnection.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\YojimboPlugin.cpp" />
   </ItemGroup>
