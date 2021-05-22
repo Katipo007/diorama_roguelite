@@ -1,6 +1,6 @@
 #include "PlayerObject.hpp"
 
-#include "ClientGame.hpp"
+#include "Client/ClientGame.hpp"
 #include "Common/Core/ResourceManager.hpp"
 #include "Visual/Resources/SpriteSheet.hpp"
 
