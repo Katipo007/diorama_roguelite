@@ -85,15 +85,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="DedicatedServerMain.cpp" />
+    <ClCompile Include="Plugins\CLI\SystemCLI.cpp" />
     <ClCompile Include="Precompiled\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Level4</WarningLevel>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Level4</WarningLevel>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="ServerGame.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Plugins\CLI\SystemCLI.hpp" />
+    <ClInclude Include="Plugins\PluginTypes.hpp" />
     <ClInclude Include="Precompiled\pch.hpp" />
+    <ClInclude Include="ServerGame.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Server\Server.vcxproj">
