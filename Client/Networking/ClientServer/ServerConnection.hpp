@@ -22,6 +22,7 @@ namespace Networking::ClientServer
 	{
 	public:
 		using MessageHandlerCallback_T = std::function<bool( ServerConnection&, const yojimbo::Message& )>;
+		using FactoryType = MessageFactory;
 
 	public:
 		ServerConnection( const yojimbo::Address& target_address, MessageHandlerCallback_T message_handler_callback );
