@@ -40,6 +40,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Geometry\Point2D.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Geometry\Rect.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Geometry\Size.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Precompiled\pch.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Utility\Unreachable.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Utility\Containers.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Utility\EnumClassBitset.hpp" />

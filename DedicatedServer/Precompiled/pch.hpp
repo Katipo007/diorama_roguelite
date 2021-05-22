@@ -1,21 +1,8 @@
 #pragma once
 
-#ifndef DIORAMA_ROGUELITE_PCH_HPP
-#define DIORAMA_ROGUELITE_PCH_HPP
+#ifndef DIORAMA_ROGUELITE_DEDICATED_SERVER_PCH_HPP
+#define DIORAMA_ROGUELITE_DEDICATED_SERVER_PCH_HPP
 
-#include <iostream>
-#include <memory>
-#include <utility>
-#include <algorithm>
-#include <functional>
+#include "Common/Precompiled/pch.hpp"
 
-#include <string>
-#include <sstream>
-#include <array>
-#include <vector>
-#include <unordered_map>
-#include <unordered_set>
-
-#include "Common/Core/Logging.hpp"
-
-#endif // DIORAMA_ROGUELITE_PCH_HPP
+#endif // DIORAMA_ROGUELITE_DEDICATED_SERVER_PCH_HPP
