@@ -11,8 +11,6 @@ namespace Networking::ClientServer
 	{
 		Reliable,
 		Unreliable,
-
-		NumChannelTypes
 	};
 
 	yojimbo::ClientServerConfig MakeConfiguration() noexcept;

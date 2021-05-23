@@ -20,7 +20,7 @@ namespace Networking::ClientServer
 		config.timeout = 6; // seconds
 		config.networkSimulator = false;
 
-		config.numChannels = static_cast<int>( ChannelType::NumChannelTypes );
+		config.numChannels = static_cast<int>(magic_enum::enum_count<ChannelType>());
 		for (const ChannelType type : magic_enum::enum_values<ChannelType>())
 		{
 			auto& channel = config.channel[static_cast<size_t>(type)];
