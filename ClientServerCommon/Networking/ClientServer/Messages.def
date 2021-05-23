@@ -15,6 +15,12 @@ DEFINE_MESSAGE( ClientServerChatMessage
 	, serialize_string( stream, &message[0], static_cast<int>(std::size( message )) );
 	);
 
+DEFINE_MESSAGE( ServerClientDisconnect
+	, std::array<char COMMA 128> reason;
+	,
+	, serialize_string( stream, &reason[0], static_cast<int>(std::size( reason )) );
+	);
+
 /// 
 /// STOP DEFINING MESSAGES
 /// 
