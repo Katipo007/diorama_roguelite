@@ -70,7 +70,6 @@ void GameServer::OnFixedUpdate( const PreciseTimestep& ts )
 		std::erase_if( clients, []( const ClientContainer_T::value_type& entry ) { return entry.second.to_be_disconnected || entry.second.Expired(); } );
 	}
 
-	ASSERT( ts.delta > 0 );
 	yojimbo::Server::AdvanceTime( yojimbo::Server::GetTime() + ts.delta );
 }
 

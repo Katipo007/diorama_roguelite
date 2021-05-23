@@ -171,7 +171,7 @@ void Core::DoFixedUpdate( const PreciseTimestep& ts )
 
 void Core::DoVariableUpdate( const PreciseTimestep& ts )
 {
-	assert( ts.delta > 0 );
+	ASSERT( ts.delta >= 0 );
 	PumpEvents( ts );
 
 	for (auto& plugin : active_apis)

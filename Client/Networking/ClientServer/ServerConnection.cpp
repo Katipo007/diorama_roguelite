@@ -57,8 +57,6 @@ namespace Networking::ClientServer
 
 	void ServerConnection::OnFixedUpdate( const PreciseTimestep& ts )
 	{
-		ASSERT( ts.delta > 0 );
-
 		if (wants_to_disconnect && !IsDisconnected())
 			Disconnect( true );
 
