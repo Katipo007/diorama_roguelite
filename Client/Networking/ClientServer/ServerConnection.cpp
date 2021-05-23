@@ -68,7 +68,7 @@ namespace Networking::ClientServer
 		if (::yojimbo::Client::IsConnected())
 			ProcessMessages();
 
-		::yojimbo::Client::AdvanceTime( ts.delta );
+		::yojimbo::Client::AdvanceTime( ::yojimbo::Client::GetTime() + ts.delta );
 
 		if (wants_to_disconnect && !IsDisconnected())
 			Disconnect( true );
