@@ -7,7 +7,8 @@ namespace Networking::ClientServer
 {
 	using MessageFactory = YojimboPlugin::TemplateMessageFactory<
 		// message types go here
-		DummyMessage
-		, ClientServerChatMessage
+		Messages::DummyMessage
+		, Messages::ServerClientDisconnect
+		, Messages::ClientServerChatMessage
 		>;
 }

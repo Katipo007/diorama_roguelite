@@ -1,6 +1,7 @@
 #include "ClientGameSession.hpp"
 
 #include "Client/Networking/ClientServer/ServerConnection.hpp"
+#include "ClientServerCommon/Networking/ClientServer/Messages.hpp"
 
 namespace Sessions
 {
@@ -23,7 +24,7 @@ namespace Sessions
 
 		switch (message.GetType())
 		{
-			CASE( ClientServerChatMessage )
+			CASE( Messages::ClientServerChatMessage )
 				const std::string chat_message = std::string{ msg.message.data() };
 				ChatMessageReceived( chat_message );
 				return true;

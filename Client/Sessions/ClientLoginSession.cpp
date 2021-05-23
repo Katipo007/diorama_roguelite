@@ -13,14 +13,14 @@ namespace Sessions
 	{
 	}
 
-	bool ClientLoginSession::MessageHandler( Networking::ClientServer::ServerConnection&, const yojimbo::Message& msg )
+	bool ClientLoginSession::MessageHandler( Networking::ClientServer::ServerConnection&, const yojimbo::Message& message )
 	{
 		using namespace Networking::ClientServer;
-		using F = ServerConnection::FactoryType;
+		using Factory = ServerConnection::FactoryType;
 
-		switch (msg.GetType())
+		switch (message.GetType())
 		{
-			case F::GetMessageType<DummyMessage>() :
+			case Factory::GetMessageType<Messages::DummyMessage>() :
 				return false;
 
 			default:

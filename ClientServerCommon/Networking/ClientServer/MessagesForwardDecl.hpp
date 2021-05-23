@@ -4,7 +4,7 @@
 
 #define DEFINE_MESSAGE( name, members, methods, serialise ) struct name;
 
-namespace Networking::ClientServer
+namespace Networking::ClientServer::Messages
 {
 	#include "Messages.def"
 }

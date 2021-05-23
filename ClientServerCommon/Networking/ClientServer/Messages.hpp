@@ -17,7 +17,7 @@
 		YOJIMBO_VIRTUAL_SERIALIZE_FUNCTIONS() \
 	};
 
-namespace Networking::ClientServer
+namespace Networking::ClientServer::Messages
 {	
 	#include "Messages.def"
 }
