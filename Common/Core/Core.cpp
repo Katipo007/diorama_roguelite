@@ -72,12 +72,12 @@ int Core::Dispatch()
 		{
 			const auto current_time = Clock_T::now();
 			const double current_time_seconds = std::chrono::duration_cast<std::chrono::milliseconds>(current_time.time_since_epoch()).count() / 1000.0;
-			constexpr double fixed_delta_seconds = 1.0 / 60.0;
+			constexpr double FixedDeltaTimeSeconds = 1.0 / 60.0;
 
-			const auto timestep = PreciseTimestep( current_time_seconds, fixed_delta_seconds );
+			const auto timestep = PreciseTimestep( current_time_seconds, FixedDeltaTimeSeconds );
 			DoFixedUpdate( timestep );
 			DoVariableUpdate( timestep );
-			GetRequiredAPI<API::SystemAPI>().Sleep( static_cast<unsigned long>(fixed_delta_seconds * 1000) );
+			GetRequiredAPI<API::SystemAPI>().Sleep( static_cast<unsigned long>(FixedDeltaTimeSeconds * 1000) );
 		}
 	}
 	else
@@ -94,7 +94,7 @@ int Core::Dispatch()
 				const double fixed_timestep_seconds = 1.0 / target_fps;
 
 				// Perform a given number of steps this frame
-				int steps_needed = static_cast<int>(std::chrono::duration<float>( current_time - target_time ).count() * target_fps);
+				const int steps_needed = static_cast<int>(std::chrono::duration<float>( current_time - target_time ).count() * target_fps);
 				for (int i = 0; i < std::min( steps_needed, MaxFixedStepsPerFrame ); i++)
 					DoFixedUpdate( PreciseTimestep( current_time_seconds, fixed_timestep_seconds ) );
 
@@ -107,14 +107,9 @@ int Core::Dispatch()
 			}
 
 			// Variable update
-			{
-				constexpr double Max_DeltaTimeSeconds = 0.1;
-				const double seconds_since_last_frame = std::chrono::duration_cast<std::chrono::milliseconds>(current_time - last_time).count() / 1000.0;
-				if (seconds_since_last_frame > 0)
-					DoVariableUpdate( PreciseTimestep( current_time_seconds, std::min( seconds_since_last_frame, Max_DeltaTimeSeconds ) ) );
-				else
-					LOG_WARN( Application, "Skipped DoVariableUpdate: delta-time was 0" );
-			}
+			constexpr double MaxDeltaTimeSeconds = 0.1;
+			const double seconds_since_last_frame = std::chrono::duration_cast<std::chrono::milliseconds>(current_time - last_time).count() / 1000.0;
+			DoVariableUpdate( PreciseTimestep( current_time_seconds, std::min( seconds_since_last_frame, MaxDeltaTimeSeconds ) ) );
 
 			last_time = current_time;
 		}
