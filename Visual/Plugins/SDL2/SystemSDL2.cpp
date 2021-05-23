@@ -183,7 +183,12 @@ namespace Graphics::API
 
     void SystemSDL2::Sleep( unsigned long milliseconds )
     {
-        std::this_thread::sleep_for( std::chrono::milliseconds( milliseconds ) );
+        auto start = std::chrono::high_resolution_clock::now();
+        auto end = start + std::chrono::milliseconds( milliseconds );
+        do
+        {
+            std::this_thread::yield();
+        } while (std::chrono::high_resolution_clock::now() < end);
     }
 
     bool SystemSDL2::GenerateEvents( ::API::VideoAPI* video, ::API::InputAPI* input, ::API::DearImGuiAPI* dearimgui )
