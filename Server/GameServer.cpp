@@ -72,8 +72,6 @@ void GameServer::OnFixedUpdate( const PreciseTimestep& ts )
 
 	ASSERT( ts.delta > 0 );
 	yojimbo::Server::AdvanceTime( yojimbo::Server::GetTime() + ts.delta );
-
-	yojimbo_sleep( ts.delta );
 }
 
 void GameServer::ClientConnectedHandler( Networking::ClientServer::ClientServerAdapter&, YojimboPlugin::ClientIndex_T index )

@@ -20,6 +20,7 @@ namespace Plugins
 		Size<uint32_t> GetScreenSize() const override;
 
 		std::thread CreateThread( std::string_view name, std::function<void()> runnable ) override;
+		void Sleep( unsigned long milliseconds ) override;
 
 		bool GenerateEvents( ::API::VideoAPI* video, ::API::InputAPI* input, ::API::DearImGuiAPI* dearimgui ) override;
 

@@ -72,11 +72,12 @@ int Core::Dispatch()
 		{
 			const auto current_time = Clock_T::now();
 			const double current_time_seconds = std::chrono::duration_cast<std::chrono::milliseconds>(current_time.time_since_epoch()).count() / 1000.0;
-			constexpr double fixed_delta = 1.0 / 60.0;
+			constexpr double fixed_delta_seconds = 1.0 / 60.0;
 
-			const auto timestep = PreciseTimestep( current_time_seconds, fixed_delta );
+			const auto timestep = PreciseTimestep( current_time_seconds, fixed_delta_seconds );
 			DoFixedUpdate( timestep );
 			DoVariableUpdate( timestep );
+			GetRequiredAPI<API::SystemAPI>().Sleep( static_cast<unsigned long>(fixed_delta_seconds * 1000) );
 		}
 	}
 	else
@@ -193,7 +194,7 @@ void Core::DoVariableUpdate( const PreciseTimestep& ts )
 
 void Core::DoRender( const PreciseTimestep& ts )
 {
-	if (const auto& video_api = GetAPI<API::VideoAPI>())
+	if (auto* video_api = GetAPI<API::VideoAPI>())
 	{
 		video_api->BeginRender();
 
@@ -212,10 +213,10 @@ void Core::DoRender( const PreciseTimestep& ts )
 
 void Core::PumpEvents( const PreciseTimestep& ts )
 {
-	const auto& system_api = GetAPI<API::SystemAPI>();
-	const auto& input_api = GetAPI<API::InputAPI>();
-	const auto& video_api = GetAPI<API::VideoAPI>();
-	const auto& dearimgui_api = GetAPI<API::DearImGuiAPI>();
+	auto* system_api = GetAPI<API::SystemAPI>();
+	auto* input_api = GetAPI<API::InputAPI>();
+	auto* video_api = GetAPI<API::VideoAPI>();
+	auto* dearimgui_api = GetAPI<API::DearImGuiAPI>();
 
 	if( input_api )
 		input_api->BeginEvents( ts );

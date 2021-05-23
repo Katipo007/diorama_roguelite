@@ -38,6 +38,7 @@ namespace API
 
 		virtual std::thread CreateThread( std::string_view name, std::function<void()> runnable ) = 0;
 		virtual void SetThreadName( std::string name ) {}
+		virtual void Sleep( unsigned long milliseconds ) = 0;
 
 	private:
 		virtual bool GenerateEvents( VideoAPI* video, InputAPI* input, DearImGuiAPI* dearimgui ) = 0;

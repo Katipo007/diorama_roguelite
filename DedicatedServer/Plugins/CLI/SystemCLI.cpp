@@ -1,5 +1,8 @@
 #include "SystemCLI.hpp"
 
+#include <chrono>
+#include <thread>
+
 #include "Common/Core/API/InputAPI.hpp"
 #include "Common/Core/Graphics/OpenGLContext.hpp"
 #include "Common/Core/Graphics/Window.hpp"
@@ -53,6 +56,11 @@ namespace Plugins
 				if (runnable_)
 					runnable_();
 			} );
+	}
+
+	void SystemCLI::Sleep( unsigned long milliseconds )
+	{
+		std::this_thread::sleep_for( std::chrono::milliseconds( milliseconds ) );
 	}
 
 	bool SystemCLI::GenerateEvents( ::API::VideoAPI*, ::API::InputAPI* input, ::API::DearImGuiAPI* )

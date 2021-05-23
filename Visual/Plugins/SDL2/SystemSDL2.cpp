@@ -1,5 +1,7 @@
 #include "SystemSDL2.hpp"
 
+#include <chrono>
+#include <thread>
 #include <SDL2/SDL.h>
 #ifdef _WIN64
 #	pragma comment(lib, "Visual/Vendor/SDL2/lib/x64/SDL2.lib")
@@ -177,6 +179,11 @@ namespace Graphics::API
                 if( runnable_ )
                     runnable_();
             } );
+    }
+
+    void SystemSDL2::Sleep( unsigned long milliseconds )
+    {
+        std::this_thread::sleep_for( std::chrono::milliseconds( milliseconds ) );
     }
 
     bool SystemSDL2::GenerateEvents( ::API::VideoAPI* video, ::API::InputAPI* input, ::API::DearImGuiAPI* dearimgui )
