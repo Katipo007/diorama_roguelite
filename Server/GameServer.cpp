@@ -103,21 +103,22 @@ void GameServer::ClientDisconnectedHandler( Networking::ClientServer::ClientServ
 	if (found_it == std::end( clients ))
 		return;
 
+	const auto client_id = yojimbo::Server::GetClientId( index );
+	std::unique_ptr<Networking::ClientServer::ServerClientConnection> connection;
+
 	// NOTE: we do not remove the clients container entry because we could be in the middle of iterating over them.
 	// Left over entries will get removed in OnFixedUpdate()
 
-	std::unique_ptr<Networking::ClientServer::ServerClientConnection> connection;
-
 	auto& entry = found_it->second;
 	entry.to_be_disconnected = true;
-	// 
+	// release the connection from the session
 	if (!!entry.session)
 	{
 		connection = entry.session->ReleaseConnection();
 		entry.session.reset();
 	}
 
-	LOG_INFO( Server, "Client '{}'({}) Disconnected", found_it->first, index );
+	LOG_INFO( Server, "Client '{}'({}) Disconnected", client_id, index );
 
 	// destroy the connection object
 	if (!!connection)
