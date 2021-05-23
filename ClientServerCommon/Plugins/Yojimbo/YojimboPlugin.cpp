@@ -48,6 +48,8 @@ namespace Plugins
 
 #ifdef _DEBUG
 		yojimbo_log_level( YOJIMBO_LOG_LEVEL_INFO );
+#else
+		yojimbo_log_level( YOJIMBO_LOG_LEVEL_ERROR );
 #endif
 		yojimbo_set_printf_function( YojimboLoggingRoute );
 
