@@ -5,6 +5,8 @@
 #include "ClientServerCommon/Plugins/PluginTypes.hpp"
 #include "ClientServerCommon/Plugins/Yojimbo/YojimboPlugin.hpp"
 
+#include "Server/GameServer.hpp"
+
 namespace Game
 {
 	struct ServerGame::Pimpl
@@ -28,6 +30,7 @@ namespace Game
 
 	void ServerGame::Init()
 	{
+		server.reset( new GameServer( yojimbo::Address( "127.0.0.1:42777" ), 8 ) );
 	}
 
 	void ServerGame::OnGameEnd()
@@ -36,8 +39,13 @@ namespace Game
 
 	void ServerGame::OnFixedUpdate( const PreciseTimestep& ts )
 	{
-		(void)ts;
-		// TODO: call Exit() if server is stopped
+		if (!server || !server->IsRunning())
+		{
+			Exit( 0 );
+			return;
+		}
+		
+		server->OnFixedUpdate( ts );
 	}
 
 	void ServerGame::OnVariableUpdate( const PreciseTimestep& ts )

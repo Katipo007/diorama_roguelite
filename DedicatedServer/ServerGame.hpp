@@ -10,6 +10,7 @@
 
 class Core;
 class ResourceManager;
+class GameServer;
 
 namespace Game
 {
@@ -35,7 +36,7 @@ namespace Game
 		void OnRender( const PreciseTimestep& ) override {}
 
 	private:
-		// TODO: game server
+		std::unique_ptr<GameServer> server;
 
 		struct Pimpl;
 		const std::unique_ptr<Pimpl> pimpl;
