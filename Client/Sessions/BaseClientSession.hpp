@@ -15,7 +15,7 @@ namespace Sessions
 		BaseClientSession( std::unique_ptr<Networking::ClientServer::ServerConnection>& connection );
 		virtual ~BaseClientSession();
 
-		bool Expired() const;
+		bool Expired() const noexcept;
 		[[nodiscard]] std::unique_ptr<Networking::ClientServer::ServerConnection> ReleaseConnection();
 
 		virtual void OnFixedUpdate( const PreciseTimestep& ts );

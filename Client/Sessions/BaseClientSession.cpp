@@ -20,7 +20,7 @@ namespace Sessions
 			static_cast<void>(ReleaseConnection());
 	}
 
-	bool BaseClientSession::Expired() const
+	bool BaseClientSession::Expired() const noexcept
 	{
 		return !connection || connection->IsDisconnected();
 	}
