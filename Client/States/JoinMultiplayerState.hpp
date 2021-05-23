@@ -10,6 +10,8 @@ namespace Game
 	class ClientGame;
 }
 
+namespace Networking::ClientServer { class ServerConnection; }
+
 namespace ClientStates
 {
 	class MainMenuState;
@@ -30,7 +32,7 @@ namespace ClientStates
 		using fsm::DefaultAction<fsm::Actions::NoAction>::HandleEvent;
 
 		explicit JoinMultiplayerState( Game::ClientGame& client );
-		explicit JoinMultiplayerState( JoinMultiplayerState&& to_move ) = default;
+		explicit JoinMultiplayerState( JoinMultiplayerState&& to_move );
 		virtual ~JoinMultiplayerState();
 
 		ExitActions HandleEvent( const FrameEvent& e );
@@ -43,6 +45,7 @@ namespace ClientStates
 
 	protected:
 		Game::ClientGame& client;
+		std::unique_ptr<Networking::ClientServer::ServerConnection> server_connection;
 
 		std::string status_message;
 

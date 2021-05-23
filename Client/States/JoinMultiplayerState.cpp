@@ -1,6 +1,9 @@
 #include "JoinMultiplayerState.hpp"
 
 #include "Client/ClientGame.hpp"
+#include "Client/Networking/ClientServer/ServerConnection.hpp"
+#include "ClientServerCommon/Plugins/Yojimbo/YojimboHeader.hpp"
+
 #include "Visual/DearImGui/DearImGui.hpp"
 
 namespace ClientStates
@@ -10,15 +13,35 @@ namespace ClientStates
 	{
 	}
 
-	JoinMultiplayerState::~JoinMultiplayerState()
-	{
-	}
+	JoinMultiplayerState::JoinMultiplayerState( JoinMultiplayerState&& to_move ) = default;
+
+	JoinMultiplayerState::~JoinMultiplayerState() = default;
 
 	JoinMultiplayerState::ExitActions JoinMultiplayerState::HandleEvent( const FrameEvent& e )
 	{
 		(void)e;
 
-		// TODO: update status message with current connection state
+		if (!server_connection)
+			status_message = "";
+		else
+		{
+			server_connection->OnFixedUpdate( e.precise_timestep );
+			switch (server_connection->GetClientState())
+			{
+			case yojimbo::ClientState::CLIENT_STATE_CONNECTED:
+				status_message = "Connected";
+				break;
+			case yojimbo::ClientState::CLIENT_STATE_CONNECTING:
+				status_message = "Connecting...";
+				break;
+			case yojimbo::ClientState::CLIENT_STATE_DISCONNECTED:
+				status_message = "Disconnected";
+				break;
+			case yojimbo::ClientState::CLIENT_STATE_ERROR:
+				status_message = "Errored";
+				break;
+			}
+		}
 
 		return fsm::Actions::NoAction{};
 	}
@@ -32,7 +55,7 @@ namespace ClientStates
 			ImGui::Text( "Join Multiplayer" );
 
 			// TODO: check if we are connecting
-			const bool is_connecting = false; // client.GetClientServerSession() != nullptr;
+			const bool is_connecting = !!server_connection;
 			if (is_connecting)
 				ImGui::PushStyleVar( ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f );
 
@@ -91,11 +114,11 @@ namespace ClientStates
 
 	void JoinMultiplayerState::InitiateConnection( std::string address_str )
 	{
-		NOT_IMPLEMENTED;
+		server_connection.reset( new Networking::ClientServer::ServerConnection( yojimbo::Address( address_str.c_str() ), {} ) );
 	}
 
 	void JoinMultiplayerState::CancelConnection()
 	{
-		NOT_IMPLEMENTED;
+		server_connection.reset();
 	}
 }
