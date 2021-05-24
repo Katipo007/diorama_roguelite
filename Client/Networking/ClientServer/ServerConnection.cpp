@@ -16,31 +16,18 @@ namespace
 
 namespace Networking::ClientServer
 {
-	ServerConnection::ServerConnection( const yojimbo::Address& target_address, MessageHandlerCallback_T message_handler_callback )
+	ServerConnection::ServerConnection( MessageHandlerCallback_T message_handler_callback_ )
 		: yojimbo::Client( yojimbo::GetDefaultAllocator(), yojimbo::Address( "0.0.0.0" ), MakeConfiguration(), adapter, 0.0 )
 		, adapter()
 		, client_id( GenerateRandomClientId() ) // If we ever create an accounts system or use Steam we'd want to use a unique fixed id per player.
-		, message_handler_func( message_handler_callback )
+		, message_handler_func( message_handler_callback_ )
 	{
-		if (!target_address.IsValid())
-			throw std::runtime_error( "Invalid target address" );
-
-		char address_string[256];
-		target_address.ToString( address_string, static_cast<int>(std::size( address_string )) );
-
-#if _DEBUG
-		LOG_TRACE( Client, "Client id: {}", client_id );
-#endif
-		LOG_INFO( Client, "Attempting to connect to a game server at '{}'", address_string );
-
-		// Connect
-		// TODO: look into using the secure version of connect
-		::yojimbo::Client::InsecureConnect( DefaultPrivateKey.data(), client_id, target_address );
+		ASSERT( !!message_handler_callback_ );
 	}
 
 	ServerConnection::~ServerConnection()
 	{
-		Disconnect( true );
+		Disconnect();
 
 		ASSERT( yojimbo::Client::IsDisconnected() );
 	}
@@ -57,19 +44,17 @@ namespace Networking::ClientServer
 
 	void ServerConnection::OnFixedUpdate( const PreciseTimestep& ts )
 	{
-		if (wants_to_disconnect && !IsDisconnected())
-			Disconnect( true );
-
-		::yojimbo::Client::SendPackets();
-		::yojimbo::Client::ReceivePackets();
-
 		if (::yojimbo::Client::IsConnected())
-			ProcessMessages();
+		{
+			::yojimbo::Client::ReceivePackets();
+
+			if (::yojimbo::Client::IsConnected())
+				ProcessMessages();
+
+			::yojimbo::Client::SendPackets();
+		}
 
 		::yojimbo::Client::AdvanceTime( ::yojimbo::Client::GetTime() + ts.delta );
-
-		if (wants_to_disconnect && !IsDisconnected())
-			Disconnect( true );
 
 		// Send connection state changed signal
 		if (GetClientState() != previous_client_state)
@@ -79,21 +64,31 @@ namespace Networking::ClientServer
 		}
 	}
 
-	void ServerConnection::Disconnect( const bool immediately )
+	void ServerConnection::Connect( const yojimbo::Address& address )
 	{
-		if (!immediately)
-			wants_to_disconnect = true;
-		else
+		if (!::yojimbo::Client::IsDisconnected())
 		{
-			if (!yojimbo::Client::IsDisconnected())
-				yojimbo::Client::Disconnect();
+			LOG_WARN( Client, "Ignoring call to ServerConnection::Connect(): Connection already in progress" );
+			return;
 		}
+
+		char address_string[256];
+		address.ToString( address_string, static_cast<int>(std::size( address_string )) );
+
+#if _DEBUG
+		LOG_TRACE( Client, "Client id: {}", client_id );
+#endif
+		LOG_INFO( Client, "Attempting to connect to a game server at '{}'", address_string );
+
+		// Connect
+		// TODO: look into using the secure version of connect
+		::yojimbo::Client::InsecureConnect( DefaultPrivateKey.data(), client_id, address );
 	}
 
-
-	void ServerConnection::SetMessageHandler( MessageHandlerCallback_T new_handler )
+	void ServerConnection::Disconnect()
 	{
-		message_handler_func = new_handler;
+		if (!::yojimbo::Client::IsDisconnected())
+			::yojimbo::Client::Disconnect();
 	}
 
 	void ServerConnection::ProcessMessages()
@@ -112,8 +107,8 @@ namespace Networking::ClientServer
 
 				if (!handled)
 				{
-					Disconnect( true );
 					LOG_CRITICAL( Client, "Disconnecting due to unhandled message. Message='{}'({})", MessageFactory::GetMessageName( message_type ), message_type );
+					Disconnect();
 					break;
 				}
 

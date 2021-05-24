@@ -5,12 +5,9 @@
 #include "Common/Utility/StateMachine/Actions/Might.hpp"
 #include "Common/Utility/StateMachine/Actions/TransitionTo.hpp"
 
-namespace Game
-{
-	class ClientGame;
-}
+#include "Common/Utility/Signal.hpp"
 
-namespace Networking::ClientServer { class ServerConnection; }
+namespace Game { class ClientGame; }
 
 namespace ClientStates
 {
@@ -37,16 +34,9 @@ namespace ClientStates
 
 		ExitActions HandleEvent( const FrameEvent& e );
 		ExitActions HandleEvent( const DearImGuiFrameEvent& e );
-		fsm::Actions::TransitionTo<LoadingState> HandleEvent( const ConnectedToServerEvent& e );
-
-	protected:
-		void InitiateConnection( std::string address );
-		void CancelConnection();
 
 	protected:
 		Game::ClientGame& client;
-		std::unique_ptr<Networking::ClientServer::ServerConnection> server_connection;
-
 		std::string status_message;
 
 	private:

@@ -9,7 +9,6 @@
 #include "Common/Utility/Signal.hpp"
 #include "Common/Utility/Timestep.hpp"
 
-
 namespace Networking::ClientServer
 {
 	enum class ChannelType : YojimboPlugin::ChannelIndex_T;
@@ -20,23 +19,24 @@ namespace Networking::ClientServer
 	class ServerConnection final
 		: private yojimbo::Client
 	{
+		friend struct IServerConnectionOwner;
+
 	public:
 		using MessageHandlerCallback_T = std::function<bool( ServerConnection&, const yojimbo::Message& )>;
 		using FactoryType = MessageFactory;
 
 	public:
-		ServerConnection( const yojimbo::Address& target_address, MessageHandlerCallback_T message_handler_callback );
+		ServerConnection( MessageHandlerCallback_T new_handler );
 		~ServerConnection();
 
-	public: // State
 		using yojimbo::Client::IsConnected;
 		using yojimbo::Client::IsConnecting;
 		using yojimbo::Client::IsDisconnected;
 		using yojimbo::Client::GetClientState;
 		
 		bool CanSendMessage( ChannelType type ) const;
+		MessageFactory& GetMessageFactory();
 
-	public: // Messaging
 		template<class MESSAGE_T>
 		void SendMessage( ChannelType channel, const std::function<void(MESSAGE_T&)>& initialiser )
 		{
@@ -56,31 +56,24 @@ namespace Networking::ClientServer
 			FATAL( "Failed to allocate message of type" + MessageFactory::GetMessageName<MESSAGE_T>() );
 		}
 
-
-	public: // Getters
-		MessageFactory& GetMessageFactory();
-
-
-	public: // Methods
 		void OnFixedUpdate( const PreciseTimestep& ts );
 
-		void Disconnect( const bool immediately = false );
+		void Connect( const yojimbo::Address& address );
+		void Disconnect();
 
-		void SetMessageHandler( MessageHandlerCallback_T new_handler );
-		void ResetMessageHandler() { SetMessageHandler( {} ); }
 
 	public: // Signals
-
 		Signal::signal<ServerConnection&> ConnectionStateChanged;
+
 
 	private:
 		void ProcessMessages();
+
 
 	private:
 		ClientServerAdapter adapter;
 		const YojimboPlugin::ClientId_T client_id;
 
-		bool wants_to_disconnect = false;
 		MessageHandlerCallback_T message_handler_func;
 
 		yojimbo::ClientState previous_client_state = yojimbo::ClientState::CLIENT_STATE_DISCONNECTED;

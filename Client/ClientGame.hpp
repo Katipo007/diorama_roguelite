@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <optional>
 #include <type_traits>
 #include <queue>
 
@@ -12,6 +13,8 @@ class Core;
 class ResourceManager;
 
 namespace API { class DearImGuiAPI; }
+namespace yojimbo { class Message; }
+namespace Networking::ClientServer { class ServerConnection; }
 
 namespace Game
 {
@@ -28,6 +31,13 @@ namespace Game
 		Core& GetCore() const { return *core; }
 		ResourceManager& GetResourceManager() const { return *resource_manager; }
 
+		Networking::ClientServer::ServerConnection& GetServerConnection();
+		const Networking::ClientServer::ServerConnection& GetServerConnection() const;
+		bool IsConnectedToServer() const noexcept;
+
+		void ConnectToServer( std::string_view address );
+		void DisconnectFromServer( std::optional<std::string> reason = std::nullopt );
+
 	protected:
 		virtual void Init() override;
 		virtual void OnGameEnd() override;
@@ -37,11 +47,14 @@ namespace Game
 		virtual void OnRender( const PreciseTimestep& ts ) override;
 		void DoDearImGuiFrame();
 
+		void ServerConnectionStateChangedHandler( Networking::ClientServer::ServerConnection& connection );
+		bool ServerConnectionMessageHandler( Networking::ClientServer::ServerConnection& connection, const yojimbo::Message& message );
+
 	protected:
 		::API::DearImGuiAPI* dearimgui = nullptr;
 
 	private:
 		struct Pimpl;
-		const std::unique_ptr<Pimpl> pimpl;
+		std::unique_ptr<Pimpl> pimpl;
 	};
 }
