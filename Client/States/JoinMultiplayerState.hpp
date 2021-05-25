@@ -12,7 +12,7 @@ namespace Game { class ClientGame; }
 namespace ClientStates
 {
 	class MainMenuState;
-	class LoadingState;
+	class ConnectingToServerState;
 
 	/// <summary>
 	/// Screen to join an existing multi-player game
@@ -22,7 +22,7 @@ namespace ClientStates
 	{
 		using ExitActions = fsm::Actions::OneOf< fsm::Actions::NoAction,
 			fsm::Actions::TransitionTo<MainMenuState>,
-			fsm::Actions::TransitionTo<LoadingState>
+			fsm::Actions::TransitionTo<ConnectingToServerState>
 		>;
 
 	public:
@@ -34,6 +34,9 @@ namespace ClientStates
 
 		ExitActions HandleEvent( const FrameEvent& e );
 		ExitActions HandleEvent( const DearImGuiFrameEvent& e );
+		ExitActions HandleEvent( const ConnectedToServerEvent& e );
+		ExitActions HandleEvent( const ConnectingToServerEvent& e );
+
 
 	protected:
 		Game::ClientGame& client;

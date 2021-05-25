@@ -63,4 +63,20 @@ namespace ClientStates
 
 		return fsm::Actions::NoAction{};
 	}
+
+	JoinMultiplayerState::ExitActions JoinMultiplayerState::HandleEvent( const ConnectedToServerEvent& e )
+	{
+		if (&e.connection == &client.GetServerConnection())
+			return fsm::Actions::TransitionTo<ConnectingToServerState>{};
+		else
+			return fsm::Actions::NoAction{};
+	}
+
+	JoinMultiplayerState::ExitActions JoinMultiplayerState::HandleEvent( const ConnectingToServerEvent& e )
+	{
+		if (&e.connection == &client.GetServerConnection())
+			return fsm::Actions::TransitionTo<ConnectingToServerState>{};
+		else
+			return fsm::Actions::NoAction{};
+	}
 }

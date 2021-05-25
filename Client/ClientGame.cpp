@@ -12,7 +12,8 @@
 #include "Client/States/PreGameState.hpp"
 #include "Client/States/MainMenuState.hpp"
 #include "Client/States/JoinMultiplayerState.hpp"
-#include "Client/States/LoadingState.hpp"
+#include "Client/States/ConnectingToServerState.hpp"
+#include "Client/States/DisconnectedFromServerState.hpp"
 #include "Client/States/InGameState.hpp"
 
 #include "ClientServerCommon/Plugins/Yojimbo/YojimboHeader.hpp"
@@ -26,7 +27,8 @@ namespace ClientStates
         PreGameState
         , MainMenuState
         , JoinMultiplayerState
-        , LoadingState
+        , ConnectingToServerState
+        , DisconnectedFromServerState
         , InGameState
     >;
 
@@ -43,6 +45,18 @@ namespace ClientStates
     using Machine = fsm::Machine<States, Events>;
 }
 
+namespace
+{
+    bool CanHaveServerConnectionInState( const ClientStates::Machine& machine )
+    {
+        return !machine.IsInState<ClientStates::PreGameState>()
+            && !machine.IsInState<ClientStates::MainMenuState>()
+            && !machine.IsInState<ClientStates::JoinMultiplayerState>()
+            && !machine.IsInState<ClientStates::DisconnectedFromServerState>()
+            ;
+    }
+}
+
 namespace Game
 {
     struct ClientGame::Pimpl
@@ -55,7 +69,8 @@ namespace Game
                 ClientStates::PreGameState{}
                 , ClientStates::MainMenuState{ owner }
                 , ClientStates::JoinMultiplayerState{ owner }
-                , ClientStates::LoadingState{}
+                , ClientStates::ConnectingToServerState{}
+                , ClientStates::DisconnectedFromServerState{}
                 , ClientStates::InGameState{ owner }
             )
             , server_connection( std::bind( &ClientGame::ServerConnectionMessageHandler, &owner, std::placeholders::_1, std::placeholders::_2 ) )
@@ -136,11 +151,11 @@ namespace Game
 
     void ClientGame::OnFixedUpdate( const PreciseTimestep& ts )
     {
-        if (pimpl->state_machine.IsInState<ClientStates::MainMenuState>() && !pimpl->server_connection.IsDisconnected())
-            pimpl->server_connection.Disconnect();
-
         pimpl->server_connection.OnFixedUpdate( ts );
         pimpl->state_machine.Handle( ClientStates::FrameEvent( ts ) );
+
+        if (!pimpl->server_connection.IsDisconnected() && !CanHaveServerConnectionInState( pimpl->state_machine ))
+            pimpl->server_connection.Disconnect();
     }
 
     void ClientGame::OnVariableUpdate( const PreciseTimestep& ts )
