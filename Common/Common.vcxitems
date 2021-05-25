@@ -15,7 +15,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)CompileTime\PlatformDetection.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Core\API\APITypesEnum.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\API\CoreAPIsEnum.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\API\BaseAPI.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\API\DearImGuiAPI.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\API\InputAPI.hpp" />
@@ -24,6 +24,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\Core.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\AbstractGame.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\API\VideoAPI.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\Graphics\OpenGLContext.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Core\Graphics\Window.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\Resources\ResourceLoader.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\Resources\Resource.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\Resources\ResourceCache.hpp" />
@@ -38,7 +40,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Geometry\Point2D.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Geometry\Rect.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Geometry\Size.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Utility\CompileTime\Unreachable.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Precompiled\pch.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Utility\StringUtility.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Utility\Unreachable.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Utility\Containers.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Utility\EnumClassBitset.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)File\FileOps.hpp" />
@@ -46,6 +50,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Utility\json.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Utility\Literals.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\Logging.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Utility\MagicEnum.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Utility\Math\Mat3.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Utility\Math\Matrix.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Utility\Math\Mat4.hpp" />

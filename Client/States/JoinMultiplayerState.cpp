@@ -1,7 +1,9 @@
 #include "JoinMultiplayerState.hpp"
 
 #include "Client/ClientGame.hpp"
-#include "Client/Sessions/ClientServerSession.hpp"
+#include "Client/Networking/ClientServer/ServerConnection.hpp"
+#include "ClientServerCommon/Plugins/Yojimbo/YojimboHeader.hpp"
+
 #include "Visual/DearImGui/DearImGui.hpp"
 
 namespace ClientStates
@@ -11,34 +13,12 @@ namespace ClientStates
 	{
 	}
 
-	JoinMultiplayerState::~JoinMultiplayerState()
+	JoinMultiplayerState::JoinMultiplayerState( JoinMultiplayerState&& to_move ) = default;
+
+	JoinMultiplayerState::~JoinMultiplayerState() = default;
+
+	JoinMultiplayerState::ExitActions JoinMultiplayerState::HandleEvent( const FrameEvent& )
 	{
-	}
-
-	JoinMultiplayerState::ExitActions JoinMultiplayerState::HandleEvent( const FrameEvent& e )
-	{
-		(void)e;
-
-		if (const auto* client_server_session = client.GetClientServerSession())
-		{
-			const auto connection_state = client_server_session->GetConnectionState();
-			switch (connection_state)
-			{
-			case Sessions::ClientServerSession::ConnectionState::Connected:
-				status_message = "Connected";
-				break;
-
-			case Sessions::ClientServerSession::ConnectionState::Connecting:
-				status_message = "Connecting...";
-				break;
-
-			case Sessions::ClientServerSession::ConnectionState::Disconnected:
-				LOG_INFO( Client, "Failed to connect to server" );
-				status_message = "Connection failed.";
-				break;
-			}
-		}
-
 		return fsm::Actions::NoAction{};
 	}
 
@@ -49,10 +29,6 @@ namespace ClientStates
 		if (ImGui::Begin( "JoinMultiplayerState", NULL, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove ))
 		{
 			ImGui::Text( "Join Multiplayer" );
-
-			const bool is_connecting = client.GetClientServerSession() != nullptr;
-			if (is_connecting)
-				ImGui::PushStyleVar( ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f );
 
 			static char address_textbox_value[128] = "127.0.0.1:42777";
 			const auto address_textbox_handler = []( ImGuiInputTextCallbackData* data ) -> int
@@ -67,27 +43,14 @@ namespace ClientStates
 				return 0;
 			};
 			if (ImGui::InputText( "IP Address", address_textbox_value, 128, ImGuiInputTextFlags_EnterReturnsTrue, address_textbox_handler ))
-			{
-				if( !is_connecting )
-					InitiateConnection( address_textbox_value );
-			}
+				client.ConnectToServer( address_textbox_value );
 
-			if (is_connecting)
-			{
-				ImGui::PopStyleVar();
-				if (ImGui::Button( "Cancel" ))
-					CancelConnection();
-			}
-			else
-			{
-				if (ImGui::Button( "Connect" ))
-					InitiateConnection( address_textbox_value );
-			}
+			if (ImGui::Button( "Connect" ))
+				client.ConnectToServer( address_textbox_value );
 
 			// return to menu
 			if (ImGui::Button( "Back" ))
 			{
-				CancelConnection();
 				ImGui::End();
 				return fsm::Actions::TransitionTo<MainMenuState>{};
 			}
@@ -101,27 +64,19 @@ namespace ClientStates
 		return fsm::Actions::NoAction{};
 	}
 
-	fsm::Actions::TransitionTo<LoadingState> JoinMultiplayerState::HandleEvent( const ConnectedToServerEvent& e )
+	JoinMultiplayerState::ExitActions JoinMultiplayerState::HandleEvent( const ConnectedToServerEvent& e )
 	{
-		(void)e;
-		return fsm::Actions::TransitionTo<LoadingState>{};
+		if (&e.connection == &client.GetServerConnection())
+			return fsm::Actions::TransitionTo<ConnectingToServerState>{};
+		else
+			return fsm::Actions::NoAction{};
 	}
 
-	void JoinMultiplayerState::InitiateConnection( std::string address_str )
+	JoinMultiplayerState::ExitActions JoinMultiplayerState::HandleEvent( const ConnectingToServerEvent& e )
 	{
-		const auto* session = client.GetClientServerSession();
-		ASSERT( session == nullptr );
-		if (session != nullptr)
-			return;
-
-		auto address = yojimbo::Address( address_str.c_str() );
-		client.ConnectToServer( address );
-	}
-
-	void JoinMultiplayerState::CancelConnection()
-	{
-		const auto* session = client.GetClientServerSession();
-		if (session != nullptr)
-			client.DisconnectFromServer();
+		if (&e.connection == &client.GetServerConnection())
+			return fsm::Actions::TransitionTo<ConnectingToServerState>{};
+		else
+			return fsm::Actions::NoAction{};
 	}
 }

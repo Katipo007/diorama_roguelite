@@ -36,22 +36,28 @@
     <ClCompile Include="States\PreGameState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sessions\ClientServerSession.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="States\MainMenuState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="States\JoinMultiplayerState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="States\LoadingState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Graphical\UI\ChatWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Game\ClientZone.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Networking\ClientServer\ServerConnection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="States\Events.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="States\ConnectingToServerState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="States\DisconnectedFromServerState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -77,22 +83,28 @@
     <ClInclude Include="States\PreGameState.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Sessions\ClientServerSession.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="States\MainMenuState.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="States\JoinMultiplayerState.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="States\LoadingState.hpp">
+    <ClInclude Include="States\ConnectingToServerState.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Graphical\UI\ChatWindow.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Game\ClientZone.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Plugins\PluginTypes.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Networking\ClientServer\ServerConnection.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="States\DisconnectedFromServerState.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

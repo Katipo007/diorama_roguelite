@@ -13,25 +13,41 @@
 #include "Common/Utility/OsAbstraction.hpp"
 #include "Common/Utility/Timestep.hpp"
 
+#include "ClientServerCommon/Plugins/Yojimbo/YojimboPlugin.hpp"
+
+#include "Client/Plugins/PluginTypes.hpp"
 #include "Client/ClientGame.hpp"
-#include "ClientServerCommon/Vendor/Wrappers/Networking.hpp"
 
-std::unique_ptr<Core> core;
-
-
-static int YojimboLoggingRoute( const char* fmt, ... )
+CoreProperties GenerateCoreProperties()
 {
-	char buffer[4 * 1024];
-	va_list args;
-	va_start( args, fmt );
-	vsprintf_s( buffer, fmt, args );
-	va_end( args );
-	const size_t length = strlen( buffer );
-	if (buffer[length - 1] == '\n')
-		buffer[length - 1] = '\0';
+	CoreProperties props;
+	props.fps = 60;
+	props.max_plugins = ClientPlugins::NumClientPlugins;
 
-	LOG_INFO( Client, "[yojimbo] {}", buffer );
-	return 0;
+	props.plugin_factory = []( Core& core, APIType type ) -> std::unique_ptr<API::BaseAPI>
+	{
+		switch (type)
+		{
+		case CoreAPIs::System: return std::make_unique<Graphics::API::SystemSDL2>();
+		case CoreAPIs::Video: return std::make_unique<Graphics::API::VideoOpenGL>( core.GetRequiredAPI<API::SystemAPI>() );
+#if (DEVELOPER_TOOLS == 1)
+		case CoreAPIs::DearImGui: return std::make_unique<Graphics::API::DearImGuiPlugin>( core.GetRequiredAPI<API::SystemAPI>(), core.GetRequiredAPI<API::VideoAPI>() );
+#endif
+
+		case ClientServerCommonPlugins::Yojimbo: return std::make_unique<Plugins::YojimboPlugin>();
+
+		default: return nullptr;
+		}
+	};
+
+	props.resource_initaliser_func = []( ResourceManager& manager )
+	{
+		manager.Init<Graphics::Texture>();
+		manager.Init<Graphics::SpriteSheet>();
+		manager.Init<Graphics::Sprite>();
+	};
+
+	return props;
 }
 
 int main( int argc, char** argv )
@@ -43,56 +59,19 @@ int main( int argc, char** argv )
 	Logging::InitDefaultClientSinks(); // TODO: move logging into a plugin
 
 	LOG_INFO( Application, "Client starting" );
-
-	//
-	// Setup Yojimbo
-	//
-	{
-		// TODO: move Yojimbo into a plugin
-		if (!InitializeYojimbo())
-		{
-			LOG_CRITICAL( Client, "Critical Error: failed to initialize Yojimbo!" );
-			return 1;
-		}
-
-#ifdef _DEBUG
-		yojimbo_log_level( YOJIMBO_LOG_LEVEL_INFO );
-#endif
-		yojimbo_set_printf_function( YojimboLoggingRoute );
-	}
 	
 	// ============================================
 	// construct core
 	// ============================================
-	{
-		// TODO: swap plugins based on system
-
-		using APIFactory_T = std::function<API::BaseAPI* ( API::SystemAPI*, API::VideoAPI*)>;
-		std::unordered_map<API::APIType, APIFactory_T> plugin_factories = {
-			{ API::APIType::System, []( API::SystemAPI*, API::VideoAPI* ) { return new Graphics::API::SystemSDL2(); } },
-			{ API::APIType::Video, []( API::SystemAPI* system, API::VideoAPI* ) { ASSERT( system ); return new Graphics::API::VideoOpenGL( *system ); } },
-
-#if (DEVELOPER_TOOLS == 1)
-			{ API::APIType::DearImGui, []( API::SystemAPI* system, API::VideoAPI* video ) { ASSERT( system && video ); return new Graphics::API::DearImGuiPlugin( *system, *video ); } },
-#endif
-		};
-
-		const auto resource_initaliser = []( ResourceManager& manager )
-		{
-			manager.Init<Graphics::Texture>();
-			manager.Init<Graphics::SpriteSheet>();
-			manager.Init<Graphics::Sprite>();
-		};
-
-		core = std::make_unique<Core>( std::make_unique<Game::ClientGame>(), resource_initaliser, plugin_factories );
-		core->Init();
-	}
+	auto core = std::make_unique<Core>( GenerateCoreProperties(), std::make_unique<Game::ClientGame>() );
+	core->Init();
 
 	// ============================================
 	// main loop
 	// ============================================
+	int exit_code = 0;
 	{
-		core->Dispatch();
+		exit_code = core->Dispatch();
 	}
 
 	// ============================================
@@ -102,11 +81,6 @@ int main( int argc, char** argv )
 		core.reset();
 	}
 
-	//
-	// Shutdown Yojimbo
-	//
-	ShutdownYojimbo();
-
 	LOG_INFO( Application, "Client finished" );
-	return 0;
+	return exit_code;
 }

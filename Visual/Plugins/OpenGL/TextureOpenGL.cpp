@@ -1,7 +1,7 @@
 #include "TextureOpenGL.hpp"
 #include "OpenGLHeader.hpp"
 
-#include "Common/Utility/CompileTime/Unreachable.hpp"
+#include "Common/Utility/Unreachable.hpp"
 
 #include "Visual/Utility/StbImage.hpp"
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Visual/Window.hpp"
+#include "Common/Core/Graphics/Window.hpp"
 
 struct SDL_WindowEvent;
 struct SDL_Window;

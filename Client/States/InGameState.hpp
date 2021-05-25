@@ -22,11 +22,6 @@ namespace Game
 	class ClientGameWorld;
 }
 
-namespace Sessions
-{
-	class ClientServerSession;
-}
-
 namespace ClientStates
 {
 	class MainMenuState;
@@ -59,7 +54,6 @@ namespace ClientStates
 		void ChatMessageReceivedHandler( const std::string& sender, const std::string& message );
 
 		Game::ClientGame& client;
-		Sessions::ClientServerSession* client_server_session = nullptr;
 
 		UI::ChatWindow chat_window;
 		std::shared_ptr<Visual::SphericalCamera> main_camera;

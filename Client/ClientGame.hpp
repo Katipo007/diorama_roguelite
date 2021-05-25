@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <optional>
 #include <type_traits>
 #include <queue>
 
@@ -11,17 +12,9 @@
 class Core;
 class ResourceManager;
 
-namespace yojimbo
-{
-	class Address;
-}
-
-namespace Sessions
-{
-	class ClientServerSession;
-}
-
 namespace API { class DearImGuiAPI; }
+namespace yojimbo { class Message; }
+namespace Networking::ClientServer { class ServerConnection; }
 
 namespace Game
 {
@@ -38,13 +31,12 @@ namespace Game
 		Core& GetCore() const { return *core; }
 		ResourceManager& GetResourceManager() const { return *resource_manager; }
 
-		//
-		// Client server session management
-		//
-		Sessions::ClientServerSession* GetClientServerSession() { return client_server_session.get(); }
-		const Sessions::ClientServerSession* GetClientServerSession() const { return client_server_session.get(); }
-		void ConnectToServer( const yojimbo::Address& address );
-		void DisconnectFromServer();
+		Networking::ClientServer::ServerConnection& GetServerConnection();
+		const Networking::ClientServer::ServerConnection& GetServerConnection() const;
+		bool IsConnectedToServer() const noexcept;
+
+		void ConnectToServer( std::string_view address );
+		void DisconnectFromServer( std::optional<std::string> reason = std::nullopt );
 
 	protected:
 		virtual void Init() override;
@@ -55,15 +47,14 @@ namespace Game
 		virtual void OnRender( const PreciseTimestep& ts ) override;
 		void DoDearImGuiFrame();
 
-		void ConnectionStateChangedHandler( Sessions::ClientServerSession& sender );
+		void ServerConnectionStateChangedHandler( Networking::ClientServer::ServerConnection& connection );
+		bool ServerConnectionMessageHandler( Networking::ClientServer::ServerConnection& connection, const yojimbo::Message& message );
 
 	protected:
-		std::unique_ptr<Sessions::ClientServerSession> client_server_session;
-
 		::API::DearImGuiAPI* dearimgui = nullptr;
 
 	private:
-		struct ClientData;
-		std::unique_ptr<ClientData> client_data;
+		struct Pimpl;
+		std::unique_ptr<Pimpl> pimpl;
 	};
 }

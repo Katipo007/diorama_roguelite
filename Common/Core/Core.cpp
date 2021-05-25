@@ -11,41 +11,29 @@
 
 #include "Common/Core/Resources/StandardResources.hpp"
 
-Core::Core( std::unique_ptr<AbstractGame> game_, const ResourceManagerInitaliserFunc_T& resource_initaliser_func_, PluginFactoryMap_T& plugin_factories_ )
+Core::Core( CoreProperties&& props, std::unique_ptr<AbstractGame> game_ )
 	: game( std::move( game_ ) )
-	, resource_initaliser_func( resource_initaliser_func_ )
-	, target_fps( 60 )
+	, resource_initaliser_func( props.resource_initaliser_func )
+	, target_fps( std::max( 0, props.fps ) )
 {
+	ASSERT( props.IsValid() );
+	if (!props.IsValid())
+		throw std::runtime_error( "Bad core properties" );
+
 	if (!game)
 		throw std::runtime_error( "Where yo game at? (Game object was null at Core construction)" );
 
 	///
 	/// initialise plugins
 	///
+	apis.resize( props.max_plugins );
+	for (APIType t = 0; t < props.max_plugins; t++)
 	{
-		API::SystemAPI* system = nullptr;
-		API::VideoAPI* video = nullptr;
-		for (auto i = 0; i < static_cast<size_t>(API::APIType::NumAPITypes); i++)
-		{
-			const auto api_t = static_cast<API::APIType>(i);
-			if (plugin_factories_.count( api_t ) > 0)
-			{
-				const auto& factory = plugin_factories_[api_t];
-				apis[i].reset( factory( system, video ) );
-				ASSERT( apis[i] != nullptr );
-
-				LOG_INFO( Application, "Added '{}'", apis[i]->GetName() );
-				
-				if (api_t == API::APIType::System)
-					system = dynamic_cast<API::SystemAPI*>( apis[i].get() );
-				else if (api_t == API::APIType::Video)
-					video = dynamic_cast<API::VideoAPI*>(apis[i].get());
-			}
-		}
-
-		if (!system)
-			FATAL( "No system interface was provided" );
+		auto plugin = props.plugin_factory( *this, t );
+		if (plugin != nullptr)
+			apis[t] = std::move( plugin );
 	}
+	LOG_INFO( Application, "{} plugins initalised", std::count_if( std::begin( apis ), std::end( apis ), []( const auto& entry ) { return entry != nullptr; } ) );
 }
 
 Core::~Core()
@@ -84,11 +72,12 @@ int Core::Dispatch()
 		{
 			const auto current_time = Clock_T::now();
 			const double current_time_seconds = std::chrono::duration_cast<std::chrono::milliseconds>(current_time.time_since_epoch()).count() / 1000.0;
-			constexpr double fixed_delta = 1.0 / 60.0;
+			constexpr double FixedDeltaTimeSeconds = 1.0 / 60.0;
 
-			const auto timestep = PreciseTimestep( current_time_seconds, fixed_delta );
+			const auto timestep = PreciseTimestep( current_time_seconds, FixedDeltaTimeSeconds );
 			DoFixedUpdate( timestep );
 			DoVariableUpdate( timestep );
+			GetRequiredAPI<API::SystemAPI>().Sleep( static_cast<unsigned long>(FixedDeltaTimeSeconds * 1000) );
 		}
 	}
 	else
@@ -105,7 +94,7 @@ int Core::Dispatch()
 				const double fixed_timestep_seconds = 1.0 / target_fps;
 
 				// Perform a given number of steps this frame
-				int steps_needed = static_cast<int>(std::chrono::duration<float>( current_time - target_time ).count() * target_fps);
+				const int steps_needed = static_cast<int>(std::chrono::duration<float>( current_time - target_time ).count() * target_fps);
 				for (int i = 0; i < std::min( steps_needed, MaxFixedStepsPerFrame ); i++)
 					DoFixedUpdate( PreciseTimestep( current_time_seconds, fixed_timestep_seconds ) );
 
@@ -118,11 +107,9 @@ int Core::Dispatch()
 			}
 
 			// Variable update
-			{
-				constexpr double Max_DeltaTimeSeconds = 0.1;
-				const double seconds_since_last_frame = std::chrono::duration_cast<std::chrono::milliseconds>(current_time - last_time).count() / 1000.0;
-				DoVariableUpdate( PreciseTimestep( current_time_seconds, std::min( seconds_since_last_frame, Max_DeltaTimeSeconds ) ) );
-			}
+			constexpr double MaxDeltaTimeSeconds = 0.1;
+			const double seconds_since_last_frame = std::chrono::duration_cast<std::chrono::milliseconds>(current_time - last_time).count() / 1000.0;
+			DoVariableUpdate( PreciseTimestep( current_time_seconds, std::min( seconds_since_last_frame, MaxDeltaTimeSeconds ) ) );
 
 			last_time = current_time;
 		}
@@ -165,16 +152,25 @@ void Core::Shutdown()
 
 void Core::DoFixedUpdate( const PreciseTimestep& ts )
 {
+	assert( ts.delta > 0 );
+
+	for (auto& plugin : active_apis)
+		plugin->OnFixedUpdate( ts, StepType::PreGameStep );
+
 	if (is_running)
 		game->OnFixedUpdate( ts );
+
+	for (auto& plugin : active_apis)
+		plugin->OnFixedUpdate( ts, StepType::PostGameStep );
 }
 
 void Core::DoVariableUpdate( const PreciseTimestep& ts )
 {
+	ASSERT( ts.delta >= 0 );
 	PumpEvents( ts );
-	const auto& dearimgui_api = GetAPI<API::DearImGuiAPI>();
-	if( dearimgui_api )
-		dearimgui_api->OnFrameBegin();
+
+	for (auto& plugin : active_apis)
+		plugin->OnVariableUpdate( ts, StepType::PreGameStep );
 
 	if (game->GetExitCode())
 	{
@@ -185,26 +181,26 @@ void Core::DoVariableUpdate( const PreciseTimestep& ts )
 	if (is_running)
 		game->OnVariableUpdate( ts );
 
-	if (dearimgui_api)
-		dearimgui_api->OnFrameEnd();
-
-	if (const auto& system_api = GetAPI<API::SystemAPI>())
-		system_api->Update( ts );
+	for (auto& plugin : active_apis)
+		plugin->OnVariableUpdate( ts, StepType::PostGameStep );
 
 	DoRender( ts );
 }
 
 void Core::DoRender( const PreciseTimestep& ts )
 {
-	if (const auto& video_api = GetAPI<API::VideoAPI>())
+	if (auto* video_api = GetAPI<API::VideoAPI>())
 	{
 		video_api->BeginRender();
+
+		for (auto& plugin : active_apis)
+			plugin->OnRender( ts, StepType::PreGameStep );
 
 		if (is_running)
 			game->OnRender( ts );
 
-		if (const auto& dearimgui_api = GetAPI<API::DearImGuiAPI>())
-			dearimgui_api->DoRender();
+		for (auto& plugin : active_apis)
+			plugin->OnRender( ts, StepType::PostGameStep );
 
 		video_api->EndRender();
 	}
@@ -212,10 +208,10 @@ void Core::DoRender( const PreciseTimestep& ts )
 
 void Core::PumpEvents( const PreciseTimestep& ts )
 {
-	const auto& system_api = GetAPI<API::SystemAPI>();
-	const auto& input_api = GetAPI<API::InputAPI>();
-	const auto& video_api = GetAPI<API::VideoAPI>();
-	const auto& dearimgui_api = GetAPI<API::DearImGuiAPI>();
+	auto* system_api = GetAPI<API::SystemAPI>();
+	auto* input_api = GetAPI<API::InputAPI>();
+	auto* video_api = GetAPI<API::VideoAPI>();
+	auto* dearimgui_api = GetAPI<API::DearImGuiAPI>();
 
 	if( input_api )
 		input_api->BeginEvents( ts );
@@ -231,10 +227,14 @@ void Core::InitAPIs()
 {
 	// order is important
 
-	std::for_each( std::begin( apis ), std::end( apis ), []( const std::unique_ptr<API::BaseAPI>& entry )
+	active_apis.clear();
+	std::for_each( std::begin( apis ), std::end( apis ), [this]( const std::unique_ptr<API::BaseAPI>& entry )
 		{
-			if( entry )
+			if (entry)
+			{
 				entry->Init();
+				active_apis.push_back( entry.get() );
+			}
 		} );
 }
 
@@ -242,6 +242,7 @@ void Core::ShutdownAPIs()
 {
 	// order is important and should be done in reverse of that in InitAPIs()
 
+	active_apis.clear();
 	std::for_each( std::rbegin( apis ), std::rend( apis ), []( const std::unique_ptr<API::BaseAPI>& entry )
 		{
 			if( entry )

@@ -91,15 +91,18 @@
     <ClCompile Include="Game\ClientZone.cpp" />
     <ClCompile Include="Game\PlayerObject.cpp" />
     <ClCompile Include="Graphical\UI\ChatWindow.cpp" />
+    <ClCompile Include="Networking\ClientServer\ServerConnection.cpp" />
     <ClCompile Include="Precompiled\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Level4</WarningLevel>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Level4</WarningLevel>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Sessions\ClientServerSession.cpp" />
+    <ClCompile Include="States\ConnectingToServerState.cpp" />
+    <ClCompile Include="States\DisconnectedFromServerState.cpp" />
+    <ClCompile Include="States\Events.cpp" />
     <ClCompile Include="States\InGameState.cpp" />
     <ClCompile Include="States\JoinMultiplayerState.cpp" />
-    <ClCompile Include="States\LoadingState.cpp" />
     <ClCompile Include="States\MainMenuState.cpp" />
     <ClCompile Include="States\PreGameState.cpp" />
   </ItemGroup>
@@ -109,12 +112,14 @@
     <ClInclude Include="Game\ClientZone.hpp" />
     <ClInclude Include="Game\PlayerObject.hpp" />
     <ClInclude Include="Graphical\UI\ChatWindow.hpp" />
+    <ClInclude Include="Networking\ClientServer\ServerConnection.hpp" />
+    <ClInclude Include="Plugins\PluginTypes.hpp" />
     <ClInclude Include="Precompiled\pch.hpp" />
-    <ClInclude Include="Sessions\ClientServerSession.hpp" />
+    <ClInclude Include="States\DisconnectedFromServerState.hpp" />
     <ClInclude Include="States\Events.hpp" />
     <ClInclude Include="States\InGameState.hpp" />
     <ClInclude Include="States\JoinMultiplayerState.hpp" />
-    <ClInclude Include="States\LoadingState.hpp" />
+    <ClInclude Include="States\ConnectingToServerState.hpp" />
     <ClInclude Include="States\MainMenuState.hpp" />
     <ClInclude Include="States\PreGameState.hpp" />
   </ItemGroup>

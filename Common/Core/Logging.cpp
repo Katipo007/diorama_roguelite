@@ -97,7 +97,10 @@ namespace Logging
 	{
 		ONLY_EXECUTE_ONCE;
 
+		const auto server_file_sink = CreateBasicFileSink( "Server", DefaultFileOutputPattern );
+
 		InitCommonSinks();
+		RegisterLogger( Channel::Application, CreateStandardLogger( "Application", true, server_file_sink ) );
 		RegisterLogger( Channel::Server, CreateStandardLogger( "Server", true ) );
 	}
 

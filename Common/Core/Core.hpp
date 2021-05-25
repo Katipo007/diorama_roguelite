@@ -4,10 +4,11 @@
 #include <string>
 #include <vector>
 
-#include "Common/Core/API/APITypesEnum.hpp"
+#include "Common/Core/API/CoreAPIsEnum.hpp"
 #include "Common/Utility/Timestep.hpp"
 
 class AbstractGame;
+class Core;
 class ResourceManager;
 
 namespace API
@@ -17,18 +18,33 @@ namespace API
 	class VideoAPI;
 }
 
+struct CoreProperties
+{
+	int fps = 60;
+
+	std::function<void( ResourceManager& )> resource_initaliser_func;
+
+	unsigned max_plugins = 0;
+	std::function<std::unique_ptr<API::BaseAPI>( Core&, APIType )> plugin_factory;
+
+	bool IsValid() const noexcept
+	{
+		return true
+			&& (fps >= 0)
+			&& (max_plugins >= CoreAPIs::Type::User)
+			&& (bool)resource_initaliser_func
+			&& (bool)plugin_factory
+			;
+	}
+};
+
 /// <summary>
 /// The be all container for the application
 /// </summary>
 class Core final
 {
 public:
-	using ResourceManagerInitaliserFunc_T = std::function<void( ResourceManager& )>;
-	using PluginFactory_T = std::function<API::BaseAPI* (API::SystemAPI*, API::VideoAPI*)>;
-	using PluginFactoryMap_T = std::unordered_map<API::APIType, PluginFactory_T>;
-
-public:
-	explicit Core( std::unique_ptr<AbstractGame> game, const ResourceManagerInitaliserFunc_T& resource_initaliser_func, PluginFactoryMap_T& plugin_factory );
+	explicit Core( CoreProperties&&, std::unique_ptr<AbstractGame> game );
 	~Core();
 
 	void Init();
@@ -36,11 +52,32 @@ public:
 	AbstractGame& GetGame() const { return *game; }
 	ResourceManager& GetResourceManager() const { return *resource_manager; }
 
-	template<class API_T> API_T* GetAPI() noexcept { constexpr API::APIType type = API_T::GetType(); return dynamic_cast<API_T*>( GetAPI( type ) ); }
-	template<class API_T> const API_T* GetAPI() const noexcept { constexpr API::APIType type = API_T::GetType(); return dynamic_cast<const API_T*>(GetAPI( type )); }
+	template<class API_T>
+	API_T* GetAPI() noexcept { return const_cast<API_T*>(((const Core*)this)->GetAPI<API_T>()); }
 
-	inline API::BaseAPI* GetAPI( const API::APIType type ) noexcept { return apis[(size_t)type].get(); }
-	inline const API::BaseAPI* GetAPI( const API::APIType type ) const noexcept { return apis[(size_t)type].get(); }
+	template<class API_T>
+	const API_T* GetAPI() const noexcept
+	{
+		constexpr auto type = API_T::GetType();
+		static_assert(std::is_same<decltype(type), const APIType>::value, "API_T::GetType() return type must be APIType");
+		return dynamic_cast<const API_T*>(GetAPI( type ));
+	}
+
+	template<class API_T>
+	API_T& GetRequiredAPI() noexcept { return const_cast<API_T&>(((const Core*)this)->GetRequiredAPI<API_T>()); }
+
+	template<class API_T>
+	const API_T& GetRequiredAPI() const noexcept
+	{
+		constexpr auto type = API_T::GetType();
+		static_assert(std::is_same<decltype(type), const APIType>::value, "API_T::GetType() return type must be APIType");
+		return dynamic_cast<const API_T&>(GetRequiredAPI( type ));
+	}
+
+	inline API::BaseAPI* GetAPI( const APIType type ) noexcept { return (type < apis.size()) ? apis[type].get() : nullptr; }
+	inline const API::BaseAPI* GetAPI( const APIType type ) const noexcept { return (type < apis.size()) ? apis[type].get() : nullptr; }
+	inline API::BaseAPI& GetRequiredAPI( const APIType type ) { if (auto* api = GetAPI( type )) return *api; throw std::runtime_error( "Missing required API" ); }
+	inline const API::BaseAPI& GetRequiredAPI( const APIType type ) const { if (auto* api = GetAPI( type )) return *api; throw std::runtime_error( "Missing required API" ); }
 
 	int Dispatch();
 
@@ -69,7 +106,8 @@ private:
 	std::unique_ptr<AbstractGame> game;
 	std::unique_ptr<ResourceManager> resource_manager;
 
-	ResourceManagerInitaliserFunc_T resource_initaliser_func;
+	const std::function<void( ResourceManager& )> resource_initaliser_func;
 
-	std::array<std::unique_ptr<API::BaseAPI>, static_cast<size_t>(API::APIType::NumAPITypes)> apis;
+	std::vector<std::unique_ptr<API::BaseAPI>> apis;
+	std::vector<API::BaseAPI*> active_apis;
 };

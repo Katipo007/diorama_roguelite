@@ -1,6 +1,6 @@
 #pragma once
 
-#include "APITypesEnum.hpp"
+#include "CoreAPIsEnum.hpp"
 #include "BaseAPI.hpp"
 #include "Common/Geometry/Size.hpp"
 #include "Common/File/Filepath.hpp"
@@ -26,7 +26,7 @@ namespace API
 	public:
 		virtual ~SystemAPI() {}
 
-		static constexpr APIType GetType() noexcept { return APIType::System; }
+		static constexpr APIType GetType() noexcept { return CoreAPIs::System; }
 
 		virtual const Filepath& GetAssetsFilepath() const = 0;
 
@@ -38,6 +38,7 @@ namespace API
 
 		virtual std::thread CreateThread( std::string_view name, std::function<void()> runnable ) = 0;
 		virtual void SetThreadName( std::string name ) {}
+		virtual void Sleep( unsigned long milliseconds ) = 0;
 
 	private:
 		virtual bool GenerateEvents( VideoAPI* video, InputAPI* input, DearImGuiAPI* dearimgui ) = 0;

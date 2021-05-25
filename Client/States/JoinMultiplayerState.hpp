@@ -5,15 +5,14 @@
 #include "Common/Utility/StateMachine/Actions/Might.hpp"
 #include "Common/Utility/StateMachine/Actions/TransitionTo.hpp"
 
-namespace Game
-{
-	class ClientGame;
-}
+#include "Common/Utility/Signal.hpp"
+
+namespace Game { class ClientGame; }
 
 namespace ClientStates
 {
 	class MainMenuState;
-	class LoadingState;
+	class ConnectingToServerState;
 
 	/// <summary>
 	/// Screen to join an existing multi-player game
@@ -23,27 +22,24 @@ namespace ClientStates
 	{
 		using ExitActions = fsm::Actions::OneOf< fsm::Actions::NoAction,
 			fsm::Actions::TransitionTo<MainMenuState>,
-			fsm::Actions::TransitionTo<LoadingState>
+			fsm::Actions::TransitionTo<ConnectingToServerState>
 		>;
 
 	public:
 		using fsm::DefaultAction<fsm::Actions::NoAction>::HandleEvent;
 
 		explicit JoinMultiplayerState( Game::ClientGame& client );
-		explicit JoinMultiplayerState( JoinMultiplayerState&& to_move ) = default;
+		explicit JoinMultiplayerState( JoinMultiplayerState&& to_move );
 		virtual ~JoinMultiplayerState();
 
 		ExitActions HandleEvent( const FrameEvent& e );
 		ExitActions HandleEvent( const DearImGuiFrameEvent& e );
-		fsm::Actions::TransitionTo<LoadingState> HandleEvent( const ConnectedToServerEvent& e );
+		ExitActions HandleEvent( const ConnectedToServerEvent& e );
+		ExitActions HandleEvent( const ConnectingToServerEvent& e );
 
-	protected:
-		void InitiateConnection( std::string address );
-		void CancelConnection();
 
 	protected:
 		Game::ClientGame& client;
-
 		std::string status_message;
 
 	private:

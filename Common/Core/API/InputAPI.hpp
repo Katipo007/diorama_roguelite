@@ -1,6 +1,6 @@
 #pragma once
 
-#include "APITypesEnum.hpp"
+#include "CoreAPIsEnum.hpp"
 #include "BaseAPI.hpp"
 
 namespace API
@@ -13,7 +13,7 @@ namespace API
 	public:
 		virtual ~InputAPI() {}
 
-		static constexpr APIType GetType() noexcept { return APIType::Input; }
+		static constexpr APIType GetType() noexcept { return CoreAPIs::Input; }
 
 		// TODO
 

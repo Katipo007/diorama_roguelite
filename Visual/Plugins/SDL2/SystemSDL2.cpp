@@ -1,5 +1,7 @@
 #include "SystemSDL2.hpp"
 
+#include <chrono>
+#include <thread>
 #include <SDL2/SDL.h>
 #ifdef _WIN64
 #	pragma comment(lib, "Visual/Vendor/SDL2/lib/x64/SDL2.lib")
@@ -179,6 +181,16 @@ namespace Graphics::API
             } );
     }
 
+    void SystemSDL2::Sleep( unsigned long milliseconds )
+    {
+        auto start = std::chrono::high_resolution_clock::now();
+        auto end = start + std::chrono::milliseconds( milliseconds );
+        do
+        {
+            std::this_thread::yield();
+        } while (std::chrono::high_resolution_clock::now() < end);
+    }
+
     bool SystemSDL2::GenerateEvents( ::API::VideoAPI* video, ::API::InputAPI* input, ::API::DearImGuiAPI* dearimgui )
     {
         SDL_Event event;
@@ -232,8 +244,7 @@ namespace Graphics::API
         return "SDL2";
     }
 
-    void SystemSDL2::Update( const PreciseTimestep& ts )
+    void SystemSDL2::OnVariableUpdate( const PreciseTimestep&, const StepType )
     {
-        (void)ts;
     }
 }

@@ -3,62 +3,66 @@
 #include <memory>
 #include <optional>
 #include <string>
+#include <string_view>
 #include <type_traits>
 
 #include "Utility/Timestep.hpp"
 
-namespace Sessions
-{
-	class ClientServerSession;
-}
+namespace yojimbo { class Message; }
 
 namespace API { class DearImGuiAPI; }
+
+namespace Networking::ClientServer { class ServerConnection; }
 
 namespace ClientStates
 {
 	struct FrameEvent
 	{
-		explicit FrameEvent( PreciseTimestep step )
-			: precise_timestep( step )
-			, timestep( step )
-		{}
+		explicit FrameEvent( PreciseTimestep step );
 
 		PreciseTimestep precise_timestep;
 		Timestep timestep;
 	};
 
-	struct RenderEvent {};
+	struct RenderEvent { };
+
 	struct DearImGuiFrameEvent
 	{
-		explicit DearImGuiFrameEvent( ::API::DearImGuiAPI& dearimgui_ )
-			: dearimgui_api( dearimgui_ )
-		{}
+		explicit DearImGuiFrameEvent( ::API::DearImGuiAPI& dearimgui_ );
 
 		::API::DearImGuiAPI& dearimgui_api;
 	};
 
 	struct ConnectedToServerEvent
 	{
-		explicit ConnectedToServerEvent( Sessions::ClientServerSession* session )
-			: session( session )
-		{}
+		explicit ConnectedToServerEvent( Networking::ClientServer::ServerConnection& connection );
 
-		Sessions::ClientServerSession* session;
+		Networking::ClientServer::ServerConnection& connection;
+	};
+
+	struct ConnectingToServerEvent
+	{
+		explicit ConnectingToServerEvent( Networking::ClientServer::ServerConnection& connection );
+
+		Networking::ClientServer::ServerConnection& connection;
 	};
 
 	struct DisconnectedFromServerEvent
 	{
-		static const size_t MaxReasonLength = 128;
+		explicit DisconnectedFromServerEvent( Networking::ClientServer::ServerConnection& connection, std::string_view reason = "" );
 
-		explicit DisconnectedFromServerEvent( Sessions::ClientServerSession* session, std::string_view reason = "" )
-			: session( session )
-		{
-			ASSERT( reason.length() < MaxReasonLength );
-			std::copy_n( reason.begin(), std::min( reason.length(), MaxReasonLength - 1 ), this->reason );
-			this->reason[MaxReasonLength - 1] = '\n';
-		}
+		Networking::ClientServer::ServerConnection& connection;
+		std::array<char, 128> reason;
+	};
 
-		Sessions::ClientServerSession* session;
-		char reason[MaxReasonLength];
+	struct ServerMessageEvent
+	{
+		explicit ServerMessageEvent( Networking::ClientServer::ServerConnection& connection, const yojimbo::Message& message );
+
+		void FlagAsHandled() const;
+
+		Networking::ClientServer::ServerConnection& connection;
+		const yojimbo::Message& message;
+		bool handled = false;
 	};
 }
