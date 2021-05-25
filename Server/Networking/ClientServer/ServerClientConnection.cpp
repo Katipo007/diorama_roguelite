@@ -71,14 +71,19 @@ namespace Networking::ClientServer
 			message = server.ReceiveMessage( client_index, static_cast<int>(channel) );
 			while (message != nullptr)
 			{
+				const auto message_type = message->GetType();
 				const bool handled = !!message_handler && message_handler( *this, *message );
 				server.ReleaseMessage( client_index, message );
 
 				// disconnect if message went unhandled
 				if (!handled)
 				{
-					LOG_INFO( Server, "Disconnecting client due to unhandled message" );
+					LOG_INFO( Server, "Disconnecting client due to unhandled message of type '{}'", MessageFactory::GetMessageName( message_type ) );
+#ifdef _DEBUG
+					Disconnect( "Unexpected message" );
+#else
 					Disconnect();
+#endif
 					return;
 				}
 

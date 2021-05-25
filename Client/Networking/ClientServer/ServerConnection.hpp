@@ -51,9 +51,10 @@ namespace Networking::ClientServer
 			{
 				initialiser( *message );
 				::yojimbo::Client::SendMessage( static_cast<int>(channel), message );
+				return;
 			}
 
-			FATAL( "Failed to allocate message of type" + MessageFactory::GetMessageName<MESSAGE_T>() );
+			FATAL( "Failed to allocate message of type '" + std::string{ MessageFactory::GetMessageName<MESSAGE_T>() } + "'" );
 		}
 
 		void OnFixedUpdate( const PreciseTimestep& ts );

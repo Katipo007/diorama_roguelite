@@ -118,7 +118,7 @@ void GameServer::ClientDisconnectedHandler( Networking::ClientServer::ClientServ
 		entry.session.reset();
 	}
 
-	LOG_INFO( Server, "Client '{}'({}) Disconnected", client_id, index );
+	LOG_INFO( Server, "Client '{}'({}) disconnected", client_id, index );
 
 	// destroy the connection object
 	if (!!connection)
