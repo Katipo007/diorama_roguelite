@@ -25,22 +25,8 @@ namespace ClientStates
 		return fsm::Actions::NoAction{};
 	}
 
-	fsm::Actions::Might<fsm::Actions::TransitionTo<InGameState>> ConnectingToServerState::HandleEvent( const ServerMessageEvent& e )
+	fsm::Actions::Might<fsm::Actions::TransitionTo<InGameState>> ConnectingToServerState::HandleEvent( const ServerMessageEvent& )
 	{
-		using namespace Networking::ClientServer;
-		using Factory_T = ServerConnection::FactoryType;
-
-		switch (e.message.GetType())
-		{
-			case Factory_T::GetMessageType<Messages::ServerClientDisconnect>() :
-				e.connection.Disconnect();
-				e.FlagAsHandled();
-				break;
-
-			default:
-				break;
-		}
-
 		return fsm::Actions::NoAction{};
 	}
 

@@ -64,6 +64,8 @@ namespace Game
         ClientStates::Machine state_machine;
         Networking::ClientServer::ServerConnection server_connection;
 
+        std::string disconnect_reason;
+
         Pimpl( ClientGame& owner )
             : state_machine(
                 ClientStates::PreGameState{}
@@ -112,6 +114,7 @@ namespace Game
         yojimbo::Address target_address( address.data() );
 
         DisconnectFromServer();
+        pimpl->disconnect_reason = "";
         if (target_address.IsValid())
             pimpl->server_connection.Connect( target_address );
         else
@@ -120,8 +123,11 @@ namespace Game
 
     void ClientGame::DisconnectFromServer( std::optional<std::string> reason )
     {
-        if( !pimpl->server_connection.IsDisconnected() )
+        if (!pimpl->server_connection.IsDisconnected())
+        {
+            pimpl->disconnect_reason = reason.value_or( "" );
             pimpl->server_connection.Disconnect();
+        }
     }
 
     void ClientGame::Init()
@@ -193,7 +199,7 @@ namespace Game
                 break;
 
             case yojimbo::ClientState::CLIENT_STATE_DISCONNECTED:
-                pimpl->state_machine.Handle( ClientStates::DisconnectedFromServerEvent{ connection } );
+                pimpl->state_machine.Handle( ClientStates::DisconnectedFromServerEvent{ connection, pimpl->disconnect_reason } );
                 break;
 
             case yojimbo::ClientState::CLIENT_STATE_ERROR:
@@ -207,10 +213,27 @@ namespace Game
     {
         if (&connection == &pimpl->server_connection)
         {
+            using namespace Networking::ClientServer;
+            using Factory_T = ServerConnection::FactoryType;
+
+            switch (message.GetType())
+            {
+                case Factory_T::GetMessageType<Messages::ServerClientDisconnect>() :
+                {
+                    auto& msg = static_cast<const Messages::ServerClientDisconnect&>(message);
+                    const auto disconnect_reason = std::string{ msg.reason.data() };
+                    DisconnectFromServer( !disconnect_reason.empty() ? std::make_optional( disconnect_reason ) : std::nullopt );
+                    return true;
+                    break;
+                }
+
+                default:
+                    break;
+            }
+
+            // Unhandled at this point, pass to state machine for handling
             ClientStates::ServerMessageEvent e( connection, message );
-
             pimpl->state_machine.Handle( e );
-
             return e.handled;
         }
 
