@@ -25,8 +25,11 @@ namespace ClientStates
 		explicit ConnectingToServerState( ConnectingToServerState&& ) = default;
 		~ConnectingToServerState() = default;
 
+		fsm::Actions::NoAction OnEnter( const ConnectingToServerEvent& );
+
 		fsm::Actions::Might<fsm::Actions::TransitionTo<JoinMultiplayerState>> HandleEvent( const DearImGuiFrameEvent& e );
 		fsm::Actions::Might<fsm::Actions::TransitionTo<InGameState>> HandleEvent( const ServerMessageEvent& e );
+		fsm::Actions::NoAction HandleEvent( const ConnectedToServerEvent& e );
 		fsm::Actions::TransitionTo<DisconnectedFromServerState> HandleEvent( const DisconnectedFromServerEvent& e );
 
 	private:
