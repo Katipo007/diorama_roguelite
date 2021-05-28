@@ -37,6 +37,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Deployment\Deployment.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Core\Assert.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)File\Filepath.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Character\CharacterUtility.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Geometry\Point2D.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Geometry\Rect.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Geometry\Size.hpp" />
