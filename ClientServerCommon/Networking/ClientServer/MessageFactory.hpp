@@ -9,6 +9,7 @@ namespace Networking::ClientServer
 		// message types go here
 		Messages::DummyMessage
 		, Messages::ServerClientDisconnect
+		, Messages::ServerClientLoginSuccess
 		, Messages::ClientServerChatMessage
 		>;
 }
