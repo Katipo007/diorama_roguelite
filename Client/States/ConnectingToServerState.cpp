@@ -73,7 +73,15 @@ namespace ClientStates
 
 	fsm::Actions::NoAction ConnectingToServerState::HandleEvent( const ConnectedToServerEvent& e )
 	{
+		using namespace Networking::ClientServer;
+
 		AttachToConnection( e.connection );
+
+		e.connection.SendMessage<Messages::ClientServerLoginStart>( ChannelType::Reliable, []( Messages::ClientServerLoginStart& msg )
+			{
+				StringUtility::StringToArray( "PLACEHOLDER", msg.username );
+			} );
+
 		return fsm::Actions::NoAction();
 	}
 
