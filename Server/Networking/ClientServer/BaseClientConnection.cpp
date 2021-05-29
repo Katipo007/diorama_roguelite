@@ -12,4 +12,14 @@ namespace Networking::ClientServer
 	}
 
 	BaseClientConnection::~BaseClientConnection() = default;
+
+	bool BaseClientConnection::TestFlag( Flags flag ) const noexcept
+	{
+		return flags.test( magic_enum::enum_index<Flags>( flag ).value() );
+	}
+
+	void BaseClientConnection::SetFlag( Flags flag, const bool value ) noexcept
+	{
+		flags.set( magic_enum::enum_index<Flags>( flag ).value(), value );
+	}
 }
