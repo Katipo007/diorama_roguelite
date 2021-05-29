@@ -18,19 +18,16 @@
     <ClCompile Include="Precompiled\pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Networking\ClientServer\ServerClientConnection.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GameServer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sessions\BaseServerClientSession.cpp">
+    <ClCompile Include="Networking\ClientServer\ActiveClient.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sessions\ClientLoginSession.cpp">
+    <ClCompile Include="Networking\ClientServer\BaseClientConnection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sessions\ClientActiveSession.cpp">
+    <ClCompile Include="Networking\ClientServer\UnauthenticatedClient.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -41,16 +38,13 @@
     <ClInclude Include="GameServer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Sessions\BaseServerClientSession.hpp">
+    <ClInclude Include="Networking\ClientServer\UnauthenticatedClient.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Networking\ClientServer\ServerClientConnection.hpp">
+    <ClInclude Include="Networking\ClientServer\ActiveClient.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Sessions\ClientLoginSession.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Sessions\ClientActiveSession.hpp">
+    <ClInclude Include="Networking\ClientServer\BaseClientConnection.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

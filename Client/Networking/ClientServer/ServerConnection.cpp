@@ -93,7 +93,7 @@ namespace Networking::ClientServer
 
 	void ServerConnection::ProcessMessages()
 	{
-		for (ChannelType channel : magic_enum::enum_values<ChannelType>())
+		for (auto channel : magic_enum::enum_values<ChannelType>())
 		{
 			const int channel_index = static_cast<int>(channel);
 
