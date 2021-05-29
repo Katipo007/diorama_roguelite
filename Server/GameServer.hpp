@@ -8,7 +8,6 @@
 #include "ClientServerCommon/Plugins/Yojimbo/Types.hpp"
 #include "ClientServerCommon/Networking/ClientServer/Adapter.hpp"
 
-#include "Common/Utility/Predicate.hpp"
 #include "Common/Utility/Signal.hpp"
 #include "Common/Utility/Timestep.hpp"
 
