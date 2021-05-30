@@ -11,7 +11,7 @@
 	path = Common/Vendor/entt
 	url = https://github.com/skypjack/entt
 [submodule "yojimbo"]
-	path = Common/Vendor/yojimbo
+	path = ClientServerCommon/Vendor/yojimbo
 	url = https://github.com/Katipo007/yojimbo
 [submodule "sigslot"]
 	path = Common/Vendor/sigslot
