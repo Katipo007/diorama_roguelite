@@ -203,6 +203,7 @@ namespace Game
                 break;
 
             case yojimbo::ClientState::CLIENT_STATE_ERROR:
+                pimpl->state_machine.Handle( ClientStates::DisconnectedFromServerEvent{ connection, "Internal Error" } );
                 NOT_IMPLEMENTED;
                 break;
             }
