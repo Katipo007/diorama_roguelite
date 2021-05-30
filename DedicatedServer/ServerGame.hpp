@@ -10,7 +10,8 @@
 
 class Core;
 class ResourceManager;
-class GameServer;
+
+namespace Networking::ClientServer { class GameServer; }
 
 namespace Game
 {
@@ -36,7 +37,7 @@ namespace Game
 		void OnRender( const PreciseTimestep& ) override {}
 
 	private:
-		std::unique_ptr<GameServer> server;
+		std::unique_ptr<Networking::ClientServer::GameServer> server;
 
 		struct Pimpl;
 		const std::unique_ptr<Pimpl> pimpl;

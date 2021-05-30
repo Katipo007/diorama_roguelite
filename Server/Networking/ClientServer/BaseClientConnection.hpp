@@ -10,12 +10,12 @@
 #include "Common/Utility/Timestep.hpp"
 #include "Common/Utility/MagicEnum.hpp"
 
-class GameServer;
-
 namespace yojimbo { class Message; }
 
 namespace Networking::ClientServer
 {
+	class GameServer;
+
 	class BaseClientConnection
 	{
 	public:

@@ -18,7 +18,7 @@
     <ClCompile Include="Precompiled\pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GameServer.cpp">
+    <ClCompile Include="Networking\ClientServer\GameServer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Networking\ClientServer\ActiveClient.cpp">
@@ -35,7 +35,7 @@
     <ClInclude Include="Precompiled\pch.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GameServer.hpp">
+    <ClInclude Include="Networking\ClientServer\GameServer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Networking\ClientServer\UnauthenticatedClient.hpp">

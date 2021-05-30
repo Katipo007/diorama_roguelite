@@ -37,6 +37,10 @@ namespace ClientStates
 		explicit InGameState( InGameState&& to_move );
 		virtual ~InGameState();
 
+		void AddChatMessage( std::string_view sender, std::string_view message );
+
+	public: // state machine stuffs
+
 		fsm::Actions::Might<fsm::Actions::TransitionTo<MainMenuState>> OnEnter();
 
 		void OnLeave();
@@ -45,14 +49,15 @@ namespace ClientStates
 		fsm::Actions::NoAction HandleEvent( const FrameEvent& e );
 		fsm::Actions::NoAction HandleEvent( const RenderEvent& e );
 		fsm::Actions::NoAction HandleEvent( const DearImGuiFrameEvent& e );
+		fsm::Actions::NoAction HandleEvent( const ServerMessageEvent& e );
 		fsm::Actions::TransitionTo<DisconnectedFromServerState> HandleEvent( const DisconnectedFromServerEvent& e );
 
 	protected:
 		void OnRender() const;
 
 		void ChatWindowSendMessageHandler( std::string_view msg );
-		void ChatMessageReceivedHandler( const std::string& sender, const std::string& message );
 
+	protected:
 		Game::ClientGame& client;
 
 		UI::ChatWindow chat_window;

@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="GameServer.cpp" />
+    <ClCompile Include="Networking\ClientServer\GameServer.cpp" />
     <ClCompile Include="Networking\ClientServer\ActiveClient.cpp" />
     <ClCompile Include="Networking\ClientServer\BaseClientConnection.cpp" />
     <ClCompile Include="Networking\ClientServer\UnauthenticatedClient.cpp" />
@@ -31,7 +31,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GameServer.hpp" />
+    <ClInclude Include="Networking\ClientServer\GameServer.hpp" />
     <ClInclude Include="Networking\ClientServer\ActiveClient.hpp" />
     <ClInclude Include="Networking\ClientServer\BaseClientConnection.hpp" />
     <ClInclude Include="Networking\ClientServer\UnauthenticatedClient.hpp" />

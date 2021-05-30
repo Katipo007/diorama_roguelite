@@ -1,7 +1,7 @@
 #include "UnauthenticatedClient.hpp"
 
 #include "Networking/ClientServer/MessageFactory.hpp"
-#include "Server/GameServer.hpp"
+#include "GameServer.hpp"
 
 namespace Networking::ClientServer
 {

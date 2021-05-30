@@ -107,6 +107,24 @@ namespace ClientStates
 		return fsm::Actions::NoAction{};
 	}
 
+	fsm::Actions::NoAction InGameState::HandleEvent( const ServerMessageEvent& e )
+	{
+		using namespace Networking::ClientServer;
+
+		switch (e.message.GetType())
+		{
+			case MessageFactory::GetMessageType<Messages::ServerClientChatMessage>() :
+			{
+				auto& chat = static_cast<const Messages::ServerClientChatMessage&>(e.message);
+				AddChatMessage( chat.sender.data(), chat.message.data() );
+				e.FlagAsHandled();
+				break;
+			}
+		}
+
+		return fsm::Actions::NoAction();
+	}
+
 	fsm::Actions::TransitionTo<DisconnectedFromServerState> InGameState::HandleEvent( const DisconnectedFromServerEvent& )
 	{
 		return fsm::Actions::TransitionTo<DisconnectedFromServerState>();
@@ -127,9 +145,10 @@ namespace ClientStates
 			} );
 	}
 
-	void InGameState::ChatMessageReceivedHandler( const std::string& sender, const std::string& message )
+	void InGameState::AddChatMessage( std::string_view sender, std::string_view message )
 	{
-		std::string to_display = "[" + sender + "] " + message;
+		using namespace std::string_literals;
+		std::string to_display = "["s + sender.data() + "] " + message.data();
 		chat_window.AddMessage( to_display );
 	}
 }

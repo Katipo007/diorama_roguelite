@@ -1,6 +1,6 @@
 #include "BaseClientConnection.hpp"
 
-#include "Server/GameServer.hpp"
+#include "GameServer.hpp"
 
 namespace Networking::ClientServer
 {

@@ -14,5 +14,6 @@ namespace Networking::ClientServer
 		, Messages::ServerClientLoginSuccess
 
 		, Messages::ClientServerChatMessage
+		, Messages::ServerClientChatMessage
 		>;
 }

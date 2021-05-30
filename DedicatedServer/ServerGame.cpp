@@ -5,7 +5,7 @@
 #include "ClientServerCommon/Plugins/PluginTypes.hpp"
 #include "ClientServerCommon/Plugins/Yojimbo/YojimboPlugin.hpp"
 
-#include "Server/GameServer.hpp"
+#include "Server/Networking/ClientServer/GameServer.hpp"
 
 namespace Game
 {
@@ -30,7 +30,7 @@ namespace Game
 
 	void ServerGame::Init()
 	{
-		server.reset( new GameServer( yojimbo::Address( "127.0.0.1:42777" ), 8 ) );
+		server.reset( new Networking::ClientServer::GameServer( yojimbo::Address( "127.0.0.1:42777" ), 8 ) );
 	}
 
 	void ServerGame::OnGameEnd()
