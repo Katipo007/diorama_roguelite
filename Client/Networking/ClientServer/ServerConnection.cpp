@@ -95,10 +95,13 @@ namespace Networking::ClientServer
 	{
 		for (auto channel : magic_enum::enum_values<ChannelType>())
 		{
+			if (::yojimbo::Client::IsDisconnected())
+				continue;
+
 			const int channel_index = static_cast<int>(channel);
 
 			auto* message = ::yojimbo::Client::ReceiveMessage( channel_index );
-			while (message != NULL)
+			while (message != NULL && !::yojimbo::Client::IsDisconnected() )
 			{
 				const YojimboPlugin::MessageType_T message_type = message->GetType();
 				const bool handled = !!message_handler_func && message_handler_func( *this, *message );
