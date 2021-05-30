@@ -20,6 +20,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\ZoneCommon.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\ChatConstants.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Networking\ClientServer\Adapter.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Networking\ClientServer\Channels.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Networking\ClientServer\Config.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Networking\ClientServer\MessageFactory.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Networking\ClientServer\Messages.hpp" />
