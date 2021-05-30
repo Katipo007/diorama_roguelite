@@ -4,7 +4,18 @@
 #include "Client/Networking/ClientServer/ServerConnection.hpp"
 #include "ClientServerCommon/Plugins/Yojimbo/YojimboHeader.hpp"
 
+#include "Common/Game/Character/CharacterUtility.hpp"
+
 #include "Visual/DearImGui/DearImGui.hpp"
+
+namespace
+{
+	std::array<char, 128> address_textbox_value{ "127.0.0.1:42777" };
+	const auto address_textbox_handler = []( ImGuiInputTextCallbackData* ) -> int { return 0; };
+
+	std::array<char, Game::CharacterUtility::CharacterNameMaxLength> username_textbox_value{ "Player" };
+	const auto username_textbox_handler = []( ImGuiInputTextCallbackData* ) -> int { return 0; };
+}
 
 namespace ClientStates
 {
@@ -26,27 +37,16 @@ namespace ClientStates
 	{
 		(void)e;
 
+		ImGui::SetNextWindowSize( ImVec2( 600, 400 ) );
 		if (ImGui::Begin( "JoinMultiplayerState", NULL, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove ))
 		{
 			ImGui::Text( "Join Multiplayer" );
 
-			static char address_textbox_value[128] = "127.0.0.1:42777";
-			const auto address_textbox_handler = []( ImGuiInputTextCallbackData* data ) -> int
-			{
-				(void)data;
-				//switch (data->EventFlag)
-				//{
-				//default:
-				//	// nothing
-				//	break;
-				//}
-				return 0;
-			};
-			if (ImGui::InputText( "IP Address", address_textbox_value, 128, ImGuiInputTextFlags_EnterReturnsTrue, address_textbox_handler ))
-				client.ConnectToServer( address_textbox_value );
+			ImGui::InputText( "IP Address", &address_textbox_value[0], std::size( address_textbox_value ), ImGuiInputTextFlags_EnterReturnsTrue, address_textbox_handler );
+			ImGui::InputText( "Username", &username_textbox_value[0], std::size( username_textbox_value ), ImGuiInputTextFlags_EnterReturnsTrue, address_textbox_handler );
 
 			if (ImGui::Button( "Connect" ))
-				client.ConnectToServer( address_textbox_value );
+				client.ConnectToServer( address_textbox_value.data(), username_textbox_value.data() );
 
 			// return to menu
 			if (ImGui::Button( "Back" ))

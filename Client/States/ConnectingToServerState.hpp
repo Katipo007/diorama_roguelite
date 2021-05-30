@@ -6,6 +6,7 @@
 #include "Common/Utility/StateMachine/Actions/TransitionTo.hpp"
 #include "Common/Utility/NonCopyable.hpp"
 
+namespace Game { class ClientGame; }
 namespace Networking::ClientServer { class ServerConnection; }
 
 namespace ClientStates
@@ -23,7 +24,7 @@ namespace ClientStates
 	public:
 		using fsm::DefaultAction<fsm::Actions::NoAction>::HandleEvent;
 
-		explicit ConnectingToServerState() = default;
+		explicit ConnectingToServerState( Game::ClientGame& );
 		explicit ConnectingToServerState( ConnectingToServerState&& ) = default;
 		~ConnectingToServerState() = default;
 
@@ -43,6 +44,7 @@ namespace ClientStates
 		void DetatchFromConnection( Networking::ClientServer::ServerConnection& connection );
 
 	private:
+		Game::ClientGame& game;
 		Networking::ClientServer::ServerConnection* connection = nullptr;
 	};
 }

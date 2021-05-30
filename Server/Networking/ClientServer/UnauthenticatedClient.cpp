@@ -1,7 +1,22 @@
 #include "UnauthenticatedClient.hpp"
 
-#include "Networking/ClientServer/MessageFactory.hpp"
 #include "GameServer.hpp"
+#include "ClientServerCommon/Networking/ClientServer/MessageFactory.hpp"
+
+#include "Common/Game/Character/CharacterUtility.hpp"
+#include "Common/Utility/StringUtility.hpp"
+
+namespace
+{
+	bool IsValidUsername( std::string_view username )
+	{
+		const auto length = username.length();
+		return
+			(length >= Game::CharacterUtility::CharacterNameMinLength)
+			&& (length <= Game::CharacterUtility::CharacterNameMaxLength)
+			;
+	}
+}
 
 namespace Networking::ClientServer
 {
@@ -19,13 +34,22 @@ namespace Networking::ClientServer
 			case MessageFactory::GetMessageType<Messages::ClientServerLoginStart>() :
 			{
 				const auto& login_start = static_cast<const Messages::ClientServerLoginStart&>(message);
-				auto username = std::string{ login_start.username.data() };
-				LOG_INFO( Server, "Got login start message from connection '{}' with username '{}'", client_index, username );
-				owner.AcceptClient( *this );
+				requested_username = login_start.username.data();
+				LOG_INFO( Server, "Got login start message from connection '{}' with username '{}'", client_index, requested_username );
+
+				if (IsValidUsername( requested_username ))
+					owner.AcceptClient( *this );
+				else
+					owner.RejectClient( *this );
 				return true;
 			}
 		}
 
 		return false;
+	}
+
+	std::string_view UnauthenticatedClient::GetUsername() const
+	{
+		return requested_username;
 	}
 }

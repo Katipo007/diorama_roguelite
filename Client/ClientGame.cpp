@@ -64,6 +64,7 @@ namespace Game
         ClientStates::Machine state_machine;
         Networking::ClientServer::ServerConnection server_connection;
 
+        std::string username;
         std::string disconnect_reason;
 
         Pimpl( ClientGame& owner )
@@ -71,7 +72,7 @@ namespace Game
                 ClientStates::PreGameState{}
                 , ClientStates::MainMenuState{ owner }
                 , ClientStates::JoinMultiplayerState{ owner }
-                , ClientStates::ConnectingToServerState{}
+                , ClientStates::ConnectingToServerState{ owner }
                 , ClientStates::DisconnectedFromServerState{}
                 , ClientStates::InGameState{ owner }
             )
@@ -109,11 +110,17 @@ namespace Game
         return pimpl->server_connection.IsConnected();
     }
 
-    void ClientGame::ConnectToServer( std::string_view address )
+    std::string_view ClientGame::GetUsername() const
+    {
+        return pimpl->username;
+    }
+
+    void ClientGame::ConnectToServer( std::string_view address, std::string_view username )
     {
         yojimbo::Address target_address( address.data() );
 
         DisconnectFromServer();
+        pimpl->username = username;
         pimpl->disconnect_reason = "";
         if (target_address.IsValid())
             pimpl->server_connection.Connect( target_address );
@@ -203,7 +210,7 @@ namespace Game
                 break;
 
             case yojimbo::ClientState::CLIENT_STATE_ERROR:
-                pimpl->state_machine.Handle( ClientStates::DisconnectedFromServerEvent{ connection, "Internal Error" } );
+                pimpl->state_machine.Handle( ClientStates::DisconnectedFromServerEvent( connection, "Internal Error" ) );
                 NOT_IMPLEMENTED;
                 break;
             }

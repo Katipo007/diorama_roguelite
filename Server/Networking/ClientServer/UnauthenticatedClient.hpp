@@ -12,5 +12,10 @@ namespace Networking::ClientServer
 		~UnauthenticatedClient();
 
 		bool HandleMessage( const yojimbo::Message& message ) override;
+
+		std::string_view GetUsername() const;
+
+	private:
+		std::string requested_username;
 	};
 }

@@ -14,5 +14,8 @@ namespace Networking::ClientServer
 		~ActiveClient();
 
 		bool HandleMessage( const yojimbo::Message& message ) override;
+
+	private:
+		std::string username;
 	};
 }

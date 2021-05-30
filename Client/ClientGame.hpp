@@ -35,7 +35,9 @@ namespace Game
 		const Networking::ClientServer::ServerConnection& GetServerConnection() const;
 		bool IsConnectedToServer() const noexcept;
 
-		void ConnectToServer( std::string_view address );
+		std::string_view GetUsername() const;
+
+		void ConnectToServer( std::string_view address, std::string_view username );
 		void DisconnectFromServer( std::optional<std::string> reason = std::nullopt );
 
 	protected:

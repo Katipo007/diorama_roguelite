@@ -1,5 +1,6 @@
 #include "ConnectingToServerState.hpp"
 
+#include "Client/ClientGame.hpp"
 #include "Client/Networking/ClientServer/ServerConnection.hpp"
 #include "ClientServerCommon/Networking/ClientServer/Config.hpp"
 
@@ -9,6 +10,11 @@
 
 namespace ClientStates
 {
+	ConnectingToServerState::ConnectingToServerState( Game::ClientGame& game )
+		: game( game )
+	{
+	}
+
 	fsm::Actions::NoAction ConnectingToServerState::OnEnter( const ConnectingToServerEvent& )
 	{
 		return fsm::Actions::NoAction();
@@ -77,9 +83,9 @@ namespace ClientStates
 
 		AttachToConnection( e.connection );
 
-		e.connection.SendMessage<Messages::ClientServerLoginStart>( ChannelType::Reliable, []( Messages::ClientServerLoginStart& msg )
+		e.connection.SendMessage<Messages::ClientServerLoginStart>( ChannelType::Reliable, [this]( Messages::ClientServerLoginStart& msg )
 			{
-				StringUtility::StringToArray( "PLACEHOLDER", msg.username );
+				StringUtility::StringToArray( game.GetUsername(), msg.username );
 			} );
 
 		return fsm::Actions::NoAction();
