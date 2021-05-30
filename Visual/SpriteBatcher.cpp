@@ -208,6 +208,9 @@ namespace Visual
 	{
 		ASSERT( active );
 		Flush();
+
+		if (data->active_shader)
+			data->active_shader->Unbind();
 		active = false;
 	}
 
