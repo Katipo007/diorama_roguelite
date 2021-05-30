@@ -2,14 +2,17 @@
 
 #include <functional>
 
-#include "Visual/Camera.hpp"
-
-#include "Common/Core/Core.hpp"
-#include "Common/Core/API/VideoAPI.hpp"
-
 #include "Client/ClientGame.hpp"
 #include "Client/Game/ClientGameWorld.hpp"
 #include "Client/Game/PlayerObject.hpp"
+#include "Client/Networking/ClientServer/ServerConnection.hpp"
+#include "ClientServerCommon/Networking/ClientServer/Channels.hpp"
+
+#include "Common/Core/Core.hpp"
+#include "Common/Core/API/VideoAPI.hpp"
+#include "Common/Utility/StringUtility.hpp"
+
+#include "Visual/Camera.hpp"
 
 namespace ClientStates
 {
@@ -69,18 +72,14 @@ namespace ClientStates
 		return fsm::Actions::NoAction();
 	}
 
-	fsm::Actions::TransitionTo<MainMenuState> InGameState::OnLeave()
+	void InGameState::OnLeave()
 	{
 		gameworld.reset();
-
-		return fsm::Actions::TransitionTo<MainMenuState>();
 	}
 
-	fsm::Actions::TransitionTo<MainMenuState> InGameState::OnLeave( const ClientStates::DisconnectedFromServerEvent& e )
+	void InGameState::OnLeave( const ClientStates::DisconnectedFromServerEvent& )
 	{
-		(void)e;
-
-		return OnLeave();
+		OnLeave();
 	}
 
 	fsm::Actions::NoAction ClientStates::InGameState::HandleEvent( const FrameEvent& e )
@@ -108,21 +107,9 @@ namespace ClientStates
 		return fsm::Actions::NoAction{};
 	}
 
-	fsm::Actions::TransitionTo<MainMenuState> InGameState::HandleEvent( const DisconnectedFromServerEvent& e )
+	fsm::Actions::TransitionTo<DisconnectedFromServerState> InGameState::HandleEvent( const DisconnectedFromServerEvent& )
 	{
-		(void)e;
-
-		//
-		// disconnect events
-		//
-		// TODO: disconnect chat message received event
-
-		//
-		// clear
-		//
-
-		LOG_INFO( Client, "Lost connection to server, returning to main menu" );
-		return fsm::Actions::TransitionTo<MainMenuState>();
+		return fsm::Actions::TransitionTo<DisconnectedFromServerState>();
 	}
 
 	void InGameState::OnRender() const
@@ -130,11 +117,14 @@ namespace ClientStates
 		gameworld->Render( main_camera );
 	}
 
-	void InGameState::ChatWindowSendMessageHandler( std::string_view msg )
+	void InGameState::ChatWindowSendMessageHandler( std::string_view chat_message )
 	{
-		LOG_INFO( Client, "Sending chat message '{}'", (std::string)msg );
-		// TODO: send chat message
-		NOT_IMPLEMENTED;
+		using namespace Networking::ClientServer;
+		LOG_INFO( Client, "Sending chat message '{}'", chat_message.data() );
+		client.GetServerConnection().SendMessage<Messages::ClientServerChatMessage>( ChannelType::Reliable, [&chat_message]( Messages::ClientServerChatMessage& chat )
+			{
+				StringUtility::StringToArray( chat_message, chat.message );
+			} );
 	}
 
 	void InGameState::ChatMessageReceivedHandler( const std::string& sender, const std::string& message )

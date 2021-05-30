@@ -25,6 +25,7 @@ namespace Game
 namespace ClientStates
 {
 	class MainMenuState;
+	class DisconnectedFromServerState;
 
 	class InGameState
 		: public fsm::DefaultAction<fsm::Actions::NoAction>
@@ -37,15 +38,14 @@ namespace ClientStates
 		virtual ~InGameState();
 
 		fsm::Actions::Might<fsm::Actions::TransitionTo<MainMenuState>> OnEnter();
-		//fsm::Actions::Might<fsm::Actions::TransitionTo<MainMenuState>> OnEnter( const FrameEvent& ) { LOG_INFO( Client, "Entered via FrameEvent!" ); return OnEnter(); }
 
-		fsm::Actions::TransitionTo<MainMenuState> OnLeave();
-		fsm::Actions::TransitionTo<MainMenuState> OnLeave( const ClientStates::DisconnectedFromServerEvent& e );
+		void OnLeave();
+		void OnLeave( const ClientStates::DisconnectedFromServerEvent& e );
 
 		fsm::Actions::NoAction HandleEvent( const FrameEvent& e );
 		fsm::Actions::NoAction HandleEvent( const RenderEvent& e );
 		fsm::Actions::NoAction HandleEvent( const DearImGuiFrameEvent& e );
-		fsm::Actions::TransitionTo<MainMenuState> HandleEvent( const DisconnectedFromServerEvent& e );
+		fsm::Actions::TransitionTo<DisconnectedFromServerState> HandleEvent( const DisconnectedFromServerEvent& e );
 
 	protected:
 		void OnRender() const;

@@ -45,9 +45,9 @@ public:
 
 	bool SendMessage( Networking::ClientServer::BaseClientConnection& client, Networking::ClientServer::ChannelType channel, YojimboPlugin::MessageType_T type, const std::function<void(yojimbo::Message&)>& initialiser );
 	template<class T>
-	bool SendMessage( Networking::ClientServer::BaseClientConnection& client, Networking::ClientServer::ChannelType channel, const std::function<void( yojimbo::Message& )>& initialiser )
+	bool SendMessage( Networking::ClientServer::BaseClientConnection& client, Networking::ClientServer::ChannelType channel, const std::function<void( T& )>& initialiser )
 	{
-		return SendMessage( client, channel, Networking::ClientServer::MessageFactory::template GetMessageType<T>(), initialiser );
+		return SendMessage( client, channel, Networking::ClientServer::MessageFactory::template GetMessageType<T>(), [&]( yojimbo::Message& message ) { initialiser( static_cast<T&>(message) ); } );
 	}
 
 	// Signals

@@ -105,11 +105,11 @@ void GameServer::DisconnectClient( Networking::ClientServer::BaseClientConnectio
 	if (&client.GetOwner() != this)
 		return;
 	
-	//SendMessage<Messages::ServerClientDisconnect>( client, [&reason]( Messages::ServerClientDisconnect& msg )
-	//	{
-	//		if (reason.has_value())
-	//			StringUtility::StringToArray( *reason, msg.reason );
-	//	} );
+	SendMessage<Messages::ServerClientDisconnect>( client, ChannelType::Unreliable, [&reason]( Messages::ServerClientDisconnect& msg )
+		{
+			if (reason.has_value())
+				StringUtility::StringToArray( *reason, msg.reason );
+		} );
 
 	client.SetFlag( ClientFlags::ToBeDisconnected );
 }
