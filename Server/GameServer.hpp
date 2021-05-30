@@ -1,15 +1,18 @@
 #pragma once
 
+#include <concepts>
 #include <optional>
-#include <ranges>
-#include <variant>
 
 #include "ClientServerCommon/Plugins/Yojimbo/YojimboHeader.hpp"
 #include "ClientServerCommon/Plugins/Yojimbo/Types.hpp"
 #include "ClientServerCommon/Networking/ClientServer/Adapter.hpp"
+#include "ClientServerCommon/Networking/ClientServer/Config.hpp"
+#include "ClientServerCommon/Networking/ClientServer/MessageFactory.hpp"
 
 #include "Common/Utility/Signal.hpp"
 #include "Common/Utility/Timestep.hpp"
+
+namespace yojimbo { class Message; }
 
 namespace Networking::ClientServer
 {
@@ -40,6 +43,12 @@ public:
 	void ForEachClient( std::invocable<Networking::ClientServer::ActiveClient&> auto func, std::predicate<const Networking::ClientServer::ActiveClient&> auto predicate );
 	void ForEachClient( std::invocable<const Networking::ClientServer::ActiveClient&> auto func, std::predicate<const Networking::ClientServer::ActiveClient&> auto predicate ) const;
 
+	bool SendMessage( Networking::ClientServer::BaseClientConnection& client, Networking::ClientServer::ChannelType channel, YojimboPlugin::MessageType_T type, const std::function<void(yojimbo::Message&)>& initialiser );
+	template<class T>
+	bool SendMessage( Networking::ClientServer::BaseClientConnection& client, Networking::ClientServer::ChannelType channel, const std::function<void( yojimbo::Message& )>& initialiser )
+	{
+		return SendMessage( client, channel, Networking::ClientServer::MessageFactory::template GetMessageType<T>(), initialiser );
+	}
 
 	// Signals
 	Signal::signal<Networking::ClientServer::ActiveClient&> ClientAccepted; // fired when a client is now active for play

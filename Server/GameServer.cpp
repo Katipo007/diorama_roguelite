@@ -1,6 +1,5 @@
 #include "GameServer.hpp"
 
-#include "ClientServerCommon/Networking/ClientServer/Config.hpp"
 #include "ClientServerCommon/Networking/ClientServer/MessageFactory.hpp"
 #include "Server/Networking/ClientServer/ActiveClient.hpp"
 #include "Server/Networking/ClientServer/UnauthenticatedClient.hpp"
@@ -173,6 +172,31 @@ void GameServer::ForEachClient( std::invocable<Networking::ClientServer::ActiveC
 		if (server.IsClientConnected( index ) && !client.TestFlag( ClientFlags::ToBeDisconnected ))
 			func( client );
 	};
+}
+
+bool GameServer::SendMessage( Networking::ClientServer::BaseClientConnection& client, Networking::ClientServer::ChannelType channel, YojimboPlugin::MessageType_T type, const std::function<void(yojimbo::Message&)>& initialiser )
+{
+	if (&client.GetOwner() != this)
+		return false;
+	
+	const auto client_index = client.GetClientIndex();
+	const auto channel_idx = static_cast<YojimboPlugin::ChannelIndex_T>(channel);
+
+	if (!server.IsClientConnected( client_index ) || !server.CanSendMessage( client_index, channel_idx ) || client.TestFlag( ClientFlags::ToBeDisconnected ))
+		return false;
+
+	if (auto* message = server.CreateMessage( client_index, type ))
+	{
+		initialiser( *message );
+		server.SendMessage( client_index, channel_idx, message );
+		return true;
+	}
+	else
+	{
+		LOG_CRITICAL( Server, "Failed to allocate message of type '{}' ({})", MessageFactory::GetMessageName( type ), type );
+	}
+
+	return false;
 }
 
 void GameServer::ClientConnectedHandler( Networking::ClientServer::ClientServerAdapter&, YojimboPlugin::ClientIndex_T index )

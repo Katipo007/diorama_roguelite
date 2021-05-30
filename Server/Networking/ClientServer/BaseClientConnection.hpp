@@ -1,7 +1,11 @@
 #pragma once
 
 #include <bitset>
+#include <concepts>
+#include <functional>
 
+#include "ClientServerCommon/Networking/ClientServer/Config.hpp"
+#include "ClientServerCommon/Networking/ClientServer/MessageFactory.hpp"
 #include "ClientServerCommon/Plugins/Yojimbo/Types.hpp"
 #include "Common/Utility/Timestep.hpp"
 #include "Common/Utility/MagicEnum.hpp"
@@ -34,6 +38,13 @@ namespace Networking::ClientServer
 		bool TestFlag( Flags flag ) const noexcept;
 		void SetFlag( Flags flag, const bool value = true ) noexcept;
 		void ClearFlag( Flags flag ) noexcept { SetFlag( flag, false ); }
+
+		bool SendMessage( ChannelType channel, YojimboPlugin::MessageType_T message_type, const std::function<void(yojimbo::Message&)>& initialiser );
+		template<YojimboPlugin::Concepts::Message T>
+		bool SendMessage( Networking::ClientServer::ChannelType channel, const std::function<void( T& )>& initialiser )
+		{
+			return SendMessage( channel, Networking::ClientServer::MessageFactory::GetMessageType<T>(), [&]( yojimbo::Message& msg ) { initialiser( static_cast<T&>( msg ) ); } );
+		}
 
 	protected:
 		BaseClientConnection( GameServer& owner, YojimboPlugin::ClientIndex_T client_index );

@@ -22,4 +22,9 @@ namespace Networking::ClientServer
 	{
 		flags.set( magic_enum::enum_index<Flags>( flag ).value(), value );
 	}
+
+	bool BaseClientConnection::SendMessage( ChannelType channel, YojimboPlugin::MessageType_T message_type, const std::function<void( yojimbo::Message& )>& initialiser )
+	{
+		return owner.SendMessage( *this, channel, message_type, initialiser );
+	}
 }
