@@ -37,7 +37,6 @@
   <ImportGroup Label="Shared">
     <Import Project="..\ClientServerCommon\ClientServerCommon.vcxitems" Label="Shared" />
     <Import Project="..\Visual\Visual.vcxitems" Label="Shared" />
-    <Import Project="..\Common\Common.vcxitems" Label="Shared" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -124,6 +123,9 @@
     <ClInclude Include="States\PreGameState.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common\Common.vcxproj">
+      <Project>{3f3f816c-0579-4b4a-9419-2ec6544f483d}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\InternalServer\InternalServer.vcxproj">
       <Project>{cf606f1d-a108-4fc5-95a0-9025bc32bf1a}</Project>
     </ProjectReference>

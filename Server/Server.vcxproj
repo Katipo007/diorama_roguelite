@@ -37,6 +37,11 @@
     <ClInclude Include="Networking\ClientServer\UnauthenticatedClient.hpp" />
     <ClInclude Include="Precompiled\pch.hpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.vcxproj">
+      <Project>{3f3f816c-0579-4b4a-9419-2ec6544f483d}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -76,7 +81,6 @@
   </ImportGroup>
   <ImportGroup Label="Shared">
     <Import Project="..\ClientServerCommon\ClientServerCommon.vcxitems" Label="Shared" />
-    <Import Project="..\Common\Common.vcxitems" Label="Shared" />
     <Import Project="..\GameData\GameData.vcxitems" Label="Shared" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
