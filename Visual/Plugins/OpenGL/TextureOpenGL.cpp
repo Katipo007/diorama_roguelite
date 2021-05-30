@@ -102,7 +102,8 @@ namespace Graphics::API
 
 	void TextureOpenGL::SetData( void * data, uint32_t data_size )
 	{
-		uint32_t _bpp = ( opengl_data_format == GL_RGBA ) ? 4 : 3;
+		(void)data_size;
+		uint32_t _bpp = (opengl_data_format == GL_RGBA) ? 4 : 3; (void)_bpp;
 		ASSERT( data_size == size.width * size.height * _bpp, "Data size must exactly match texture!" );
 		glTextureSubImage2D( opengl_texture_id, 0, 0, 0, static_cast<GLsizei>( size.width ), static_cast<GLsizei>( size.height ), opengl_data_format, GL_UNSIGNED_BYTE, data );
 	}

@@ -20,5 +20,5 @@
 
 // these are at the bottom because these files reference this one
 #include "Common/Deployment/Deployment.hpp"
-#include "Common/Core/Logging.hpp"
+#include "Common/Core/API/LoggingAPI.hpp"
 #include "Common/Core/Assert.hpp"

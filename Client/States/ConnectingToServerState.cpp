@@ -64,7 +64,7 @@ namespace ClientStates
 			case MessageFactory::GetMessageType<Messages::ServerClientLoginSuccess>() :
 			{
 				const auto& result = static_cast<const Messages::ServerClientLoginSuccess&>(e.message);
-				LOG_INFO( Client, "Login success message received, our username is '{}'", result.username.data() );
+				LOG_INFO( LoggingChannels::Client, "Login success message received, our username is '{}'", result.username.data() );
 				e.FlagAsHandled();
 				return fsm::Actions::TransitionTo<ClientStates::InGameState>();
 				break;

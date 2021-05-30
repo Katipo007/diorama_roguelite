@@ -24,7 +24,7 @@ namespace Networking::ClientServer
 			case MessageFactory::GetMessageType<Messages::ClientServerChatMessage>() :
 			{
 				auto& chat = static_cast<const Messages::ClientServerChatMessage&>(incoming);
-				LOG_INFO( Server, "Chat message received from '{}'({}): {}", username, GetClientIndex(), chat.message.data() );
+				LOG_INFO( LoggingChannels::Server, "Chat message received from '{}'({}): {}", username.c_str(), GetClientIndex(), chat.message.data() );
 
 				owner.BroadcastMessage<Messages::ServerClientChatMessage>( ChannelType::Reliable, [&chat, this]( ActiveClient&, Messages::ServerClientChatMessage& outgoing )
 					{

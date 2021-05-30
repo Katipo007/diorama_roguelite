@@ -57,7 +57,7 @@ namespace Resources
 	{
 		auto result = GetUntyped( resource_id_ );
 		if (!result)
-			LOG_WARN( Application, "Preloading resource '{}' (type: {}) failed", resource_id_, GetAssetTypeName( type ) );
+			LOG_WARN( LoggingChannels::Application, "Preloading resource '{}' (type: {}) failed", resource_id_, GetAssetTypeName( type ) );
 
 		return result != nullptr;
 	}
@@ -82,7 +82,7 @@ namespace Resources
 				++it;
 		}
 		
-		LOG_INFO( Application, "Purged '{}' old resources from {} cache", old_size - resources.size(), GetAssetTypeName( type ) );
+		LOG_INFO( LoggingChannels::Application, "Purged '{}' old resources from {} cache", old_size - resources.size(), GetAssetTypeName( type ) );
 	}
 
 	void BaseResourceCache::NextGeneration()

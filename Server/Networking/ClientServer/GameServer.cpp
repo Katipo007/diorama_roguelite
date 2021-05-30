@@ -69,7 +69,7 @@ namespace Networking::ClientServer
 		auto unauthed_obj = unauthed_clients.extract( client.GetClientIndex() );
 		if (!unauthed_obj)
 		{
-			LOG_WARN( Server, "Client ({}) isn't in the 'unauthenticated' state", client_index );
+			LOG_WARN( LoggingChannels::Server, "Client ({}) isn't in the 'unauthenticated' state", client_index );
 			return false;
 		}
 		ASSERT( client_index == unauthed_obj.key() );
@@ -77,12 +77,12 @@ namespace Networking::ClientServer
 		const auto [accepted_it, success] = active_clients.try_emplace( client_index, unauthed_obj.mapped() );
 		if (!success)
 		{
-			LOG_CRITICAL( Server, "Failed to transition client ({}) to 'active' because: Failed to emplace", client_index );
+			LOG_CRITICAL( LoggingChannels::Server, "Failed to transition client ({}) to 'active' because: Failed to emplace", client_index );
 			server.DisconnectClient( client_index );
 			return false;
 		}
 
-		LOG_INFO( Server, "Accepted client ({})", client_index );
+		LOG_INFO( LoggingChannels::Server, "Accepted client ({})", client_index );
 		return true;
 	}
 
@@ -97,7 +97,7 @@ namespace Networking::ClientServer
 			return true;
 		}
 
-		LOG_WARN( Server, "Client ({}) isn't in the 'unauthenticated' state", client.GetClientIndex() );
+		LOG_WARN( LoggingChannels::Server, "Client ({}) isn't in the 'unauthenticated' state", client.GetClientIndex() );
 		return false;
 	}
 
@@ -113,9 +113,9 @@ namespace Networking::ClientServer
 			} );
 
 		if (reason.has_value())
-			LOG_INFO( Server, "Disconnecting client ({}) for reason '{}'", client.GetClientIndex(), reason.value() );
+			LOG_INFO( LoggingChannels::Server, "Disconnecting client ({}) for reason '{}'", client.GetClientIndex(), reason.value().c_str() );
 		else
-			LOG_INFO( Server, "Disconnecting client ({}) (no reason provided)", client.GetClientIndex() );
+			LOG_INFO( LoggingChannels::Server, "Disconnecting client ({}) (no reason provided)", client.GetClientIndex() );
 		client.SetFlag( ClientFlags::ToBeDisconnected );
 	}
 
@@ -198,7 +198,7 @@ namespace Networking::ClientServer
 		}
 		else
 		{
-			LOG_CRITICAL( Server, "Failed to allocate message of type '{}' ({})", MessageFactory::GetMessageName( type ), type );
+			LOG_CRITICAL( LoggingChannels::Server, "Failed to allocate message of type '{}' ({})", MessageFactory::GetMessageName( type ), type );
 		}
 
 		return false;
@@ -226,14 +226,14 @@ namespace Networking::ClientServer
 		ASSERT( FindClientConnection( index ) == nullptr );
 
 		const auto [it, success] = unauthed_clients.try_emplace( index, *this, index );
-		LOG_INFO( Server, "Client ({}) connected", index );
+		LOG_INFO( LoggingChannels::Server, "Client ({}) connected", index );
 	}
 
 	void GameServer::ClientDisconnectedHandler( ClientServerAdapter&, YojimboPlugin::ClientIndex_T index )
 	{
 		unauthed_clients.erase( index );
 		active_clients.erase( index );
-		LOG_INFO( Server, "Client ({}) disconnected", index );
+		LOG_INFO( LoggingChannels::Server, "Client ({}) disconnected", index );
 	}
 
 	void GameServer::ProcessMessages()
@@ -249,7 +249,7 @@ namespace Networking::ClientServer
 			auto* client = FindClientConnection( idx );
 			if (client == nullptr)
 			{
-				LOG_CRITICAL( Server, "Found a connected client without a connection object, severing" );
+				LOG_CRITICAL( LoggingChannels::Server, "Found a connected client without a connection object, severing" );
 				server.DisconnectClient( idx );
 				continue;
 			}

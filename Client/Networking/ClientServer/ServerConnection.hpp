@@ -54,7 +54,8 @@ namespace Networking::ClientServer
 				return;
 			}
 
-			FATAL( "Failed to allocate message of type '" + std::string{ MessageFactory::GetMessageName<MESSAGE_T>() } + "'" );
+			const auto error_msg = "Failed to allocate message of type '" + std::string{ MessageFactory::GetMessageName<MESSAGE_T>() } + "'";
+			FATAL( error_msg.c_str() );
 		}
 
 		void OnFixedUpdate( const PreciseTimestep& ts );

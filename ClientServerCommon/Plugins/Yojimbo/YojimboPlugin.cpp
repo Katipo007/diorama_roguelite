@@ -4,6 +4,8 @@
 
 namespace
 {
+	constexpr API::LoggingAPI::ChannelId YojimboLoggingChannel( "Yojimbo" );
+
 	int YojimboLoggingRoute( const char* fmt, ... )
 	{
 		char buffer[4 * 1024];
@@ -15,7 +17,7 @@ namespace
 		if (buffer[length - 1] == '\n')
 			buffer[length - 1] = '\0';
 
-		LOG_INFO( Application, "[yojimbo] {}", buffer );
+		LOG_INFO( YojimboLoggingChannel, "{}", buffer );
 		return 0;
 	}
 }
@@ -26,6 +28,12 @@ namespace Plugins
 
 	YojimboPlugin::YojimboPlugin()
 	{
+		auto& logging = API::LoggingAPI::GetInstance();
+		logging.AddSink( YojimboLoggingChannel,
+			{
+				.name = "Yojimbo",
+				.window_output_pattern = "",
+			} );
 	}
 
 	YojimboPlugin::~YojimboPlugin()

@@ -32,7 +32,7 @@ namespace Graphics::API
         {
             if (SDL_Init( flags ) != 0)
             {
-                LOG_CRITICAL( Application, "SDL2 could not initialize! SDL_Error: '{0}'", SDL_GetError() );
+                LOG_CRITICAL( LoggingChannels::Application, "SDL2 could not initialize! SDL_Error: '{0}'", SDL_GetError() );
                 FATAL( "SDL2 could not initialize!" );
             }
         }

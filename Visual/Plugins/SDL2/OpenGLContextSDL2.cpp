@@ -14,10 +14,10 @@ namespace Graphics::API
 		shared_context = SDL_GL_CreateContext( window );
 		context = SDL_GL_CreateContext( window );
 
-		LOG_INFO( OpenGL, "OpenGL Info:" );
-		LOG_INFO( OpenGL, "\tVendor: {0}", glGetString( GL_VENDOR ) );
-		LOG_INFO( OpenGL, "\tRenderer: {0}", glGetString( GL_RENDERER ) );
-		LOG_INFO( OpenGL, "\tVersion: {0}", glGetString( GL_VERSION ) );
+		LOG_INFO( LoggingChannels::OpenGL, "OpenGL Info:" );
+		LOG_INFO( LoggingChannels::OpenGL, "\tVendor: {0}", glGetString( GL_VENDOR ) );
+		LOG_INFO( LoggingChannels::OpenGL, "\tRenderer: {0}", glGetString( GL_RENDERER ) );
+		LOG_INFO( LoggingChannels::OpenGL, "\tVersion: {0}", glGetString( GL_VERSION ) );
 	}
 
 	OpenGLContextSDL2::OpenGLContextSDL2( SDL_Window* window_, SDL_GLContext shared_ )

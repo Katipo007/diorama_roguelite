@@ -72,9 +72,6 @@
     <ClInclude Include="Core\Core.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Logging.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Core\ResourceManager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -198,6 +195,12 @@
     <ClInclude Include="Utility\Unreachable.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Core\API\LoggingAPI.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Plugins\Spdlog\SpdlogPlugin.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Resources\ResourceCache.cpp">
@@ -215,9 +218,6 @@
     <ClCompile Include="Core\Core.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Logging.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Core\ResourceManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -228,6 +228,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Precompiled\pch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\API\LoggingAPI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Plugins\Spdlog\SpdlogPlugin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

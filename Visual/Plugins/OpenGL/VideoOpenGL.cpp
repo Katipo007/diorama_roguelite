@@ -191,10 +191,10 @@ namespace Graphics::API
 
 		switch (severity)
 		{
-		case GL_DEBUG_SEVERITY_HIGH:         LOG_CRITICAL( OpenGL, message ); DEBUGBREAK(); return;
-		case GL_DEBUG_SEVERITY_MEDIUM:       LOG_ERROR( OpenGL, message ); return;
-		case GL_DEBUG_SEVERITY_LOW:          LOG_WARN( OpenGL, message ); return;
-		case GL_DEBUG_SEVERITY_NOTIFICATION: LOG_TRACE( OpenGL, message ); return;
+		case GL_DEBUG_SEVERITY_HIGH:         LOG_CRITICAL( LoggingChannels::OpenGL, message ); DEBUGBREAK(); return;
+		case GL_DEBUG_SEVERITY_MEDIUM:       LOG_ERROR( LoggingChannels::OpenGL, message ); return;
+		case GL_DEBUG_SEVERITY_LOW:          LOG_WARN( LoggingChannels::OpenGL, message ); return;
+		case GL_DEBUG_SEVERITY_NOTIFICATION: LOG_TRACE( LoggingChannels::OpenGL, message ); return;
 		}
 
 		ASSERT( false, "Unknown severity level!" );

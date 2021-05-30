@@ -35,7 +35,7 @@ namespace Networking::ClientServer
 			{
 				const auto& login_start = static_cast<const Messages::ClientServerLoginStart&>(message);
 				requested_username = login_start.username.data();
-				LOG_INFO( Server, "Got login start message from connection '{}' with username '{}'", client_index, requested_username );
+				LOG_INFO( LoggingChannels::Server, "Got login start message from connection '{}' with username '{}'", client_index, requested_username.c_str() );
 
 				if (IsValidUsername( requested_username ))
 					owner.AcceptClient( *this );

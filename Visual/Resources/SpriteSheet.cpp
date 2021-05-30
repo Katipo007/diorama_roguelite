@@ -75,7 +75,7 @@ namespace
 				texture_filename_out = filepath_prefix / texture_filename;
 			else
 			{
-				LOG_WARN( Application, "Spritesheet JSON didn't supply a texture filename" );
+				LOG_WARN( LoggingChannels::Application, "Spritesheet JSON didn't supply a texture filename" );
 				texture_filename_out = "";
 			}
 
@@ -138,7 +138,7 @@ namespace Graphics
 		if (it != std::end( id_to_sprite_idx_map ))
 			return it->second;
 		
-		LOG_ERROR( Application, "SpriteSheet does not contain sprite '{}'", name );
+		LOG_ERROR( LoggingChannels::Application, "SpriteSheet does not contain sprite '{}'", name );
 		return static_cast<SpriteIdx_T>(-1);
 	}
 
@@ -162,12 +162,12 @@ namespace Graphics
 		}
 		catch (nlohmann::json::exception& e)
 		{
-			LOG_ERROR( Application, "Exception while parsing spritesheet json: '{}'", e.what() );
+			LOG_ERROR( LoggingChannels::Application, "Exception while parsing spritesheet json: '{}'", e.what() );
 			handled = false;
 		}
 		catch (std::runtime_error& e)
 		{
-			LOG_ERROR( Application, "Exception while parsing spritesheet:'{}'", e.what() );
+			LOG_ERROR( LoggingChannels::Application, "Exception while parsing spritesheet:'{}'", e.what() );
 			handled = false;
 		}
 

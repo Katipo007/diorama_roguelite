@@ -74,12 +74,12 @@ namespace Graphics::API
 	{
 		if( width == 0 || height == 0 )
 		{
-			LOG_WARN( OpenGL, "Attempting to resize framebuffer with a 0 dimension! ({0} x {1})", width, height );
+			LOG_WARN( LoggingChannels::OpenGL, "Attempting to resize framebuffer with a 0 dimension! ({0} x {1})", width, height );
 			return;
 		}
 		else if( width > MaxFramebufferSize || height > MaxFramebufferSize)
 		{
-			LOG_WARN( OpenGL, "Attempting to resize framebuffer beyond limits! ({0} x {1})", width, height );
+			LOG_WARN( LoggingChannels::OpenGL, "Attempting to resize framebuffer beyond limits! ({0} x {1})", width, height );
 			return;
 		}
 

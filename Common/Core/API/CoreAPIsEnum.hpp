@@ -10,6 +10,7 @@ namespace CoreAPIs
 		/// i.e. Most important at top, ones which depend on others lower.
 
 		System = 0,
+		Logging,
 		Input,
 		Video,
 		DearImGui,

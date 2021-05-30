@@ -138,7 +138,7 @@ namespace ClientStates
 	void InGameState::ChatWindowSendMessageHandler( std::string_view chat_message )
 	{
 		using namespace Networking::ClientServer;
-		LOG_INFO( Client, "Sending chat message '{}'", chat_message.data() );
+		LOG_INFO( LoggingChannels::Client, "Sending chat message '{}'", chat_message );
 		client.GetServerConnection().SendMessage<Messages::ClientServerChatMessage>( ChannelType::Reliable, [&chat_message]( Messages::ClientServerChatMessage& chat )
 			{
 				StringUtility::StringToArray( chat_message, chat.message );

@@ -24,6 +24,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Shader.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\Texture.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Graphics\VertexArray.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Logging.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\OpenGL\BufferOpenGL.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\OpenGL\FrameBufferOpenGL.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\OpenGL\OpenGLHeader.hpp" />

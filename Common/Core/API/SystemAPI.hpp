@@ -1,5 +1,7 @@
 #pragma once
 
+#include <thread>
+
 #include "CoreAPIsEnum.hpp"
 #include "BaseAPI.hpp"
 #include "Common/Geometry/Size.hpp"

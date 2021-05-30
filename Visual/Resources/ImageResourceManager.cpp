@@ -67,12 +67,12 @@ namespace Resources
 		}
 		catch (std::exception& e)
 		{
-			LOG_ERROR( Application, "Exception while parsing images from json: '{}'", e.what() );
+			LOG_ERROR( LoggingChannels::Application, "Exception while parsing images from json: '{}'", e.what() );
 			handled = false;
 		}
 
 		if (!handled)
-			LOG_ERROR( Application, "Failed to add images from json" );
+			LOG_ERROR( LoggingChannels::Application, "Failed to add images from json" );
 		return handled;
 	}
 
@@ -84,7 +84,7 @@ namespace Resources
 		if (FileOps::ReadFile( filepath, file_contents ))
 			return AddImagesFromJson( file_contents, file_directory );
 
-		LOG_WARN( Application, "Failed to open file " );
+		LOG_WARN( LoggingChannels::Application, "Failed to open file " );
 		return false;
 	}
 
@@ -159,7 +159,7 @@ namespace Resources
 		auto [it, success] = id_to_image_def.try_emplace( (std::string)image_id, def );
 
 		if (!success)
-			LOG_WARN( Application, "Failed to add image definition to the resource manager, duplicate entry?" );
+			LOG_WARN( LoggingChannels::Application, "Failed to add image definition to the resource manager, duplicate entry?" );
 
 		return success;
 	}

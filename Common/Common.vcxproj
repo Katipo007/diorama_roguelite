@@ -17,6 +17,7 @@
     <ClInclude Include="Core\API\CoreAPIsEnum.hpp" />
     <ClInclude Include="Core\API\DearImGuiAPI.hpp" />
     <ClInclude Include="Core\API\InputAPI.hpp" />
+    <ClInclude Include="Core\API\LoggingAPI.hpp" />
     <ClInclude Include="Core\API\SystemAPI.hpp" />
     <ClInclude Include="Core\API\VideoAPI.hpp" />
     <ClInclude Include="Core\Assert.hpp" />
@@ -24,7 +25,7 @@
     <ClInclude Include="Core\Core.hpp" />
     <ClInclude Include="Core\Graphics\OpenGLContext.hpp" />
     <ClInclude Include="Core\Graphics\Window.hpp" />
-    <ClInclude Include="Core\Logging.hpp" />
+    <ClInclude Include="Core\Plugins\Spdlog\SpdlogPlugin.hpp" />
     <ClInclude Include="Core\ResourceManager.hpp" />
     <ClInclude Include="Core\Resources\Resource.hpp" />
     <ClInclude Include="Core\Resources\ResourceCache.hpp" />
@@ -75,8 +76,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\AbstractGame.cpp" />
+    <ClCompile Include="Core\API\LoggingAPI.cpp" />
     <ClCompile Include="Core\Core.cpp" />
-    <ClCompile Include="Core\Logging.cpp" />
+    <ClCompile Include="Core\Plugins\Spdlog\SpdlogPlugin.cpp" />
     <ClCompile Include="Core\ResourceManager.cpp" />
     <ClCompile Include="Core\Resources\ResourceCache.cpp" />
     <ClCompile Include="Core\Resources\ResourceLoader.cpp" />

@@ -111,6 +111,7 @@
     <ClInclude Include="Game\ClientZone.hpp" />
     <ClInclude Include="Game\PlayerObject.hpp" />
     <ClInclude Include="Graphical\UI\ChatWindow.hpp" />
+    <ClInclude Include="Logging.hpp" />
     <ClInclude Include="Networking\ClientServer\ServerConnection.hpp" />
     <ClInclude Include="Plugins\PluginTypes.hpp" />
     <ClInclude Include="Precompiled\pch.hpp" />

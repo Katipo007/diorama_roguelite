@@ -68,7 +68,7 @@ namespace Networking::ClientServer
 	{
 		if (!::yojimbo::Client::IsDisconnected())
 		{
-			LOG_WARN( Client, "Ignoring call to ServerConnection::Connect(): Connection already in progress" );
+			LOG_WARN( LoggingChannels::Client, "Ignoring call to ServerConnection::Connect(): Connection already in progress" );
 			return;
 		}
 
@@ -76,9 +76,9 @@ namespace Networking::ClientServer
 		address.ToString( address_string, static_cast<int>(std::size( address_string )) );
 
 #if _DEBUG
-		LOG_TRACE( Client, "Client id: {}", client_id );
+		LOG_TRACE( LoggingChannels::Client, "Client id: {}", client_id );
 #endif
-		LOG_INFO( Client, "Attempting to connect to a game server at '{}'", address_string );
+		LOG_INFO( LoggingChannels::Client, "Attempting to connect to a game server at '{}'", address_string );
 
 		// Connect
 		// TODO: look into using the secure version of connect
@@ -110,7 +110,7 @@ namespace Networking::ClientServer
 
 				if (!handled)
 				{
-					LOG_CRITICAL( Client, "Disconnecting due to unhandled message. Message='{}'({})", MessageFactory::GetMessageName( message_type ), message_type );
+					LOG_CRITICAL( LoggingChannels::Client, "Disconnecting due to unhandled message. Message='{}'({})", MessageFactory::GetMessageName( message_type ), message_type );
 					Disconnect();
 					break;
 				}

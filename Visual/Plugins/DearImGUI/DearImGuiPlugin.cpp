@@ -142,7 +142,7 @@ namespace Graphics::API
 				}
 			}
 			else
-				LOG_WARN( Application, "DearImGui draw data was NULL" );
+				LOG_WARN( LoggingChannels::Application, "DearImGui draw data was NULL" );
 		}
 	}
 

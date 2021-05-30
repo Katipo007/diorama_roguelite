@@ -179,7 +179,7 @@ namespace Graphics::API
 			}
 			else
 			{
-				LOG_ERROR( OpenGL, "Could not read from file '{0}'", filepath );
+				LOG_ERROR( LoggingChannels::OpenGL, "Could not read from file '{0}'", filepath.string().c_str() );
 			}
 
 			return _result;
@@ -187,7 +187,7 @@ namespace Graphics::API
 		}
 		else
 		{
-			LOG_ERROR( OpenGL, "Could not open file '{0}' for reading", filepath );
+			LOG_ERROR( LoggingChannels::OpenGL, "Could not open file '{0}' for reading", filepath.string().c_str() );
 		}
 
 		return std::string();
@@ -261,8 +261,8 @@ namespace Graphics::API
 					glDeleteShader( shader );
 
 					// report error
-					LOG_ERROR( OpenGL, "Error compiling OpenGL shader: {0}", msg.data() );
-					ASSERT_CHANNEL( OpenGL, false, "Shader compilation failed" );
+					LOG_ERROR( LoggingChannels::OpenGL, "Error compiling OpenGL shader: {0}", msg.data() );
+					ASSERT_CHANNEL( LoggingChannels::OpenGL, false, "Shader compilation failed" );
 					break;
 				}
 			}
@@ -297,8 +297,8 @@ namespace Graphics::API
 					glDeleteShader( shader.second );
 
 				// report error
-				LOG_ERROR( OpenGL, "Error linking OpenGL shader program: {0}", msg.data() );
-				ASSERT_CHANNEL( OpenGL, false, "Shader link failed" );
+				LOG_ERROR( LoggingChannels::OpenGL, "Error linking OpenGL shader program: {0}", msg.data() );
+				ASSERT_CHANNEL( LoggingChannels::OpenGL, false, "Shader link failed" );
 				return;
 			}
 		}

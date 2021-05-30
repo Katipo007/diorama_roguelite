@@ -125,7 +125,7 @@ namespace Game
         if (target_address.IsValid())
             pimpl->server_connection.Connect( target_address );
         else
-            LOG_WARN( Client, "Failed to connect to server, invalid address" );
+            LOG_WARN( LoggingChannels::Client, "Failed to connect to server, invalid address" );
     }
 
     void ClientGame::DisconnectFromServer( std::optional<std::string> reason )
