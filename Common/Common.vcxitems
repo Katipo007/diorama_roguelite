@@ -74,6 +74,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Utility\StringHashMap.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Utility\Timestep.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\enumclassbitset\EnumClassBitset.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Version\BuildVersion.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)Core\AbstractGame.cpp" />
@@ -85,5 +86,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)File\FileOps.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Core\Logging.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Utility\StateMachine\example.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Version\BuildVersion.cpp" />
   </ItemGroup>
 </Project>
