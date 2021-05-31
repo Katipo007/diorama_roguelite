@@ -12,7 +12,10 @@ namespace Networking::ClientServer
 		: BaseClientConnection( unauthed_client.GetOwner(), unauthed_client.GetClientIndex() )
 		, username( unauthed_client.GetUsername() )
 	{
-		SendMessage<Messages::ServerClientLoginSuccess>( ChannelType::Reliable, []( Messages::ServerClientLoginSuccess& ) {} );
+		SendMessage<Messages::ServerClientLoginSuccess>( ChannelType::Reliable, [this]( Messages::ServerClientLoginSuccess& message )
+			{
+				StringUtility::StringToArray( this->username, message.username );
+			} );
 	}
 	
 	ActiveClient::~ActiveClient() = default;
