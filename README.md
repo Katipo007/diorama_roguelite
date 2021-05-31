@@ -11,7 +11,6 @@ The engine source will probably end up releasing under the MIT license.
 # State of the Project
 A bit sad at the moment, currently the 'game' consists of a chatbox and a character displayed on screen, that is it.
 ## Immediate goals:
-- ~~Finish or abandon the `networking-plugin` branch.~~
 - Get character movement working again and committed.
 - A basic NPC enemy which chases the closest player.
 - 'Zone' generation and moving between zones which will act as the 'dioramas'/'areas' that you play the game through.
@@ -37,6 +36,7 @@ A bit sad at the moment, currently the 'game' consists of a chatbox and a charac
 - [pugixml](https://pugixml.org/) XML parser.
 - [EnumClassBitset](https://github.com/Dalzhim/ArticleEnumClass-v2) helpers to provide bitmask operators and typesafe comparisons for `enum class`
 - [magic_enum](https://github.com/Neargye/magic_enum) A great utility library providing static reflection for enums.
+- [frozen](https://github.com/serge-sans-paille/frozen) Header-only library for 0 initialization cost containers.
 ## Art
 - "Scroll-o-Sprites" and some other CC-BY-3.0 works by _Sebastiaan van Hijfte_ as placeholders
 
