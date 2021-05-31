@@ -20,11 +20,11 @@ namespace ClientStates
 	{
 	}
 
-	fsm::Actions::NoAction MainMenuState::HandleEvent( const FrameEvent& e )
+	fsm::NoAction MainMenuState::HandleEvent( const FrameEvent& e )
 	{
 		(void)e;
 
-		return fsm::Actions::NoAction{};
+		return fsm::NoAction{};
 	}
 
 	MainMenuState::OutTransitionActions MainMenuState::HandleEvent( const DearImGuiFrameEvent& )
@@ -54,10 +54,10 @@ namespace ClientStates
 		}
 
 		if( do_join )
-			return fsm::Actions::TransitionTo<JoinMultiplayerState>{};
+			return fsm::TransitionTo<JoinMultiplayerState>{};
 		else if( do_exit )
 			client.Exit( 0 );
 
-		return fsm::Actions::NoAction{};
+		return fsm::NoAction{};
 	}
 }

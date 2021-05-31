@@ -5,8 +5,8 @@
 #include "Client/Graphical/UI/ChatWindow.hpp"
 #include "Client/States/Events.hpp"
 #include "Common/Utility/StateMachine/DefaultAction.hpp"
-#include "Common/Utility/StateMachine/Actions/Might.hpp"
-#include "Common/Utility/StateMachine/Actions/TransitionTo.hpp"
+#include "Common/Utility/StateMachine/Might.hpp"
+#include "Common/Utility/StateMachine/TransitionTo.hpp"
 #include "Common/Utility/NonCopyable.hpp"
 
 namespace API
@@ -33,10 +33,10 @@ namespace ClientStates
 	class DisconnectedFromServerState;
 
 	class InGameState
-		: public fsm::DefaultAction<fsm::Actions::NoAction>
+		: public fsm::DefaultAction<fsm::NoAction>
 	{
 	public:
-		using fsm::DefaultAction<fsm::Actions::NoAction>::HandleEvent;
+		using fsm::DefaultAction<fsm::NoAction>::HandleEvent;
 
 		explicit InGameState( Game::ClientGame& client );
 		explicit InGameState( InGameState&& to_move );
@@ -46,16 +46,16 @@ namespace ClientStates
 
 	public: // state machine stuffs
 
-		fsm::Actions::Might<fsm::Actions::TransitionTo<MainMenuState>> OnEnter();
+		fsm::Might<fsm::TransitionTo<MainMenuState>> OnEnter();
 
 		void OnLeave();
 		void OnLeave( const ClientStates::DisconnectedFromServerEvent& e );
 
-		fsm::Actions::NoAction HandleEvent( const FrameEvent& e );
-		fsm::Actions::NoAction HandleEvent( const RenderEvent& e );
-		fsm::Actions::NoAction HandleEvent( const DearImGuiFrameEvent& e );
-		fsm::Actions::NoAction HandleEvent( const ServerMessageEvent& e );
-		fsm::Actions::TransitionTo<DisconnectedFromServerState> HandleEvent( const DisconnectedFromServerEvent& e );
+		fsm::NoAction HandleEvent( const FrameEvent& e );
+		fsm::NoAction HandleEvent( const RenderEvent& e );
+		fsm::NoAction HandleEvent( const DearImGuiFrameEvent& e );
+		fsm::NoAction HandleEvent( const ServerMessageEvent& e );
+		fsm::TransitionTo<DisconnectedFromServerState> HandleEvent( const DisconnectedFromServerEvent& e );
 
 	protected:
 		void OnRender() const;

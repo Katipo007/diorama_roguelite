@@ -54,13 +54,13 @@ namespace ClientStates
 		main_camera.reset();
 	}
 
-	fsm::Actions::Might<fsm::Actions::TransitionTo<MainMenuState>> InGameState::OnEnter()
+	fsm::Might<fsm::TransitionTo<MainMenuState>> InGameState::OnEnter()
 	{
 		// TODO: return to menu if we don't have a connection
 		//if (!client.GetClientServerSession())
 		//{
 		//	LOG_ERROR( Client, "Expected to have a session when entering InGameState!" );
-		//	//return fsm::Actions::TransitionTo<MainMenuState>{};
+		//	//return fsm::TransitionTo<MainMenuState>{};
 		//}
 
 		//
@@ -74,7 +74,7 @@ namespace ClientStates
 		//
 		// TODO: connect to chat recieved event
 
-		return fsm::Actions::NoAction();
+		return fsm::NoAction();
 	}
 
 	void InGameState::OnLeave()
@@ -87,7 +87,7 @@ namespace ClientStates
 		OnLeave();
 	}
 
-	fsm::Actions::NoAction ClientStates::InGameState::HandleEvent( const FrameEvent& e )
+	fsm::NoAction ClientStates::InGameState::HandleEvent( const FrameEvent& e )
 	{
 		auto keyboard = input.GetKeyboard( 0 );
 		ASSERT( keyboard );
@@ -100,28 +100,28 @@ namespace ClientStates
 		}
 
 
-		return fsm::Actions::NoAction{};
+		return fsm::NoAction{};
 	}
 
-	fsm::Actions::NoAction InGameState::HandleEvent( const RenderEvent& e )
+	fsm::NoAction InGameState::HandleEvent( const RenderEvent& e )
 	{
 		(void)e;
 
 		OnRender();
 
-		return fsm::Actions::NoAction();
+		return fsm::NoAction();
 	}
 
-	fsm::Actions::NoAction ClientStates::InGameState::HandleEvent( const DearImGuiFrameEvent& e )
+	fsm::NoAction ClientStates::InGameState::HandleEvent( const DearImGuiFrameEvent& e )
 	{
 		(void)e;
 
 		chat_window.Do();
 
-		return fsm::Actions::NoAction{};
+		return fsm::NoAction{};
 	}
 
-	fsm::Actions::NoAction InGameState::HandleEvent( const ServerMessageEvent& e )
+	fsm::NoAction InGameState::HandleEvent( const ServerMessageEvent& e )
 	{
 		using namespace Networking::ClientServer;
 
@@ -136,12 +136,12 @@ namespace ClientStates
 			}
 		}
 
-		return fsm::Actions::NoAction();
+		return fsm::NoAction();
 	}
 
-	fsm::Actions::TransitionTo<DisconnectedFromServerState> InGameState::HandleEvent( const DisconnectedFromServerEvent& )
+	fsm::TransitionTo<DisconnectedFromServerState> InGameState::HandleEvent( const DisconnectedFromServerEvent& )
 	{
-		return fsm::Actions::TransitionTo<DisconnectedFromServerState>();
+		return fsm::TransitionTo<DisconnectedFromServerState>();
 	}
 
 	void InGameState::OnRender() const

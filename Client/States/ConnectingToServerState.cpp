@@ -15,9 +15,9 @@ namespace ClientStates
 	{
 	}
 
-	fsm::Actions::NoAction ConnectingToServerState::OnEnter( const ConnectingToServerEvent& )
+	fsm::NoAction ConnectingToServerState::OnEnter( const ConnectingToServerEvent& )
 	{
-		return fsm::Actions::NoAction();
+		return fsm::NoAction();
 	}
 
 	void ConnectingToServerState::OnLeave()
@@ -26,7 +26,7 @@ namespace ClientStates
 			DetatchFromConnection( *connection );
 	}
 
-	fsm::Actions::Might<fsm::Actions::TransitionTo<JoinMultiplayerState>> ConnectingToServerState::HandleEvent( const DearImGuiFrameEvent& )
+	fsm::Might<fsm::TransitionTo<JoinMultiplayerState>> ConnectingToServerState::HandleEvent( const DearImGuiFrameEvent& )
 	{
 		if (ImGui::Begin( "ConnectingToServerState", NULL, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove ))
 		{
@@ -46,16 +46,16 @@ namespace ClientStates
 			{
 				ImGui::End();
 				
-				return fsm::Actions::TransitionTo<JoinMultiplayerState>();
+				return fsm::TransitionTo<JoinMultiplayerState>();
 			}
 
 			ImGui::End();
 		}
 
-		return fsm::Actions::NoAction{};
+		return fsm::NoAction{};
 	}
 
-	fsm::Actions::Might<fsm::Actions::TransitionTo<InGameState>> ConnectingToServerState::HandleEvent( const ServerMessageEvent& e )
+	fsm::Might<fsm::TransitionTo<InGameState>> ConnectingToServerState::HandleEvent( const ServerMessageEvent& e )
 	{
 		using namespace Networking::ClientServer;
 
@@ -66,7 +66,7 @@ namespace ClientStates
 				const auto& result = static_cast<const Messages::ServerClientLoginSuccess&>(e.message);
 				LOG_INFO( LoggingChannels::Client, "Login success message received, our username is '{}'", result.username.data() );
 				e.FlagAsHandled();
-				return fsm::Actions::TransitionTo<ClientStates::InGameState>();
+				return fsm::TransitionTo<ClientStates::InGameState>();
 				break;
 			}
 
@@ -74,10 +74,10 @@ namespace ClientStates
 				break;
 		}
 
-		return fsm::Actions::NoAction{};
+		return fsm::NoAction{};
 	}
 
-	fsm::Actions::NoAction ConnectingToServerState::HandleEvent( const ConnectedToServerEvent& e )
+	fsm::NoAction ConnectingToServerState::HandleEvent( const ConnectedToServerEvent& e )
 	{
 		using namespace Networking::ClientServer;
 
@@ -88,13 +88,13 @@ namespace ClientStates
 				StringUtility::StringToArray( game.GetUsername(), msg.username );
 			} );
 
-		return fsm::Actions::NoAction();
+		return fsm::NoAction();
 	}
 
-	fsm::Actions::TransitionTo<DisconnectedFromServerState> ConnectingToServerState::HandleEvent( const DisconnectedFromServerEvent& e )
+	fsm::TransitionTo<DisconnectedFromServerState> ConnectingToServerState::HandleEvent( const DisconnectedFromServerEvent& e )
 	{
 		DetatchFromConnection( e.connection );
-		return fsm::Actions::TransitionTo<DisconnectedFromServerState>();
+		return fsm::TransitionTo<DisconnectedFromServerState>();
 	}
 
 	void ConnectingToServerState::AttachToConnection( Networking::ClientServer::ServerConnection& connection_ )

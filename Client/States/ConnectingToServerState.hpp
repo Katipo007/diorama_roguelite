@@ -2,8 +2,8 @@
 
 #include "Client/States/Events.hpp"
 #include "Common/Utility/StateMachine/DefaultAction.hpp"
-#include "Common/Utility/StateMachine/Actions/Might.hpp"
-#include "Common/Utility/StateMachine/Actions/TransitionTo.hpp"
+#include "Common/Utility/StateMachine/Might.hpp"
+#include "Common/Utility/StateMachine/TransitionTo.hpp"
 #include "Common/Utility/NonCopyable.hpp"
 
 namespace Game { class ClientGame; }
@@ -19,22 +19,22 @@ namespace ClientStates
 	/// Loading screen going from menu to in-game
 	/// </summary>
 	class ConnectingToServerState final
-		: public fsm::DefaultAction<fsm::Actions::NoAction>
+		: public fsm::DefaultAction<fsm::NoAction>
 	{
 	public:
-		using fsm::DefaultAction<fsm::Actions::NoAction>::HandleEvent;
+		using fsm::DefaultAction<fsm::NoAction>::HandleEvent;
 
 		explicit ConnectingToServerState( Game::ClientGame& );
 		explicit ConnectingToServerState( ConnectingToServerState&& ) = default;
 		~ConnectingToServerState() = default;
 
-		fsm::Actions::NoAction OnEnter( const ConnectingToServerEvent& );
+		fsm::NoAction OnEnter( const ConnectingToServerEvent& );
 		void OnLeave();
 
-		fsm::Actions::Might<fsm::Actions::TransitionTo<JoinMultiplayerState>> HandleEvent( const DearImGuiFrameEvent& e );
-		fsm::Actions::Might<fsm::Actions::TransitionTo<InGameState>> HandleEvent( const ServerMessageEvent& e );
-		fsm::Actions::NoAction HandleEvent( const ConnectedToServerEvent& e );
-		fsm::Actions::TransitionTo<DisconnectedFromServerState> HandleEvent( const DisconnectedFromServerEvent& e );
+		fsm::Might<fsm::TransitionTo<JoinMultiplayerState>> HandleEvent( const DearImGuiFrameEvent& e );
+		fsm::Might<fsm::TransitionTo<InGameState>> HandleEvent( const ServerMessageEvent& e );
+		fsm::NoAction HandleEvent( const ConnectedToServerEvent& e );
+		fsm::TransitionTo<DisconnectedFromServerState> HandleEvent( const DisconnectedFromServerEvent& e );
 
 	private:
 		ConnectingToServerState( const ConnectingToServerState& ) = delete;

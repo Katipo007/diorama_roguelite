@@ -30,7 +30,7 @@ namespace ClientStates
 
 	JoinMultiplayerState::ExitActions JoinMultiplayerState::HandleEvent( const FrameEvent& )
 	{
-		return fsm::Actions::NoAction{};
+		return fsm::NoAction{};
 	}
 
 	JoinMultiplayerState::ExitActions JoinMultiplayerState::HandleEvent( const DearImGuiFrameEvent& e )
@@ -52,7 +52,7 @@ namespace ClientStates
 			if (ImGui::Button( "Back" ))
 			{
 				ImGui::End();
-				return fsm::Actions::TransitionTo<MainMenuState>{};
+				return fsm::TransitionTo<MainMenuState>{};
 			}
 
 			// current status message
@@ -61,22 +61,22 @@ namespace ClientStates
 			ImGui::End();
 		}
 
-		return fsm::Actions::NoAction{};
+		return fsm::NoAction{};
 	}
 
 	JoinMultiplayerState::ExitActions JoinMultiplayerState::HandleEvent( const ConnectedToServerEvent& e )
 	{
 		if (&e.connection == &client.GetServerConnection())
-			return fsm::Actions::TransitionTo<ConnectingToServerState>{};
+			return fsm::TransitionTo<ConnectingToServerState>{};
 		else
-			return fsm::Actions::NoAction{};
+			return fsm::NoAction{};
 	}
 
 	JoinMultiplayerState::ExitActions JoinMultiplayerState::HandleEvent( const ConnectingToServerEvent& e )
 	{
 		if (&e.connection == &client.GetServerConnection())
-			return fsm::Actions::TransitionTo<ConnectingToServerState>{};
+			return fsm::TransitionTo<ConnectingToServerState>{};
 		else
-			return fsm::Actions::NoAction{};
+			return fsm::NoAction{};
 	}
 }

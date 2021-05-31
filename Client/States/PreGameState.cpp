@@ -10,11 +10,11 @@ namespace ClientStates
 	{
 	}
 
-	fsm::Actions::Might<fsm::Actions::TransitionTo<MainMenuState>> PreGameState::HandleEvent( const FrameEvent& e )
+	fsm::Might<fsm::TransitionTo<MainMenuState>> PreGameState::HandleEvent( const FrameEvent& e )
 	{
 		(void)e;
 
 		// TODO: only transition after we've loaded starting stuff
-		return fsm::Actions::TransitionTo<MainMenuState>();
+		return fsm::TransitionTo<MainMenuState>();
 	}
 }

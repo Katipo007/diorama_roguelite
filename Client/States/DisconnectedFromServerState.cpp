@@ -4,10 +4,10 @@
 
 namespace ClientStates
 {
-	fsm::Actions::NoAction DisconnectedFromServerState::OnEnter( const DisconnectedFromServerState& e )
+	fsm::NoAction DisconnectedFromServerState::OnEnter( const DisconnectedFromServerState& e )
 	{
 		given_reason = e.given_reason;
-		return fsm::Actions::NoAction();
+		return fsm::NoAction();
 	}
 
 	void DisconnectedFromServerState::OnLeave()
@@ -15,7 +15,7 @@ namespace ClientStates
 		given_reason.clear();
 	}
 
-	fsm::Actions::Might<fsm::Actions::TransitionTo<JoinMultiplayerState>> DisconnectedFromServerState::HandleEvent( const DearImGuiFrameEvent& )
+	fsm::Might<fsm::TransitionTo<JoinMultiplayerState>> DisconnectedFromServerState::HandleEvent( const DearImGuiFrameEvent& )
 	{
 		if (ImGui::Begin( "DisconnectedFromServerState", NULL, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove ))
 		{
@@ -27,12 +27,12 @@ namespace ClientStates
 			if (ImGui::Button( "Back" ))
 			{
 				ImGui::End();
-				return fsm::Actions::TransitionTo<JoinMultiplayerState>();
+				return fsm::TransitionTo<JoinMultiplayerState>();
 			}
 
 			ImGui::End();
 		}
 
-		return fsm::Actions::NoAction{};
+		return fsm::NoAction{};
 	}
 }

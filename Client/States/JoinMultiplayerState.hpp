@@ -2,8 +2,8 @@
 
 #include "Client/States/Events.hpp"
 #include "Common/Utility/StateMachine/DefaultAction.hpp"
-#include "Common/Utility/StateMachine/Actions/Might.hpp"
-#include "Common/Utility/StateMachine/Actions/TransitionTo.hpp"
+#include "Common/Utility/StateMachine/Might.hpp"
+#include "Common/Utility/StateMachine/TransitionTo.hpp"
 
 #include "Common/Utility/Signal.hpp"
 
@@ -18,15 +18,15 @@ namespace ClientStates
 	/// Screen to join an existing multi-player game
 	/// </summary>
 	class JoinMultiplayerState
-		: public fsm::DefaultAction<fsm::Actions::NoAction>
+		: public fsm::DefaultAction<fsm::NoAction>
 	{
-		using ExitActions = fsm::Actions::OneOf< fsm::Actions::NoAction,
-			fsm::Actions::TransitionTo<MainMenuState>,
-			fsm::Actions::TransitionTo<ConnectingToServerState>
+		using ExitActions = fsm::OneOf< fsm::NoAction,
+			fsm::TransitionTo<MainMenuState>,
+			fsm::TransitionTo<ConnectingToServerState>
 		>;
 
 	public:
-		using fsm::DefaultAction<fsm::Actions::NoAction>::HandleEvent;
+		using fsm::DefaultAction<fsm::NoAction>::HandleEvent;
 
 		explicit JoinMultiplayerState( Game::ClientGame& client );
 		explicit JoinMultiplayerState( JoinMultiplayerState&& to_move );
