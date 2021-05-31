@@ -87,12 +87,18 @@ namespace ClientStates
 		OnLeave();
 	}
 
-	fsm::Actions::NoAction ClientStates::InGameState::HandleEvent( const FrameEvent& )
+	fsm::Actions::NoAction ClientStates::InGameState::HandleEvent( const FrameEvent& e )
 	{
 		auto keyboard = input.GetKeyboard( 0 );
 		ASSERT( keyboard );
-		if (keyboard->IsButtonDown( Input::Keys::Space ))
-			LOG_INFO( ::LoggingChannels::Client, "SPACE BAR HELD" );
+
+		if (auto* player_object = gameworld->GetPlayerObject())
+		{
+			auto& player_position = player_object->GetPosition();
+
+			player_position.z = std::clamp( std::lerp( player_position.z, keyboard->IsButtonDown( Input::Keys::Space ) ? 4.f : 0.f, e.timestep.delta * 8.f ), 0.f, 4.f );
+		}
+
 
 		return fsm::Actions::NoAction{};
 	}

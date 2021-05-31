@@ -63,7 +63,7 @@ namespace Game
 		/// Draw player specificly
 		{
 			ASSERT( player );
-			sprite_renderer->DrawStandingSprite( player->GetSprite(), { 0.f, 0.f, 0.f } );
+			sprite_renderer->DrawStandingSprite( player->GetSprite(), player->GetPosition() );
 		}
 	}
 }

@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "Common/Core/Resources/ResourceHandle.hpp"
+#include "Common/Utility/Math/Vec3.hpp"
 
 namespace Graphics { class Sprite; }
 
@@ -23,7 +24,11 @@ namespace Game
 
 		const Resources::ResourceHandle<Graphics::Sprite>& GetSprite() const { return sprite; }
 
+		glm::vec3& GetPosition() { return position; }
+		const glm::vec3& GetPosition() const { return position; }
+
 	protected:
 		Resources::ResourceHandle<Graphics::Sprite> sprite;
+		glm::vec3 position;
 	};
 }

@@ -27,7 +27,6 @@ namespace Game
 		PlayerObject* GetPlayerObject() { return player.get(); }
 		const PlayerObject* GetPlayerObject() const { return player.get(); }
 
-
 		virtual void OnFrame( const Timestep& timestep ) override;
 		// Render the world from a given camera's perspective
 		void Render( std::shared_ptr<Visual::Camera> camera ) const;
