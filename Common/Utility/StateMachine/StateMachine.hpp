@@ -33,35 +33,20 @@ namespace fsm
 
 	namespace detail
 	{
-		template<class... B>
-		using or_ = std::disjunction<B...>;
+		template <class Tuple, class T>
+		struct tuple_index;
 
-		template <typename T, typename Tuple>
-		struct has_type;
+		template <class... Types, class T>
+		struct tuple_index<std::tuple<T, Types...>, T> { static const std::size_t value = 0; };
 
-		template <typename T, typename... Us>
-		struct has_type<T, std::tuple<Us...>> : or_<std::is_same<T, Us>...> {};
+		template <class U, class... Types, class T>
+		struct tuple_index<std::tuple<U, Types...>, T> { static const std::size_t value = 1 + tuple_index<std::tuple<Types...>, T>::value; };
 
-		template <class T, class Tuple>
-		struct index
-		{
-			static_assert(!std::is_same_v<Tuple, std::tuple<>>, "Could not find `T` in given `Tuple`");
-		};
+		template<typename, typename>
+		struct tuple_contains {};
 
-		template <class T, class... Types>
-		struct index<T, std::tuple<T, Types...>>
-		{
-			static const std::size_t value = 0;
-		};
-
-		template <class T, class U, class... Types>
-		struct index<T, std::tuple<U, Types...>>
-		{
-			static const std::size_t value = 1 + index<T, std::tuple<Types...>>::value;
-		};
-
-		template<typename T, typename... Ts>
-		struct contains : std::bool_constant < (std::is_same<T, Ts>{} || ...) > {};
+		template<typename... Ts, typename T>
+		struct tuple_contains<std::tuple<Ts...>, T> : std::disjunction<std::is_same<Ts, T>...> {};
 	}
 
 	/// <summary>
@@ -77,6 +62,7 @@ namespace fsm
 		template<class>
 		friend class ::fsm::TransitionTo;
 
+		using States_T = std::tuple<_States...>;
 		using Events_T = std::tuple<_Events...>;
 	public:
 		using EventsVariant_T = std::variant<_Events...>;
@@ -94,15 +80,6 @@ namespace fsm
 		{
 		}
 
-		// We don't support copy constructors yet :(
-		Machine( const Machine& ) = delete;
-		// We don't support move constructors yet :(
-		Machine( Machine&& ) = delete;
-		// We don't support copy constructors yet :(
-		Machine operator=( const Machine& ) = delete;
-		// We don't support move constructors yet :(
-		Machine operator=( Machine&& ) = delete;
-
 		/// <summary>
 		/// Get the current state variant
 		/// </summary>
@@ -114,7 +91,7 @@ namespace fsm
 		template<Concepts::State State>
 		bool IsInState() const
 		{
-			static_assert(detail::contains<State, _States...>(), "StateMachine doesn't contain state State");
+			static_assert(detail::tuple_contains<States_T, State>(), "StateMachine doesn't contain state State");
 
 			return std::get_if<State*>( &current_state ) != nullptr;
 		}
@@ -125,9 +102,9 @@ namespace fsm
 		template<Concepts::State State>
 		State& GetState()
 		{
-			static_assert(detail::contains<State, _States...>(), "StateMachine doesn't contain state State");
+			static_assert(detail::tuple_contains<States_T, State>(), "StateMachine doesn't contain state State");
 
-			constexpr auto state_index = detail::index<State, decltype(states)>::value;
+			constexpr auto state_index = detail::tuple_index<States_T, State>::value;
 			return std::get<state_index>( states );
 		}
 
@@ -137,9 +114,9 @@ namespace fsm
 		template<Concepts::State State>
 		const State& GetState() const
 		{
-			static_assert(detail::contains<State, _States...>(), "StateMachine doesn't contain state State");
+			static_assert(detail::tuple_contains<States_T, State>(), "StateMachine doesn't contain state State");
 
-			constexpr auto state_index = detail::index<State, decltype(states)>::value;
+			constexpr auto state_index = detail::tuple_index<States_T, State>::value;
 			return std::get<state_index>( states );
 		}
 
@@ -149,7 +126,7 @@ namespace fsm
 		template<Concepts::Event Event>
 		void Handle( const Event& event )
 		{
-			static_assert( detail::has_type<Event, Events_T>::value, "Unhandled event type" );
+			static_assert( detail::tuple_contains<Events_T, Event>(), "Unhandled event type" );
 			HandleBy( event, *this );
 		}
 
@@ -184,5 +161,14 @@ namespace fsm
 	protected:
 		std::tuple<_States...> states;
 		std::variant<_States*...> current_state; // start in the first listed event
+
+	private:
+		//
+		// We don't support copy or move constructors yet :(
+		//
+		Machine( const Machine& ) = delete;
+		Machine( Machine&& ) = delete;
+		Machine operator=( const Machine& ) = delete;
+		Machine operator=( Machine&& ) = delete;
 	};
 }
