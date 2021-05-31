@@ -35,8 +35,7 @@ Core::Core( CoreProperties&& props, std::unique_ptr<AbstractGame> game_ )
 		if (plugin != nullptr)
 			apis[t] = std::move( plugin );
 	}
-
-	//LOG_INFO( LoggingChannels::Application, "{} plugins initalised", std::count_if( std::begin( apis ), std::end( apis ), []( const auto& entry ) { return entry != nullptr; } ) );
+	LOG_INFO( LoggingChannels::Application, "{} plugins initalised", std::count_if( std::begin( apis ), std::end( apis ), []( const auto& entry ) { return entry != nullptr; } ) );
 }
 
 Core::~Core()

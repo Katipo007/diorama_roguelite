@@ -2,5 +2,5 @@
 
 namespace LoggingChannels
 {
-	constexpr API::LoggingAPI::ChannelId OpenGL{ "OpenGL" };
+	constexpr LoggerChannelId OpenGL{ "OpenGL" };
 }

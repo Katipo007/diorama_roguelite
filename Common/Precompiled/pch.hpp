@@ -17,7 +17,7 @@
 #include <unordered_set>
 
 #include "Common/Core/Base.hpp"
-#include "Common/Core/API/LoggingAPI.hpp"
+#include "Common/Core/Logging.hpp"
 
 #define GLM_FORCE_SILENT_WARNINGS
 

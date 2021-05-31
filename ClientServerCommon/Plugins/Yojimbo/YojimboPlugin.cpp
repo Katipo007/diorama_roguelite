@@ -4,7 +4,7 @@
 
 namespace
 {
-	constexpr API::LoggingAPI::ChannelId YojimboLoggingChannel( "Yojimbo" );
+	constexpr LoggerChannelId YojimboLoggingChannel( "Yojimbo" );
 
 	int YojimboLoggingRoute( const char* fmt, ... )
 	{
@@ -28,11 +28,12 @@ namespace Plugins
 
 	YojimboPlugin::YojimboPlugin()
 	{
-		auto& logging = API::LoggingAPI::GetInstance();
+		auto& logging = Logger::GetInstance();
 		logging.AddSink( YojimboLoggingChannel,
 			{
 				.name = "Yojimbo",
-				.window_output_pattern = "",
+				.output_filename = "Yojimbo.log",
+				.window_output_pattern = "%^[%n][%l]%$ %v",
 			} );
 	}
 

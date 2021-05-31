@@ -1,126 +1,89 @@
 #include "Logging.hpp"
 
+
+#pragma warning(push, 0) // This ignores all warnings raised inside External headers
+#define SPDLOG_COMPILED_LIB
+#include <spdlog/spdlog.h>
+#include <spdlog/fmt/ostr.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/sinks/basic_file_sink.h>
+#pragma warning(pop)
+
 #ifdef _DEBUG
 #	pragma comment(lib, "Common/Vendor/spdlog/build/Debug/spdlogd.lib")
 #else
 #	pragma comment(lib, "Common/Vendor/spdlog/build/Release/spdlog.lib")
 #endif
 
-#define ONLY_EXECUTE_ONCE { static bool ___only_exec_once___i_ = false; if (___only_exec_once___i_) return; ___only_exec_once___i_ = true; }
-
-#pragma warning(push, 0)
-#define SPDLOG_COMPILED_LIB
-#include <spdlog/sinks/stdout_color_sinks.h>
-#include <spdlog/sinks/basic_file_sink.h>
-#pragma warning(pop)
-
-namespace Logging
+namespace
 {
-	namespace
+	constexpr std::string_view DefaultFileOutputPattern = "[%T][%n][%l] %v";
+	const auto VoidLogger = std::make_shared<spdlog::logger>( "VOID" );
+}
+
+Logger::Logger( Filepath log_file_directory )
+	: log_file_directory( log_file_directory )
+{
+}
+
+void Logger::Initialise( Filepath log_file_directory )
+{
+	assert( static_instance == nullptr );
+	if (static_instance != nullptr)
+		return;
+
+	static_instance.reset( new Logger( log_file_directory ) );
+}
+
+Logger::~Logger()
+{
+}
+
+void Logger::AddSink( LoggerChannelId channel, const Sink& definition )
+{
+	assert( !loggers.contains( channel ) );
+
+	std::vector<spdlog::sink_ptr> sinks;
+
+	// file output
+	if (definition.output_filename.has_value())
 	{
-		std::string DefaultFileOutputPattern = "[%T][%n][%l] %v";
+		assert( !definition.output_filename.value().empty() );
+		auto& sink = sinks.emplace_back( std::make_shared<spdlog::sinks::basic_file_sink_mt>( (log_file_directory / definition.output_filename.value()).string(), true ) );
 
-		spdlog::sink_ptr CreateBasicFileSink( std::string_view filename, std::string_view pattern )
-		{
-			assert( !filename.empty() );
-			assert( !pattern.empty() );
-
-			auto sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>( std::string( filename ) + ".log", true );
-			sink->set_pattern( std::string( pattern ) );
-			return sink;
-		}
-
-		void InitCommonSinks()
-		{
-			ONLY_EXECUTE_ONCE;
-
-			RegisterLogger( Channel::Assert, CreateAdvancedLogger( "Asserts", "%^[ASSERT]%$ %v (%@)", "[%T][ASSERT] %v (%@)" ) );
-		}
-
-		std::unordered_map<Channel, std::shared_ptr<Logger>> loggers;
+		if (definition.file_output_pattern.has_value())
+			sink->set_pattern( definition.file_output_pattern.value() );
+		else
+			sink->set_pattern( std::string{ DefaultFileOutputPattern } );
 	}
 
-	std::shared_ptr<Logger> CreateStandardLogger( std::string_view name, const bool output_to_window, const spdlog::sink_ptr file_sink )
+	// window output
+	if (definition.window_output_pattern.has_value())
 	{
-		return CreateAdvancedLogger(
-			name,
-			output_to_window ? "%^[%n][%l]%$ %v" : "",
-			DefaultFileOutputPattern,
-			file_sink
-		);
+		auto& sink = sinks.emplace_back( std::make_shared<spdlog::sinks::stderr_color_sink_mt>() );
+		sink->set_pattern( definition.window_output_pattern.value() );
 	}
 
-	std::shared_ptr<Logger> CreateAdvancedLogger( std::string_view name, std::string_view output_window_pattern, std::string_view file_output_pattern, const spdlog::sink_ptr file_sink )
+	// create the logger
+	auto [it, success] = loggers.emplace( channel, std::make_shared<spdlog::logger>( definition.name, std::begin( sinks ), std::end( sinks ) ) );
+	assert( success );
+	it->second->set_level( TranslateLogLevel( definition.level ) );
+	it->second->flush_on( TranslateLogLevel( definition.flush_on ) );
+
+	spdlog::register_logger( it->second );
+}
+
+spdlog::level::level_enum Logger::TranslateLogLevel( Level in )
+{
+	switch (in)
 	{
-		std::vector<spdlog::sink_ptr> sinks;
-		if (!output_window_pattern.empty())
-		{
-			sinks.emplace_back( std::make_shared<spdlog::sinks::stderr_color_sink_mt>() );
-			sinks.back()->set_pattern( std::string( output_window_pattern ) );
-		}
+	case Level::Critical:	return spdlog::level::critical;
+	case Level::Error:		return spdlog::level::err;
+	case Level::Warning:	return spdlog::level::warn;
+	case Level::Info:		return spdlog::level::info;
+	case Level::Debug:		return spdlog::level::debug;
+	case Level::Trace:		return spdlog::level::trace;
 
-		if (file_sink)
-			sinks.emplace_back( file_sink );
-		else if( !file_output_pattern.empty() )
-			sinks.emplace_back( CreateBasicFileSink( name, file_output_pattern ) );
-
-		auto logger = std::make_shared<spdlog::logger>( std::string( name ), std::begin( sinks ), std::end( sinks ) );
-		spdlog::register_logger( logger );
-
-#ifdef _DEBUG
-		logger->set_level( spdlog::level::trace );
-		logger->flush_on( spdlog::level::trace );
-#else
-		logger->set_level( spdlog::level::info );
-		logger->flush_on( spdlog::level::info );
-#endif
-
-		return logger;
-	}
-
-	void InitDefaultClientSinks()
-	{
-		ONLY_EXECUTE_ONCE;
-
-		const auto client_file_sink = CreateBasicFileSink( "Client", DefaultFileOutputPattern );
-
-		InitCommonSinks();
-		RegisterLogger( Channel::Application, CreateStandardLogger( "Application", true, client_file_sink ) );
-		RegisterLogger( Channel::Client, CreateStandardLogger( "Client", true, client_file_sink ) );
-
-#ifdef RENDERER_IMPLEMENTATION_OPENGL
-		RegisterLogger( Channel::OpenGL, CreateStandardLogger( "OpenGL", true, client_file_sink ) );
-#endif
-	}
-
-	void InitDefaultServerSinks()
-	{
-		ONLY_EXECUTE_ONCE;
-
-		const auto server_file_sink = CreateBasicFileSink( "Server", DefaultFileOutputPattern );
-
-		InitCommonSinks();
-		RegisterLogger( Channel::Application, CreateStandardLogger( "Application", true, server_file_sink ) );
-		RegisterLogger( Channel::Server, CreateStandardLogger( "Server", true ) );
-	}
-
-	void RegisterLogger( const Channel chnl, std::shared_ptr<Logger> logger )
-	{
-		assert( logger != nullptr );
-		if (logger == nullptr)
-			return;
-
-		assert( loggers.count( chnl ) == 0 ); // We don't want to replace loggers
-		if (loggers.count( chnl ) != 0)
-			return;
-
-		loggers[chnl] = logger;
-	}
-
-	const std::shared_ptr<Logger>& GetLogger( const Channel chnl )
-	{
-		static const auto VoidLogger = std::make_shared<Logger>( "VOID" ); // used if a specific channel wasn't initialised
-
-		return (loggers.count( chnl ) > 0) ? loggers[chnl] : VoidLogger;
+	default:				return spdlog::level::n_levels;
 	}
 }

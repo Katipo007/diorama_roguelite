@@ -195,10 +195,7 @@
     <ClInclude Include="Utility\Unreachable.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Core\API\LoggingAPI.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Plugins\Spdlog\SpdlogPlugin.hpp">
+    <ClInclude Include="Core\Logging.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -230,10 +227,7 @@
     <ClCompile Include="Precompiled\pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Core\API\LoggingAPI.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Plugins\Spdlog\SpdlogPlugin.cpp">
+    <ClCompile Include="Core\Logging.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -10,7 +10,6 @@
 #include "Common/Core/Base.hpp"
 #include "Common/Core/Core.hpp"
 #include "Common/Core/ResourceManager.hpp"
-#include "Common/Core/Plugins/Spdlog/SpdlogPlugin.hpp"
 #include "Common/Utility/OsAbstraction.hpp"
 #include "Common/Utility/Timestep.hpp"
 
@@ -30,7 +29,6 @@ CoreProperties GenerateCoreProperties()
 		switch (type)
 		{
 		case CoreAPIs::System: return std::make_unique<Graphics::API::SystemSDL2>();
-		case CoreAPIs::Logging: return std::make_unique<Plugins::SpdlogPlugin>( "./Logs" );
 		case CoreAPIs::Video: return std::make_unique<Graphics::API::VideoOpenGL>( core.GetRequiredAPI<API::SystemAPI>() );
 #if (DEVELOPER_TOOLS == 1)
 		case CoreAPIs::DearImGui: return std::make_unique<Graphics::API::DearImGuiPlugin>( core.GetRequiredAPI<API::SystemAPI>(), core.GetRequiredAPI<API::VideoAPI>() );
@@ -57,7 +55,8 @@ void InitLogger()
 	const auto ClientFilename = "Client.log";
 	const auto DefaultWindowPattern = "%^[%n][%l]%$ %v";
 
-	auto& logger = API::LoggingAPI::GetInstance();
+	Logger::Initialise( "./logs/" );
+	auto& logger = Logger::GetInstance();
 	logger.AddSink( LoggingChannels::Assertion,
 		{
 			.name = "Assertions",
@@ -94,8 +93,9 @@ int main( int argc, char** argv )
 	(void)argc;
 	(void)argv;
 
-	auto core = std::make_unique<Core>( GenerateCoreProperties(), std::make_unique<Game::ClientGame>() );
 	InitLogger();
+
+	auto core = std::make_unique<Core>( GenerateCoreProperties(), std::make_unique<Game::ClientGame>() );
 	core->Init();
 	int exit_code = core->Dispatch();
 	core.reset();

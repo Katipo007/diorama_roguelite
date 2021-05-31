@@ -2,5 +2,5 @@
 
 namespace LoggingChannels
 {
-	constexpr API::LoggingAPI::ChannelId Client{ "Client" };
+	constexpr LoggerChannelId Client{ "Client" };
 }
