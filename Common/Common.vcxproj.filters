@@ -156,9 +156,6 @@
     <ClInclude Include="Utility\Containers.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\EnumClassBitset.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Utility\Hashing.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>

@@ -1,10 +1,11 @@
 #pragma once
 
+#include <bitset>
 #include <functional>
 #include <sstream>
 
 #include "Common/Core/Base.hpp"
-#include "Common/Utility/EnumClassBitset.hpp"
+#include "Common/Utility/MagicEnum.hpp"
 
 namespace Visual::Device
 {
@@ -35,13 +36,11 @@ namespace Visual::Device
 
 	enum class EventCategory : uint16_t
 	{
-		None = 0,
-
-		Application = BIT( 0 ),
-		Input = BIT( 1 ),
-		Keyboard = BIT( 2 ),
-		Mouse = BIT( 3 ),
-		MouseButton = BIT( 4 ),
+		Application = 0,
+		Input,
+		Keyboard,
+		Mouse,
+		MouseButton,
 	};
 
 	class Event
@@ -53,12 +52,12 @@ namespace Visual::Device
 
 		virtual EventType GetEventType() const = 0;
 		virtual std::string GetName() const = 0;
-		virtual bitmask<EventCategory> GetCategoryFlags() const = 0;
+		virtual std::bitset<magic_enum::flags::enum_count<EventCategory>()> GetCategoryFlags() const = 0;
 		virtual std::string ToString() const { return GetName(); }
 
 		inline bool IsInCategory( EventCategory category )
 		{
-			return (GetCategoryFlags().value & (uint16_t)category);
+			return GetCategoryFlags().test( magic_enum::flags::enum_integer<EventCategory>( category ) );
 		}
 	};
 
@@ -71,7 +70,7 @@ namespace Visual::Device
 
 		virtual EventType GetEventType() const override { return DERIVED::GetStaticType(); }
 		virtual std::string GetName() const override { return std::to_string( static_cast<unsigned long>(DERIVED::GetStaticType()) ); }
-		virtual bitmask<EventCategory> GetCategoryFlags() const override { return DERIVED::GetStaticCategoryFlags(); }
+		virtual std::bitset<magic_enum::flags::enum_count<EventCategory>()> GetCategoryFlags() const override { return DERIVED::GetStaticCategoryFlags(); }
 	};
 
 	class EventDispatcher
@@ -105,5 +104,3 @@ namespace Visual::Device
 		return os << e.ToString();
 	}
 }
-
-enableEnumClassBitmask( Visual::Device::EventCategory );

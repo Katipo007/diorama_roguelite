@@ -34,7 +34,6 @@ A bit sad at the moment, currently the 'game' consists of a chatbox and a charac
 - [sigslot](https://github.com/palacaze/sigslot) for signals & events.
 - [Nlohmann Json](https://github.com/nlohmann/json) json library.
 - [pugixml](https://pugixml.org/) XML parser.
-- [EnumClassBitset](https://github.com/Dalzhim/ArticleEnumClass-v2) helpers to provide bitmask operators and typesafe comparisons for `enum class`
 - [magic_enum](https://github.com/Neargye/magic_enum) A great utility library providing static reflection for enums.
 - [frozen](https://github.com/serge-sans-paille/frozen) Header-only library for 0 initialization cost containers.
 ## Art
