@@ -9,6 +9,11 @@
 #include "Common/Utility/StateMachine/Actions/TransitionTo.hpp"
 #include "Common/Utility/NonCopyable.hpp"
 
+namespace API
+{
+	class InputAPI;
+}
+
 namespace Visual
 {
 	class Camera;
@@ -58,7 +63,9 @@ namespace ClientStates
 		void ChatWindowSendMessageHandler( std::string_view msg );
 
 	protected:
-		Game::ClientGame& client;
+		Game::ClientGame& game;
+
+		API::InputAPI& input;
 
 		UI::ChatWindow chat_window;
 		std::shared_ptr<Visual::SphericalCamera> main_camera;

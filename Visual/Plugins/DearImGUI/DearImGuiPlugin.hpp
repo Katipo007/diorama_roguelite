@@ -21,10 +21,13 @@ namespace Graphics::API
 		DearImGuiPlugin( ::API::SystemAPI& system, ::API::VideoAPI& video );
 		~DearImGuiPlugin();
 
-		virtual void SetEnabled( const bool enable ) override;
-		virtual bool GetEnabled() const noexcept override { return enabled; }
+		void SetEnabled( const bool enable ) override;
+		bool GetEnabled() const noexcept override { return enabled; }
 
-		virtual std::string_view GetName() const noexcept override { return "DearImGui Plugin"; }
+		bool WantsToCaptureKeyboard() const noexcept override;
+		bool WantsToCaptureMouse() const noexcept override;
+
+		std::string_view GetName() const noexcept override { return "DearImGui Plugin"; }
 
 	protected:
 		void Init() override;

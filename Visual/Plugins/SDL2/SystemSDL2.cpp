@@ -2,17 +2,13 @@
 
 #include <chrono>
 #include <thread>
-#include <SDL2/SDL.h>
-#ifdef _WIN64
-#	pragma comment(lib, "Visual/Vendor/SDL2/lib/x64/SDL2.lib")
-#else
-#	pragma comment(lib, "Visual/Vendor/SDL2/lib/x86/SDL2.lib")
-#endif
 
 #include "Common/Core/API/DearImGuiAPI.hpp"
 #include "Common/Core/API/InputAPI.hpp"
 
+#include "SDL2Include.hpp"
 #include "OpenGLContextSDL2.hpp"
+#include "InputSDL2.hpp"
 #include "WindowSDL2.hpp"
 
 namespace Graphics::API
@@ -204,8 +200,23 @@ namespace Graphics::API
             {
             case SDL_KEYDOWN:
             case SDL_KEYUP:
+            {
+                if (auto* input_sdl2 = dynamic_cast<Plugins::InputSDL2*>(input); (input_sdl2 != nullptr) && !(dearimgui && dearimgui->WantsToCaptureKeyboard()))
+                    input_sdl2->ProcessEvent( event.key );
+                break;
+            }
             case SDL_TEXTINPUT:
+            {
+                if (auto* input_sdl2 = dynamic_cast<Plugins::InputSDL2*>(input); (input_sdl2 != nullptr) && !(dearimgui && dearimgui->WantsToCaptureKeyboard()))
+                    input_sdl2->ProcessEvent( event.text );
+                break;
+            }
             case SDL_TEXTEDITING:
+            {
+                if (auto* input_sdl2 = dynamic_cast<Plugins::InputSDL2*>(input); (input_sdl2 != nullptr) && !(dearimgui && dearimgui->WantsToCaptureKeyboard()))
+                    input_sdl2->ProcessEvent( event.edit );
+                break;
+            }
             case SDL_MOUSEMOTION:
             case SDL_MOUSEBUTTONUP:
             case SDL_MOUSEBUTTONDOWN:

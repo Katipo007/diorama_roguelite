@@ -1,6 +1,6 @@
 #include "WindowSDL2.hpp"
 
-#include <SDL2/SDL.h>
+#include "SDL2Include.hpp"
 #ifdef PLATFORM_WINDOWS
 #	include <SDL2/SDL_syswm.h>
 #endif

@@ -9,15 +9,19 @@
 #include "ClientServerCommon/Networking/ClientServer/Channels.hpp"
 
 #include "Common/Core/Core.hpp"
+#include "Common/Core/API/InputAPI.hpp"
 #include "Common/Core/API/VideoAPI.hpp"
+#include "Common/Core/Input/KeyboardInput.hpp"
+#include "Common/Core/Input/Keycodes.hpp"
 #include "Common/Utility/StringUtility.hpp"
 
 #include "Visual/Camera.hpp"
 
 namespace ClientStates
 {
-	InGameState::InGameState( Game::ClientGame& _client )
-		: client( _client )
+	InGameState::InGameState( Game::ClientGame& game )
+		: game( game )
+		, input( game.GetCore().GetRequiredAPI<API::InputAPI>() )
 	{
 		main_camera = std::make_shared<Visual::SphericalCamera>();
 		main_camera->SetPosition( { 0, 0, 0 } );
@@ -31,8 +35,9 @@ namespace ClientStates
 	}
 
 	InGameState::InGameState( InGameState&& to_move )
-		: client( to_move.client )
+		: game( to_move.game )
 		, chat_window( std::move( to_move.chat_window ) )
+		, input( to_move.input )
 	{
 		std::swap( main_camera, to_move.main_camera );
 		std::swap( gameworld, to_move.gameworld );
@@ -61,8 +66,8 @@ namespace ClientStates
 		//
 		// initalise
 		//
-		auto& video = client.GetCore().GetRequiredAPI<API::VideoAPI>();
-		gameworld = std::make_unique<Game::ClientGameWorld>( video, client.GetResourceManager() );
+		auto& video = game.GetCore().GetRequiredAPI<API::VideoAPI>();
+		gameworld = std::make_unique<Game::ClientGameWorld>( video, game.GetResourceManager() );
 
 		//
 		// connect to session events
@@ -82,9 +87,12 @@ namespace ClientStates
 		OnLeave();
 	}
 
-	fsm::Actions::NoAction ClientStates::InGameState::HandleEvent( const FrameEvent& e )
+	fsm::Actions::NoAction ClientStates::InGameState::HandleEvent( const FrameEvent& )
 	{
-		(void)e;
+		auto keyboard = input.GetKeyboard( 0 );
+		ASSERT( keyboard );
+		if (keyboard->IsButtonDown( Input::Keys::Space ))
+			LOG_INFO( ::LoggingChannels::Client, "SPACE BAR HELD" );
 
 		return fsm::Actions::NoAction{};
 	}
@@ -139,7 +147,7 @@ namespace ClientStates
 	{
 		using namespace Networking::ClientServer;
 		LOG_INFO( LoggingChannels::Client, "Sending chat message '{}'", chat_message );
-		client.GetServerConnection().SendMessage<Messages::ClientServerChatMessage>( ChannelType::Reliable, [&chat_message]( Messages::ClientServerChatMessage& chat )
+		game.GetServerConnection().SendMessage<Messages::ClientServerChatMessage>( ChannelType::Reliable, [&chat_message]( Messages::ClientServerChatMessage& chat )
 			{
 				StringUtility::StringToArray( chat_message, chat.message );
 			} );

@@ -3,6 +3,7 @@
 
 #include "Visual/Plugins/OpenGL/VideoOpenGL.hpp"
 #include "Visual/Plugins/SDL2/SystemSDL2.hpp"
+#include "Visual/Plugins/SDL2/InputSDL2.hpp"
 #include "Visual/Plugins/DearImGUI/DearImGuiPlugin.hpp"
 #include "Visual/Graphics/Texture.hpp"
 #include "Visual/Resources/SpriteSheet.hpp"
@@ -29,6 +30,7 @@ CoreProperties GenerateCoreProperties()
 		switch (type)
 		{
 		case CoreAPIs::System: return std::make_unique<Graphics::API::SystemSDL2>();
+		case CoreAPIs::Input: return std::make_unique<Plugins::InputSDL2>( core.GetRequiredAPI<API::SystemAPI>() );
 		case CoreAPIs::Video: return std::make_unique<Graphics::API::VideoOpenGL>( core.GetRequiredAPI<API::SystemAPI>() );
 #if (DEVELOPER_TOOLS == 1)
 		case CoreAPIs::DearImGui: return std::make_unique<Graphics::API::DearImGuiPlugin>( core.GetRequiredAPI<API::SystemAPI>(), core.GetRequiredAPI<API::VideoAPI>() );

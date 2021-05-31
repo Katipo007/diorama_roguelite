@@ -185,6 +185,16 @@ namespace Graphics::API
 		enabled = enable_;
 	}
 
+	bool DearImGuiPlugin::WantsToCaptureKeyboard() const noexcept
+	{
+		return ImGui::GetIO().WantCaptureKeyboard;
+	}
+
+	bool DearImGuiPlugin::WantsToCaptureMouse() const noexcept
+	{
+		return ImGui::GetIO().WantCaptureMouse;
+	}
+
 	void DearImGuiPlugin::ProcessSystemEvent( void* raw_event )
 	{
 		if (data->implementation_initalised)

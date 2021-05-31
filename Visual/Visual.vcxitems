@@ -31,7 +31,10 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\OpenGL\ShaderOpenGL.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\OpenGL\TextureOpenGL.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\OpenGL\VertexArrayOpenGL.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\SDL2\InputSDL2.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\SDL2\KeyboardInputSDL2.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\SDL2\OpenGLContextSDL2.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\SDL2\SDL2Include.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\SDL2\SystemSDL2.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Events\ApplicationEvents.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Events\Event.hpp" />
@@ -66,7 +69,10 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\OpenGL\TextureOpenGL.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\OpenGL\VertexArrayOpenGL.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\OpenGL\VideoOpenGL.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\SDL2\InputSDL2.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\SDL2\KeyboardInputSDL2.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\SDL2\OpenGLContextSDL2.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\SDL2\SDL2Include.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\SDL2\SystemSDL2.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\SDL2\WindowSDL2.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Renderer.cpp" />

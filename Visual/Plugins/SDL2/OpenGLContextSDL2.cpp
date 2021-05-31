@@ -1,6 +1,6 @@
 #include "OpenGLContextSDL2.hpp"
 
-#include <SDL2/SDL.h>
+#include "SDL2Include.hpp"
 #include <SDL2/SDL_opengl.h>
 
 namespace Graphics::API

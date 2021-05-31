@@ -22,6 +22,9 @@ namespace API
 		virtual void SetEnabled( const bool enable ) = 0;
 		virtual bool GetEnabled() const noexcept = 0;
 
+		virtual bool WantsToCaptureKeyboard() const noexcept = 0;
+		virtual bool WantsToCaptureMouse() const noexcept = 0;
+
 		virtual void ProcessSystemEvent( void* e ) = 0;
 
 	private:
