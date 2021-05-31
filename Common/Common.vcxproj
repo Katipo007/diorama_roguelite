@@ -17,6 +17,9 @@
     <ClInclude Include="Core\API\CoreAPIsEnum.hpp" />
     <ClInclude Include="Core\API\DearImGuiAPI.hpp" />
     <ClInclude Include="Core\API\InputAPI.hpp" />
+    <ClInclude Include="Core\Input\InputButtonDevice.hpp" />
+    <ClInclude Include="Core\Input\InputDevice.hpp" />
+    <ClInclude Include="Core\Input\KeyboardInput.hpp" />
     <ClInclude Include="Core\Input\Keycodes.hpp" />
     <ClInclude Include="Core\Logging.hpp" />
     <ClInclude Include="Core\API\SystemAPI.hpp" />
@@ -77,6 +80,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\AbstractGame.cpp" />
+    <ClCompile Include="Core\Input\InputButtonDevice.cpp" />
+    <ClCompile Include="Core\Input\KeyboardInput.cpp" />
     <ClCompile Include="Core\Logging.cpp" />
     <ClCompile Include="Core\Core.cpp" />
     <ClCompile Include="Core\ResourceManager.cpp" />
