@@ -60,7 +60,6 @@
     <ClInclude Include="Utility\Math\Vec4.hpp" />
     <ClInclude Include="Utility\Math\Vector.hpp" />
     <ClInclude Include="Utility\NonCopyable.hpp" />
-    <ClInclude Include="Utility\Numbers.hpp" />
     <ClInclude Include="Utility\OsAbstraction.hpp" />
     <ClInclude Include="Utility\Signal.hpp" />
     <ClInclude Include="Utility\StateMachine\Might.hpp" />

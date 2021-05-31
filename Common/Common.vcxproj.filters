@@ -171,9 +171,6 @@
     <ClInclude Include="Utility\NonCopyable.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\Numbers.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Utility\OsAbstraction.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
