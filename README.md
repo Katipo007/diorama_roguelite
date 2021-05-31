@@ -45,8 +45,6 @@ This section still needs fleshing out and nothing is set in stone yet. I'm more 
 I've recently been refactoring the engine into a "Core" class which facilitates the "Game" classes, the resource manager and various engine "plugins".
 I have different types of plugins (system, input, graphics, etc) which is designed to abstract away and encapsulate specific systems like rendering. There can only be one of each type active at a given time and are designed to be swappable based on the current platform the game application is running on.
 
-In the `networking-plugin` branch I am currently working on moving yojimbo to be provided as a plugin but I might ultimately just incorporate it as a core part of the engine.
-
 ## Where do I even start??
 `Client/ClientMain.cpp` and `DedicatedServerMain.cpp` act as entry points, initialise the core, plugins and `ClientGame` `ServerGame` respectfully.
 From here it should be fairly straight forward to follow any particular class to see how everything works but as a quick run-down:
