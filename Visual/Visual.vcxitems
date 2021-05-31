@@ -39,7 +39,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Events\MouseEvents.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Colour.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Input\Input.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Input\Keycodes.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Input\MouseCodes.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\DearImGUI\DearImGuiPlugin.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\OpenGL\VideoOpenGL.hpp" />

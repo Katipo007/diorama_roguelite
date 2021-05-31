@@ -198,6 +198,9 @@
     <ClInclude Include="Core\Logging.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Input\Keycodes.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Utility\ConstExprContainers.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
