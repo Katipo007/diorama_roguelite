@@ -1,7 +1,7 @@
 #include "StateMachine.hpp"
-#include "Actions/NoAction.hpp"
-#include "Actions/TransitionTo.hpp"
-#include "Actions/Might.hpp"
+#include "NoAction.hpp"
+#include "TransitionTo.hpp"
+#include "Might.hpp"
 #include "DefaultAction.hpp"
 #include "OnEvent.hpp"
 #include "Will.hpp"
@@ -32,43 +32,43 @@ namespace example
 
 	struct ClosedState
 		: public Will<
-		DefaultAction<Actions::NoAction>,
-		OnEvent<LockEvent, Actions::TransitionTo<LockedState>>,
-		OnEvent<OpenEvent, Actions::TransitionTo<OpenState>>
+		DefaultAction<NoAction>,
+		OnEvent<LockEvent, TransitionTo<LockedState>>,
+		OnEvent<OpenEvent, TransitionTo<OpenState>>
 		>
 	{
 	};
 
 	struct OpenState
 		: public Will<
-		DefaultAction<Actions::NoAction>,
-		OnEvent<CloseEvent, Actions::TransitionTo<ClosedState>>
+		DefaultAction<NoAction>,
+		OnEvent<CloseEvent, TransitionTo<ClosedState>>
 		>
 	{
 	};
 
 	class LockedState
-		: public DefaultAction<Actions::NoAction>
+		: public DefaultAction<NoAction>
 	{
 	public:
-		using DefaultAction<Actions::NoAction>::HandleEvent;
+		using DefaultAction<NoAction>::HandleEvent;
 
 		explicit LockedState( int key_ )
 			: key( key_ )
 		{}
 
-		Actions::NoAction OnEnter( const LockEvent& e )
+		NoAction OnEnter( const LockEvent& e )
 		{
 			key = e.new_key;
-			return Actions::NoAction{};
+			return NoAction{};
 		}
 
-		Actions::Might<Actions::TransitionTo<ClosedState>> HandleEvent( const UnlockEvent& e )
+		Might<TransitionTo<ClosedState>> HandleEvent( const UnlockEvent& e )
 		{
 			if (e.key == key)
-				return Actions::TransitionTo<ClosedState>{};
+				return TransitionTo<ClosedState>{};
 
-			return Actions::NoAction{};
+			return NoAction{};
 		}
 
 	private:
@@ -77,7 +77,7 @@ namespace example
 
 
 	struct VoidState
-		: public Will<DefaultAction<Actions::NoAction>>
+		: public Will<DefaultAction<NoAction>>
 	{
 
 	};
