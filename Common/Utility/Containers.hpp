@@ -4,38 +4,38 @@
 #include <functional>
 #include <ranges>
 
-template<class T, typename Value>
-auto Find( T& container, const Value& value ) -> decltype(T::iterator)
+template<std::ranges::range CONTAINER>
+auto Find( CONTAINER& container, const std::ranges::range_value_t<CONTAINER>& value ) -> std::ranges::iterator_t<CONTAINER>
 {
 	return std::find( std::begin( container ), std::end( container ), value );
 }
 
-template<class T, typename Value>
-auto Find( const T& container, const Value& value ) -> decltype(T::const_iterator)
+template<std::ranges::range CONTAINER>
+auto Find( const CONTAINER& container, const std::ranges::range_value_t<const CONTAINER>& value ) -> std::ranges::iterator_t<const CONTAINER>
 {
 	return std::find( std::begin( container ), std::end( container ), value );
 }
 
-template<class T, typename Pred>
-auto FindIf( T& container, const Pred& pred ) -> decltype(T::iterator)
+template<std::ranges::range CONTAINER>
+auto FindIf( CONTAINER& container, std::predicate<std::ranges::range_value_t<const CONTAINER>> auto pred ) -> std::ranges::iterator_t<CONTAINER>
 {
 	return std::find_if( std::begin( container ), std::end( container ), pred );
 }
 
-template<class T, typename Pred>
-auto FindIf( const T& container, const Pred& pred ) -> decltype(T::const_iterator)
+template<std::ranges::range CONTAINER>
+auto FindIf( const CONTAINER& container, std::predicate<std::ranges::range_value_t<const CONTAINER>> auto pred ) -> std::ranges::iterator_t<const CONTAINER>
 {
 	return std::find_if( std::begin( container ), std::end( container ), pred );
 }
 
-template<class T, typename Func>
-void ForEach( T& container, const Func& func )
+template<std::ranges::range CONTAINER>
+void ForEach( CONTAINER& container, std::invocable<std::ranges::range_value_t<CONTAIENR>> auto func )
 {
 	std::for_each( std::begin( container ), std::end( container ), func );
 }
 
-template<class T, typename Func>
-void ForEach( const T& container, const Func& func )
+template<std::ranges::range CONTAINER>
+void ForEach( const CONTAINER& container, std::invocable<std::ranges::range_value_t<const CONTAIENR>> auto func )
 {
 	std::for_each( std::begin( container ), std::end( container ), func );
 }
