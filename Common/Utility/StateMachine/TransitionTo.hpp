@@ -1,9 +1,11 @@
 #pragma once
 
 #include <type_traits>
-#include "NoAction.hpp"
 
-namespace fsm::Actions
+#include "NoAction.hpp"
+#include "Concepts.hpp"
+
+namespace fsm
 {
 	namespace detail
 	{
@@ -71,19 +73,20 @@ namespace fsm::Actions
 	/// Have the state machine transition to the given state
 	/// </summary>
 	/// <typeparam name="TargetState">State type to transition to</typeparam>
-	template<typename TargetState>
+	template<class TargetState>
 	class TransitionTo
 	{
 	public:
-		template<typename Machine, typename PreviousState, typename Event>
+		template<typename Machine, Concepts::State PreviousState, Concepts::Event Event>
 		void Execute( Machine& machine, PreviousState& previous_state, const Event& event )
 		{
-			static_assert(std::is_trivially_copyable<Event>::value, "Events must be trivially copyable");
+			static_assert(Concepts::State<TargetState>); // we have this concept requirement inside the definition so that we can using in-complete types
+
 #pragma warning(push)
 #pragma warning(disable:4839)
 			LeaveState( previous_state, event );
 			TargetState& new_state = machine.template TransitionTo<TargetState>();
-			auto enter_action = EnterState( new_state, event ); // we allow EnterState to return an action so we can have transient states
+			Concepts::Action auto enter_action = EnterState( new_state, event ); // we allow EnterState to return an action so we can have transient states
 			enter_action.Execute( machine, new_state, event );
 #pragma warning(pop)
 		}
@@ -95,17 +98,17 @@ namespace fsm::Actions
 		auto EnterState( ... ) -> NoAction { return NoAction{}; }
 
 		// version which doesn't take event
-		template<typename NewState, typename Event, typename = typename std::enable_if<!detail::has_OnEnter<TargetState, const Event&>::value>::type>
+		template<Concepts::State NewState, Concepts::Event Event, typename = typename std::enable_if<!detail::has_OnEnter<TargetState, const Event&>::value>::type>
 		auto EnterState( NewState& new_state, const Event& ) -> decltype(new_state.OnEnter()) { return new_state.OnEnter(); }
 
-		template<typename PreviousState, typename Event, typename = typename std::enable_if<!detail::has_OnLeave<TargetState, const Event&>::value>::type>
+		template<Concepts::State PreviousState, Concepts::Event Event, typename = typename std::enable_if<!detail::has_OnLeave<TargetState, const Event&>::value>::type>
 		auto LeaveState( PreviousState& previous_state, const Event& ) -> decltype(previous_state.OnLeave()) { return previous_state.OnLeave(); }
 
 		// version which does take event
-		template<typename NewState, typename Event, typename = typename std::enable_if<detail::has_OnEnter<TargetState, const Event&>::value>::type>
+		template<Concepts::State NewState, Concepts::Event Event, typename = typename std::enable_if<detail::has_OnEnter<TargetState, const Event&>::value>::type>
 		auto EnterState( NewState& new_state, const Event& event ) -> decltype(new_state.OnEnter( event )) { return new_state.OnEnter( event ); }
 
-		template<typename PreviousState, typename Event, typename = typename std::enable_if<detail::has_OnLeave<TargetState, const Event&>::value>::type>
+		template<Concepts::State PreviousState, Concepts::Event Event, typename = typename std::enable_if<detail::has_OnLeave<TargetState, const Event&>::value>::type>
 		auto LeaveState( PreviousState& previous_state, const Event& event ) -> decltype(previous_state.OnLeave( event )) { return previous_state.OnLeave( event ); }
 	};
 }

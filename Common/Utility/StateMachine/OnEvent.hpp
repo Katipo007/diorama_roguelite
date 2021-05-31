@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Concepts.hpp"
+
 namespace fsm
 {
 	/// <summary>
@@ -7,7 +9,7 @@ namespace fsm
 	/// </summary>
 	/// <typeparam name="Event">Event to trigger this action on</typeparam>
 	/// <typeparam name="Action">Action to perform</typeparam>
-	template<typename Event, typename Action>
+	template<Concepts::Event Event, Concepts::Action Action>
 	struct OnEvent
 	{
 		Action HandleEvent( const Event& ) const { return Action{}; }

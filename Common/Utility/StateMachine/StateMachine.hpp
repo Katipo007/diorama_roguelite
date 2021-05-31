@@ -15,22 +15,21 @@
 #include <utility>
 #include <variant>
 
+#include "Concepts.hpp"
+
 namespace fsm
 {
-	template<typename... _States>
+	template<Concepts::State... _States>
 	class States;
 
-	template<typename... _Events>
+	template<Concepts::Event... _Events>
 	class Events;
 
 	template<class States, class Events>
 	class Machine;
 
-	namespace Actions
-	{
-		template<typename State>
-		class TransitionTo;
-	}
+	template<class>
+	class TransitionTo;
 
 	namespace detail
 	{
@@ -42,16 +41,6 @@ namespace fsm
 
 		template <typename T, typename... Us>
 		struct has_type<T, std::tuple<Us...>> : or_<std::is_same<T, Us>...> {};
-
-		template< bool... Bs >
-		using bool_sequence = std::integer_sequence< bool, Bs... >;
-
-		template< bool... Bs >
-		using bool_and = std::is_same< bool_sequence< Bs... >,
-			bool_sequence< (Bs || true)... > >;
-
-		template< bool... Bs >
-		using bool_or = std::integral_constant< bool, !bool_and< !Bs... >::value >;
 
 		template <class T, class Tuple>
 		struct index
@@ -81,14 +70,12 @@ namespace fsm
 	/// </summary>
 	/// <typeparam name="..._States"></typeparam>
 	/// <typeparam name="..._Events"></typeparam>
-	template<typename... _States, typename... _Events>
+	template<Concepts::State... _States, Concepts::Event... _Events>
 	class Machine<States<_States...>, Events<_Events...>>
 	{
-		static_assert(detail::bool_and< std::is_move_constructible< _States >::value... >::value, "All state types must be movable");
-
 		// Allow TransitionTo action to access protected members so it can call TransitionTo method
-		template<typename>
-		friend class Actions::TransitionTo;
+		template<class>
+		friend class ::fsm::TransitionTo;
 
 		using Events_T = std::tuple<_Events...>;
 	public:
@@ -101,7 +88,6 @@ namespace fsm
 		virtual ~Machine() noexcept {}
 
 		// contruct the machine with pre-created states
-		template<typename = typename std::enable_if_t< detail::bool_and< std::is_move_constructible< _States >::value... >::value> >
 		explicit Machine( _States&&... states_ )
 			: states( std::forward<_States>( states_ )... )
 			, current_state( &std::get<0>( states ) )
@@ -125,7 +111,7 @@ namespace fsm
 		/// <summary>
 		/// Test whether the machine is currently in a given state
 		/// </summary>
-		template<typename State>
+		template<Concepts::State State>
 		bool IsInState() const
 		{
 			static_assert(detail::contains<State, _States...>(), "StateMachine doesn't contain state State");
@@ -136,7 +122,7 @@ namespace fsm
 		/// <summary>
 		/// Get a reference to a state, even if it isn't the current state
 		/// </summary>
-		template<typename State>
+		template<Concepts::State State>
 		State& GetState()
 		{
 			static_assert(detail::contains<State, _States...>(), "StateMachine doesn't contain state State");
@@ -148,7 +134,7 @@ namespace fsm
 		/// <summary>
 		/// Get a const reference to a state, even if it isn't the current state
 		/// </summary>
-		template<typename State>
+		template<Concepts::State State>
 		const State& GetState() const
 		{
 			static_assert(detail::contains<State, _States...>(), "StateMachine doesn't contain state State");
@@ -160,7 +146,7 @@ namespace fsm
 		/// <summary>
 		/// Have the current state handle an event
 		/// </summary>
-		template<typename Event>
+		template<Concepts::Event Event>
 		void Handle( const Event& event )
 		{
 			static_assert( detail::has_type<Event, Events_T>::value, "Unhandled event type" );
@@ -171,12 +157,12 @@ namespace fsm
 		/// <summary>
 		/// Have the current state of this machine handle an event, performing the action on a given machine
 		/// </summary>
-		template<typename Event>
+		template<Concepts::Event Event>
 		void HandleBy( const Event& event, Machine& machine )
 		{
 			auto PassEventToState = [&machine, &event]( auto* state )
 			{
-				auto action = state->HandleEvent( event );
+				Concepts::Action auto action = state->HandleEvent( event );
 				action.Execute( machine, *state, event );
 			};
 			std::visit( PassEventToState, current_state );
@@ -187,7 +173,7 @@ namespace fsm
 		/// Have the machine transition to the given state.
 		/// </summary>
 		/// <returns></returns>
-		template<typename State>
+		template<Concepts::State State>
 		State& TransitionTo()
 		{
 			auto& new_state = std::get<State>( states );

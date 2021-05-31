@@ -63,10 +63,11 @@
     <ClInclude Include="Utility\Numbers.hpp" />
     <ClInclude Include="Utility\OsAbstraction.hpp" />
     <ClInclude Include="Utility\Signal.hpp" />
-    <ClInclude Include="Utility\StateMachine\Actions\Might.hpp" />
-    <ClInclude Include="Utility\StateMachine\Actions\NoAction.hpp" />
-    <ClInclude Include="Utility\StateMachine\Actions\OneOf.hpp" />
-    <ClInclude Include="Utility\StateMachine\Actions\TransitionTo.hpp" />
+    <ClInclude Include="Utility\StateMachine\Might.hpp" />
+    <ClInclude Include="Utility\StateMachine\NoAction.hpp" />
+    <ClInclude Include="Utility\StateMachine\OneOf.hpp" />
+    <ClInclude Include="Utility\StateMachine\TransitionTo.hpp" />
+    <ClInclude Include="Utility\StateMachine\Concepts.hpp" />
     <ClInclude Include="Utility\StateMachine\DefaultAction.hpp" />
     <ClInclude Include="Utility\StateMachine\OnEvent.hpp" />
     <ClInclude Include="Utility\StateMachine\StateMachine.hpp" />

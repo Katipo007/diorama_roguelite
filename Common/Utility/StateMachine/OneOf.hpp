@@ -3,13 +3,15 @@
 #include <utility>
 #include <variant>
 
-namespace fsm::Actions
+#include "Concepts.hpp"
+
+namespace fsm
 {
 	/// <summary>
 	/// Helper mechanism to say we will perform one of these action types
 	/// </summary>
 	/// <typeparam name="...Actions">Types of action we might perform</typeparam>
-	template<typename... ActionTypes>
+	template<Concepts::Action... ActionTypes>
 	class OneOf
 	{
 	public:
@@ -19,10 +21,10 @@ namespace fsm::Actions
 		{
 		}
 
-		template<typename Machine, typename State, typename Event>
+		template<typename Machine, Concepts::State State, Concepts::Event Event>
 		void Execute( Machine& machine, State& state, const Event& event )
 		{
-			std::visit( [&machine, &state, &event]( auto& action )
+			std::visit( [&machine, &state, &event]( Concepts::Action auto& action )
 			{
 				action.Execute( machine, state, event );
 			}, options );

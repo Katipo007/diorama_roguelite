@@ -129,16 +129,16 @@
     <ClInclude Include="Utility\Math\Vector.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\StateMachine\Actions\Might.hpp">
+    <ClInclude Include="Utility\StateMachine\Might.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\StateMachine\Actions\NoAction.hpp">
+    <ClInclude Include="Utility\StateMachine\NoAction.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\StateMachine\Actions\OneOf.hpp">
+    <ClInclude Include="Utility\StateMachine\OneOf.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\StateMachine\Actions\TransitionTo.hpp">
+    <ClInclude Include="Utility\StateMachine\TransitionTo.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Utility\StateMachine\DefaultAction.hpp">
@@ -208,6 +208,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Utility\ConstExprContainers.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\StateMachine\Concepts.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
