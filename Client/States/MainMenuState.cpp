@@ -1,7 +1,7 @@
 #include "MainMenuState.hpp"
 
 #include "Client/ClientGame.hpp"
-
+#include "Common/Version/BuildVersion.hpp"
 #include "Visual/DearImGui/DearImGui.hpp"
 
 namespace
@@ -27,27 +27,36 @@ namespace ClientStates
 		return fsm::Actions::NoAction{};
 	}
 
-	MainMenuState::OutTransitionActions MainMenuState::HandleEvent( const DearImGuiFrameEvent& e )
+	MainMenuState::OutTransitionActions MainMenuState::HandleEvent( const DearImGuiFrameEvent& )
 	{
-		(void)e;
+		bool do_join = false;
+		bool do_exit = false;
 
-		if (ImGui::Begin( "Main Menu", NULL, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove ))
+		constexpr bool use_work_area = true;
+		const ImGuiViewport* viewport = ImGui::GetMainViewport();
+
+		ImGui::SetNextWindowPos( use_work_area ? viewport->WorkPos : viewport->Pos );
+		ImGui::SetNextWindowSize( use_work_area ? viewport->WorkSize : viewport->Size );
+		if (ImGui::Begin( "Main Menu", NULL, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings ))
 		{
 			ImGui::Text( "Main Menu" );
 
-			if (ImGui::Button( "Join Server" ))
-			{
-				ImGui::End();
-				return fsm::Actions::TransitionTo<JoinMultiplayerState>{};
-			}
+			ImGui::BeginGroup();
+			do_join |= ImGui::Button( "Join Server" );
+			do_exit |= ImGui::Button( "Exit" );
+			ImGui::EndGroup();
 
-			if (ImGui::Button( "Exit" ))
-			{ 
-				client.Exit( 0 );
-			}
+			ImGui::BeginGroup();
+			ImGui::TextDisabled( "Build %s", BuildVersion::FullVersionString.data() );
+			ImGui::EndGroup();
 
 			ImGui::End();
 		}
+
+		if( do_join )
+			return fsm::Actions::TransitionTo<JoinMultiplayerState>{};
+		else if( do_exit )
+			client.Exit( 0 );
 
 		return fsm::Actions::NoAction{};
 	}
