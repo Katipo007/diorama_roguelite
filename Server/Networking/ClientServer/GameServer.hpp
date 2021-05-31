@@ -4,6 +4,7 @@
 
 #include "ClientServerCommon/Plugins/Yojimbo/YojimboHeader.hpp"
 #include "ClientServerCommon/Plugins/Yojimbo/Types.hpp"
+#include "ClientServerCommon/Plugins/Yojimbo/Concepts.hpp"
 #include "ClientServerCommon/Networking/ClientServer/Adapter.hpp"
 #include "ClientServerCommon/Networking/ClientServer/Config.hpp"
 #include "ClientServerCommon/Networking/ClientServer/MessageFactory.hpp"
@@ -22,7 +23,7 @@ namespace Networking::ClientServer
 	namespace detail
 	{
 		using ActiveClientPredicate_T = std::function<bool( const ActiveClient& )>;
-		const auto AllActiveClientsPredicate = []( const ActiveClient& ) { return true; };
+		const auto AllActiveClientsPredicate = []( const ActiveClient& ) -> bool { return true; };
 	}
 
 	class GameServer final
@@ -48,17 +49,17 @@ namespace Networking::ClientServer
 		void ForEachClient( std::invocable<const ActiveClient&> auto func, std::predicate<const ActiveClient&> auto predicate ) const;
 
 		bool SendMessage( BaseClientConnection& client, ChannelType channel, YojimboPlugin::MessageType_T type, const std::function<void( yojimbo::Message& )>& initialiser );
-		template<class T>
-		bool SendMessage( BaseClientConnection& client, ChannelType channel, const std::function<void( T& )>& initialiser )
+		template<YojimboPlugin::Concepts::Message MESSAGE_T>
+		bool SendMessage( BaseClientConnection& client, ChannelType channel, YojimboPlugin::Concepts::MessageInitialiser auto initialiser )
 		{
-			return SendMessage( client, channel, MessageFactory::template GetMessageType<T>(), [&]( yojimbo::Message& message ) { initialiser( static_cast<T&>(message) ); } );
+			return SendMessage( client, channel, MessageFactory::template GetMessageType<MESSAGE_T>(), [&]( yojimbo::Message& message ) { initialiser( static_cast<MESSAGE_T&>(message) ); } );
 		}
 
 		size_t BroadcastMessage( ChannelType channel, YojimboPlugin::MessageType_T type, const std::function<void( ActiveClient&, yojimbo::Message& )>& initialiser, const detail::ActiveClientPredicate_T& inclusion_predicate = detail::AllActiveClientsPredicate );
-		template<class T>
-		bool BroadcastMessage( ChannelType channel, const std::function<void( ActiveClient&, T& )>& initialiser, const detail::ActiveClientPredicate_T& inclusion_predicate = detail::AllActiveClientsPredicate )
+		template<YojimboPlugin::Concepts::Message MESSAGE_T>
+		bool BroadcastMessage( ChannelType channel, std::invocable<ActiveClient&, MESSAGE_T&> auto initialiser, const detail::ActiveClientPredicate_T& inclusion_predicate = detail::AllActiveClientsPredicate )
 		{
-			return BroadcastMessage( channel, MessageFactory::template GetMessageType<T>(), [&]( ActiveClient& client, yojimbo::Message& message ) { initialiser( client, static_cast<T&>(message) ); }, inclusion_predicate );
+			return BroadcastMessage( channel, MessageFactory::template GetMessageType<MESSAGE_T>(), [&]( ActiveClient& client, yojimbo::Message& message ) { initialiser( client, static_cast<MESSAGE_T&>(message) ); }, inclusion_predicate );
 		}
 
 		// Signals

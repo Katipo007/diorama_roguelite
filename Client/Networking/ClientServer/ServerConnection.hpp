@@ -1,6 +1,9 @@
 #pragma once
 
+#include <concepts>
+
 #include "ClientServerCommon/Plugins/Yojimbo/YojimboHeader.hpp"
+#include "ClientServerCommon/Plugins/Yojimbo/Concepts.hpp"
 #include "ClientServerCommon/Plugins/Yojimbo/Types.hpp"
 
 #include "ClientServerCommon/Networking/ClientServer/Adapter.hpp"
@@ -37,10 +40,9 @@ namespace Networking::ClientServer
 		bool CanSendMessage( ChannelType type ) const;
 		MessageFactory& GetMessageFactory();
 
-		template<class MESSAGE_T>
-		void SendMessage( ChannelType channel, const std::function<void(MESSAGE_T&)>& initialiser )
+		template<YojimboPlugin::Concepts::Message MESSAGE_T>
+		void SendMessage( ChannelType channel, YojimboPlugin::Concepts::MessageInitialiser auto initialiser )
 		{
-			ASSERT( initialiser );
 			if (!CanSendMessage( channel ))
 			{
 				ASSERT( false, "Cannot send message to given channel" );

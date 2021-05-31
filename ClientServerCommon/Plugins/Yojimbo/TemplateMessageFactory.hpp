@@ -7,6 +7,7 @@
 #include <string_view>
 
 #include "YojimboHeader.hpp"
+#include "Concepts.hpp"
 #include "Types.hpp"
 
 namespace YojimboPlugin
@@ -22,12 +23,6 @@ namespace YojimboPlugin
 		template <class T, class U, class... Types>
 		struct index<T, std::tuple<U, Types...>> { static const std::size_t value = 1 + index<T, std::tuple<Types...>>::value; };
 
-		template< bool... Bs >
-		using bool_sequence = std::integer_sequence< bool, Bs... >;
-
-		template< bool... Bs >
-		using bool_and = std::is_same< bool_sequence< Bs... >, bool_sequence< (Bs || true)... > >;
-
 		template<class... B>
 		using or_ = std::disjunction<B...>;
 
@@ -38,14 +33,10 @@ namespace YojimboPlugin
 		struct has_type<T, std::tuple<Us...>> : or_<std::is_same<T, Us>...> {};
 	}
 
-	template<class... MESSAGES>
+	template<Concepts::Message... MESSAGES>
 	class TemplateMessageFactory final
 		: public yojimbo::MessageFactory
 	{
-		static_assert(__detail::bool_and< std::is_base_of< ::yojimbo::Message, MESSAGES >::value... >::value, "All message types must derive from yojimbo::Message");
-		static_assert(__detail::bool_and< std::is_default_constructible< MESSAGES >::value... >::value, "All message types must be default constructable");
-		static_assert(__detail::bool_and< std::is_same< std::string_view, decltype(std::declval<MESSAGES&>().GetName()) >::value... >::value, "All message types must provide a `static constexpr std::string_view GetName() noexcept` method");
-
 		using MessageTypesTuple_T = std::tuple<MESSAGES...>;
 
 	public: // con/de-structors
@@ -63,10 +54,10 @@ namespace YojimboPlugin
 		static_assert(NumMessageTypes > 0, "Must have at least one message type");
 
 		static constexpr bool HasMessageType( const MessageType_T type ) noexcept { return (type >= 0) && (type < NumMessageTypes); }
-		template<class MESSAGE_T>
+		template<Concepts::Message MESSAGE_T>
 		inline static constexpr bool HasMessageType() noexcept { HasMessageType( GetMessageType<MESSAGE_T>() ); }
 
-		template<class MESSAGE_T>
+		template<Concepts::Message MESSAGE_T>
 		inline static constexpr MessageType_T GetMessageType() noexcept
 		{
 			static_assert(__detail::has_type<MESSAGE_T, MessageTypesTuple_T>::value, "Message type does not belong to this factory");
@@ -78,7 +69,7 @@ namespace YojimboPlugin
 
 		inline yojimbo::Message* CreateUntypedMessage( const MessageType_T type ) { return ::yojimbo::MessageFactory::CreateMessage( type ); }
 
-		template<class MESSAGE_T>
+		template<Concepts::Message MESSAGE_T>
 		inline MESSAGE_T* CreateMessage() { return dynamic_cast<MESSAGE_T*>(CreateUntypedMessage( GetMessageType<MESSAGE_T>() )); }
 
 
@@ -86,7 +77,7 @@ namespace YojimboPlugin
 
 		static constexpr std::string_view GetMessageName( const MessageType_T type ) noexcept { return (static_cast<size_t>(type) < NumMessageTypes) ? message_names.at( type ) : ""; }
 
-		template<class MESSAGE_T>
+		template<Concepts::Message MESSAGE_T>
 		inline static constexpr std::string_view GetMessageName() noexcept { return GetMessageName( GetMessageType<MESSAGE_T>() ); }
 
 

@@ -31,6 +31,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Networking\ClientServer\Messages\LoginMessages.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\PluginTypes.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\Basic\Client.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\Concepts.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\IMessageFactory.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\Basic\MessageFactory.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\TemplateMessageFactory.hpp" />

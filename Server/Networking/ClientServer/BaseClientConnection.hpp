@@ -7,6 +7,7 @@
 #include "ClientServerCommon/Networking/ClientServer/Config.hpp"
 #include "ClientServerCommon/Networking/ClientServer/MessageFactory.hpp"
 #include "ClientServerCommon/Plugins/Yojimbo/Types.hpp"
+#include "ClientServerCommon/Plugins/Yojimbo/Concepts.hpp"
 #include "Common/Utility/Timestep.hpp"
 #include "Common/Utility/MagicEnum.hpp"
 
@@ -41,9 +42,9 @@ namespace Networking::ClientServer
 
 		bool SendMessage( ChannelType channel, YojimboPlugin::MessageType_T message_type, const std::function<void(yojimbo::Message&)>& initialiser );
 		template<YojimboPlugin::Concepts::Message T>
-		bool SendMessage( Networking::ClientServer::ChannelType channel, const std::function<void( T& )>& initialiser )
+		bool SendMessage( ChannelType channel, YojimboPlugin::Concepts::MessageInitialiser auto initialiser )
 		{
-			return SendMessage( channel, Networking::ClientServer::MessageFactory::GetMessageType<T>(), [&]( yojimbo::Message& msg ) { initialiser( static_cast<T&>( msg ) ); } );
+			return SendMessage( channel, MessageFactory::GetMessageType<T>(), [&]( yojimbo::Message& msg ) { initialiser( static_cast<T&>( msg ) ); } );
 		}
 
 	protected:
