@@ -9,7 +9,7 @@ namespace Networking::ClientServer::Messages
 	BEGIN_MESSAGE( ServerClientDisconnect )
 		std::array<char, 128> reason;
 		
-		template<typename STREAM>
+		template<YojimboPlugin::Concepts::SerializeStream STREAM>
 		bool Serialize( STREAM& stream )
 		{
 			serialize_string( stream, &reason[0], static_cast<int>(std::size( reason )) );

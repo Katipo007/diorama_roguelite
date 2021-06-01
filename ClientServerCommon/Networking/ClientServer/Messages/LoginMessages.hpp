@@ -9,7 +9,7 @@ namespace Networking::ClientServer::Messages
 	BEGIN_MESSAGE( ClientServerLoginStart )
 		std::array<char, Game::CharacterUtility::CharacterNameMaxLength> username;
 
-		template<typename STREAM>
+		template<YojimboPlugin::Concepts::SerializeStream STREAM>
 		bool Serialize( STREAM& stream )
 		{
 			serialize_string( stream, &username[0], static_cast<int>(std::size( username )) );
@@ -20,7 +20,7 @@ namespace Networking::ClientServer::Messages
 	BEGIN_MESSAGE( ServerClientLoginSuccess )
 		std::array<char, Game::CharacterUtility::CharacterNameMaxLength> username;
 		
-		template<typename STREAM>
+		template<YojimboPlugin::Concepts::SerializeStream STREAM>
 		bool Serialize( STREAM& stream )
 		{
 			serialize_string( stream, &username[0], static_cast<int>(std::size( username )) );

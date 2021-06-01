@@ -7,7 +7,7 @@ namespace Networking::ClientServer::Messages
 	BEGIN_MESSAGE( ClientServerChatMessage )
 		std::array<char, 128> message;
 		
-		template<typename STREAM>
+		template<YojimboPlugin::Concepts::SerializeStream STREAM>
 		bool Serialize( STREAM& stream )
 		{
 			serialize_string( stream, &message[0], static_cast<int>(std::size( message )) );
@@ -19,7 +19,7 @@ namespace Networking::ClientServer::Messages
 		std::array<char, 32> sender;
 		std::array<char, 128> message;
 
-	template<typename STREAM>
+	template<YojimboPlugin::Concepts::SerializeStream STREAM>
 	bool Serialize( STREAM& stream )
 	{
 		serialize_string( stream, &sender[0], static_cast<int>(std::size( sender )) );

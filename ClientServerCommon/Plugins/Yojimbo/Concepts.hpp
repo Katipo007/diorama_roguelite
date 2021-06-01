@@ -3,7 +3,14 @@
 #include <concepts>
 #include <type_traits>
 
-namespace yojimbo { class Message; }
+namespace yojimbo
+{
+	class Message;
+	class BaseStream;
+	class WriteStream;
+	class ReadStream;
+	class MeasureStream;
+}
 
 namespace YojimboPlugin::Concepts
 {
@@ -19,5 +26,11 @@ namespace YojimboPlugin::Concepts
 	concept MessageInitialiser = requires(T x) {
 		std::derived_from<T, ::yojimbo::Message>;
 		std::invocable<T&>;
+	};
+
+	template<class T>
+	concept SerializeStream = requires
+	{
+		std::derived_from<T, yojimbo::WriteStream> || std::derived_from<T, yojimbo::ReadStream> || std::derived_from<T, yojimbo::MeasureStream>;
 	};
 }
