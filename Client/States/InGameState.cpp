@@ -89,6 +89,8 @@ namespace ClientStates
 
 	fsm::NoAction ClientStates::InGameState::HandleEvent( const FrameEvent& e )
 	{
+		ASSERT( !!gameworld );
+
 		auto keyboard = input.GetKeyboard( 0 );
 		ASSERT( keyboard );
 
