@@ -15,6 +15,7 @@
 #include <utility>
 #include <variant>
 
+#include "Common/Utility/TupleReflection.hpp"
 #include "Concepts.hpp"
 
 namespace fsm
@@ -30,24 +31,6 @@ namespace fsm
 
 	template<class>
 	class TransitionTo;
-
-	namespace detail
-	{
-		template <class Tuple, class T>
-		struct tuple_index;
-
-		template <class... Types, class T>
-		struct tuple_index<std::tuple<T, Types...>, T> { static const std::size_t value = 0; };
-
-		template <class U, class... Types, class T>
-		struct tuple_index<std::tuple<U, Types...>, T> { static const std::size_t value = 1 + tuple_index<std::tuple<Types...>, T>::value; };
-
-		template<typename, typename>
-		struct tuple_contains {};
-
-		template<typename... Ts, typename T>
-		struct tuple_contains<std::tuple<Ts...>, T> : std::disjunction<std::is_same<Ts, T>...> {};
-	}
 
 	/// <summary>
 	/// Compiletime enforced state machine.
@@ -91,7 +74,7 @@ namespace fsm
 		template<Concepts::State State>
 		bool IsInState() const
 		{
-			static_assert(detail::tuple_contains<States_T, State>(), "StateMachine doesn't contain state State");
+			static_assert(TupleReflection::tuple_contains<States_T, State>(), "StateMachine doesn't contain state State");
 
 			return std::get_if<State*>( &current_state ) != nullptr;
 		}
@@ -102,9 +85,9 @@ namespace fsm
 		template<Concepts::State State>
 		State& GetState()
 		{
-			static_assert(detail::tuple_contains<States_T, State>(), "StateMachine doesn't contain state State");
+			static_assert(TupleReflection::tuple_contains<States_T, State>(), "StateMachine doesn't contain state State");
 
-			constexpr auto state_index = detail::tuple_index<States_T, State>::value;
+			constexpr auto state_index = TupleReflection::tuple_index<States_T, State>::value;
 			return std::get<state_index>( states );
 		}
 
@@ -114,9 +97,9 @@ namespace fsm
 		template<Concepts::State State>
 		const State& GetState() const
 		{
-			static_assert(detail::tuple_contains<States_T, State>(), "StateMachine doesn't contain state State");
+			static_assert(TupleReflection::tuple_contains<States_T, State>(), "StateMachine doesn't contain state State");
 
-			constexpr auto state_index = detail::tuple_index<States_T, State>::value;
+			constexpr auto state_index = TupleReflection::tuple_index<States_T, State>::value;
 			return std::get<state_index>( states );
 		}
 
@@ -126,7 +109,7 @@ namespace fsm
 		template<Concepts::Event Event>
 		void Handle( const Event& event )
 		{
-			static_assert( detail::tuple_contains<Events_T, Event>(), "Unhandled event type" );
+			static_assert(TupleReflection::tuple_contains<Events_T, Event>(), "Unhandled event type" );
 			HandleBy( event, *this );
 		}
 

@@ -6,33 +6,14 @@
 #include <tuple>
 #include <string_view>
 
+#include "Common/Utility/TupleReflection.hpp"
+
 #include "YojimboHeader.hpp"
 #include "Concepts.hpp"
 #include "Types.hpp"
 
 namespace YojimboPlugin
 {
-	namespace __detail
-	{
-		template <class T, class Tuple>
-		struct index { static_assert(!std::is_same_v<Tuple, std::tuple<>>, "Could not find `T` in given `Tuple`"); };
-
-		template <class T, class... Types>
-		struct index<T, std::tuple<T, Types...>> { static const std::size_t value = 0; };
-
-		template <class T, class U, class... Types>
-		struct index<T, std::tuple<U, Types...>> { static const std::size_t value = 1 + index<T, std::tuple<Types...>>::value; };
-
-		template<class... B>
-		using or_ = std::disjunction<B...>;
-
-		template <typename T, typename Tuple>
-		struct has_type;
-
-		template <typename T, typename... Us>
-		struct has_type<T, std::tuple<Us...>> : or_<std::is_same<T, Us>...> {};
-	}
-
 	template<Concepts::Message... MESSAGES>
 	class TemplateMessageFactory final
 		: public yojimbo::MessageFactory
@@ -60,8 +41,8 @@ namespace YojimboPlugin
 		template<Concepts::Message MESSAGE_T>
 		inline static constexpr MessageType_T GetMessageType() noexcept
 		{
-			static_assert(__detail::has_type<MESSAGE_T, MessageTypesTuple_T>::value, "Message type does not belong to this factory");
-			return __detail::index<MESSAGE_T, MessageTypesTuple_T>::value;
+			static_assert(TupleReflection::tuple_contains<MessageTypesTuple_T, MESSAGE_T>(), "Message type does not belong to this factory");
+			return TupleReflection::tuple_index<MessageTypesTuple_T, MESSAGE_T>::value;
 		}
 
 

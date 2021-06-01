@@ -74,6 +74,7 @@
     <ClInclude Include="Utility\StringHashMap.hpp" />
     <ClInclude Include="Utility\StringUtility.hpp" />
     <ClInclude Include="Utility\Timestep.hpp" />
+    <ClInclude Include="Utility\TupleReflection.hpp" />
     <ClInclude Include="Utility\Unreachable.hpp" />
     <ClInclude Include="Version\BuildVersion.hpp" />
   </ItemGroup>
