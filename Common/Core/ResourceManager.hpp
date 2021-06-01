@@ -2,6 +2,7 @@
 
 #include "Common/Core/Resources/ResourceHandle.hpp"
 #include "Common/Core/Resources/ResourceCache.hpp"
+#include "Common/Core/Resources/Concepts.hpp"
 
 class Core;
 
@@ -20,10 +21,9 @@ public:
 	explicit ResourceManager( ::Core& core );
 	virtual ~ResourceManager();
 
-	template<typename RESOURCE>
+	template<Resources::Concepts::Resource RESOURCE>
 	void Init()
 	{
-		static_assert(std::is_base_of<Resources::Resource, RESOURCE>::value, "Provided type must derive from Resources::Resource");
 		constexpr Resources::AssetType type = RESOURCE::GetResourceType();
 
 		if (const auto* existing_cache = GetCacheInternal( type ))
@@ -34,28 +34,27 @@ public:
 			throw std::runtime_error( "Failed to store ResourceCache of given type" );
 	}
 
-	template<typename RESOURCE>
+	template<Resources::Concepts::Resource RESOURCE>
 	bool Exists( std::string_view resource_id ) const { return GetCache<RESOURCE>().Exists( resource_id ); }
 
-	template<typename RESOURCE>
+	template<Resources::Concepts::Resource RESOURCE>
 	bool IsLoaded( std::string_view resource_id ) const { return GetCache<RESOURCE>().IsLoaded( resource_id ); }
 
-	template<typename RESOURCE>
+	template<Resources::Concepts::Resource RESOURCE>
 	Resources::ResourceHandle<const RESOURCE> Get( std::string_view resource_id ) const { return Resources::ResourceHandle<const RESOURCE>( GetCache<RESOURCE>().Get( resource_id ) ); }
 
-	template<typename RESOURCE>
+	template<Resources::Concepts::Resource RESOURCE>
 	bool Preload( std::string_view resource_id ) const { return GetCache<RESOURCE>().Preload( resource_id ); }
 
-	template<typename RESOURCE>
+	template<Resources::Concepts::Resource RESOURCE>
 	void Unload( std::string_view resource_id ) { GetCache<RESOURCE>().Unload( resource_id ); }
 
-	template<typename RESOURCE>
+	template<Resources::Concepts::Resource RESOURCE>
 	void Purge( size_t min_generations = 3 ) { GetCache<RESOURCE>().Purge( min_generations ); }
 
-	template<typename RESOURCE>
+	template<Resources::Concepts::Resource RESOURCE>
 	[[nodiscard]] const Resources::ResourceCache<RESOURCE>& GetCache() const
 	{
-		static_assert(std::is_base_of<Resources::Resource, RESOURCE>::value, "Provided type must derive from Resources::Resource");
 		constexpr Resources::AssetType type = RESOURCE::GetResourceType();
 		if (const auto* cache = GetCacheInternal( type ))
 			return *dynamic_cast<const Resources::ResourceCache<RESOURCE>*>(cache);

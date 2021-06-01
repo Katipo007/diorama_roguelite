@@ -6,6 +6,7 @@
 
 #include "Common/Utility/StringHashMap.hpp"
 #include "ResourceTypes.hpp"
+#include "Concepts.hpp"
 
 class ResourceManager;
 
@@ -65,7 +66,7 @@ namespace Resources
 		size_t current_generation = 0;
 	};
 
-	template<typename RESOURCE>
+	template<Resources::Concepts::Resource RESOURCE>
 	class ResourceCache
 		: public BaseResourceCache
 	{

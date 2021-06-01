@@ -3,9 +3,11 @@
 #include <string>
 #include <memory>
 
+#include "Concepts.hpp"
+
 namespace Resources
 {
-	template<typename RESOURCE>
+	template<Resources::Concepts::Resource RESOURCE>
 	using ResourceHandle = std::shared_ptr<const RESOURCE>;
 
 #if 0

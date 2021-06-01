@@ -30,6 +30,7 @@
     <ClInclude Include="Core\Graphics\OpenGLContext.hpp" />
     <ClInclude Include="Core\Graphics\Window.hpp" />
     <ClInclude Include="Core\ResourceManager.hpp" />
+    <ClInclude Include="Core\Resources\Concepts.hpp" />
     <ClInclude Include="Core\Resources\Resource.hpp" />
     <ClInclude Include="Core\Resources\ResourceCache.hpp" />
     <ClInclude Include="Core\Resources\ResourceHandle.hpp" />
