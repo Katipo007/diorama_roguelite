@@ -1,12 +1,11 @@
 #pragma once
 
+#include <concepts>
 #include <type_traits>
 
-template<typename T>
+template<typename T> requires(std::integral<T> || std::floating_point<T>)
 struct Point2D
 {
-	static_assert(std::is_integral<T>::value || std::is_floating_point<T>::value, "Must be an integral or floating point type!");
-
 	T x, y;
 
 	constexpr Point2D() : x( 0 ), y( 0 ) {}
@@ -22,5 +21,5 @@ struct Point2D
 	constexpr bool operator!=( const Point2D& rhs ) const { return !(*this == rhs); }
 };
 
-template<typename T>
+template<typename T> requires(std::integral<T> || std::floating_point<T>)
 inline const Point2D<T> Point2D<T>::empty = { 0, 0 };

@@ -6,11 +6,9 @@
 #include "Point2D.hpp"
 #include "Common/Core/Assert.hpp"
 
-template<typename T>
+template<typename T> requires(std::integral<T> || std::floating_point<T>)
 struct Size
 {
-	static_assert(std::is_integral<T>::value || std::is_floating_point<T>::value, "Must be an integral or floating point type!");
-
 	// TODO: Look at using SafeInt for integral types
 
 public:
@@ -40,5 +38,5 @@ public:
 	static const Size empty;
 };
 
-template<typename T>
+template<typename T> requires(std::integral<T> || std::floating_point<T>)
 inline const Size<T> Size<T>::empty = { 0, 0 };

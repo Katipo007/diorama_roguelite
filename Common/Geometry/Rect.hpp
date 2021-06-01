@@ -5,10 +5,9 @@
 #include "Common/Geometry/Point2D.hpp"
 #include "Common/Geometry/Size.hpp"
 
-template<typename T>
+template<typename T> requires(std::integral<T> || std::floating_point<T>)
 class Rect
 {
-	static_assert( std::is_integral<T>::value || std::is_floating_point<T>::value, "Type must be a floating point or integral type" );
 public:
 	static const Rect empty;
 
@@ -62,5 +61,5 @@ public:
 	T w, h;
 };
 
-template<typename T>
+template<typename T> requires(std::integral<T> || std::floating_point<T>)
 inline const Rect<T> Rect<T>::empty = { 0, 0, 0, 0 };
