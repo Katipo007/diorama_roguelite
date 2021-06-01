@@ -12,25 +12,25 @@ namespace fsm
 		template<typename T>
 		concept HasDefaultOnEnterMethod = requires(T t)
 		{
-			{ t.OnEnter() } -> Concepts::Action;
+			{ t.OnEnter() };
 		};
 
 		template<typename T, typename... Args>
 		concept HasOnEnterMethod = requires( T t )
 		{
-			{ t.OnEnter( std::declval<Args>()... ) } -> Concepts::Action;
+			{ t.OnEnter( std::declval<Args>()... ) };
 		};
 
 		template<typename T>
 		concept HasDefaultOnLeaveMethod = requires(T t)
 		{
-			{ t.OnLeave() } -> std::same_as<void>;
+			{ t.OnLeave() };
 		};
 
 		template<typename T, typename... Args>
 		concept HasOnLeaveMethod = requires( T t )
 		{
-			{ t.OnLeave( std::declval<Args>()... ) } -> std::same_as<void>;
+			{ t.OnLeave( std::declval<Args>()... ) };
 		};
 	}
 
