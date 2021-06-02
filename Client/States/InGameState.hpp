@@ -23,7 +23,6 @@ namespace Visual
 namespace Game
 {
 	class ClientGame;
-	class PlayerObject;
 	class ClientGameWorld;
 }
 

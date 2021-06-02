@@ -15,19 +15,16 @@ namespace Visual
 
 namespace Game
 {
-	class PlayerObject;
-
-	class ClientGameWorld
+	class ClientGameWorld final
 		: public GameWorld
 	{
 	public:
 		ClientGameWorld( ::API::VideoAPI& video, ResourceManager& resources );
 		~ClientGameWorld();
 
-		PlayerObject* GetPlayerObject() { return player.get(); }
-		const PlayerObject* GetPlayerObject() const { return player.get(); }
+		void OnFixedUpdate( const PreciseTimestep& ) override;
+		void OnVariableUpdate( const PreciseTimestep& ) override;
 
-		virtual void OnFrame( const Timestep& timestep ) override;
 		// Render the world from a given camera's perspective
 		void Render( std::shared_ptr<Visual::Camera> camera ) const;
 
@@ -38,7 +35,6 @@ namespace Game
 		::API::VideoAPI& video;
 		ResourceManager& resources;
 
-		std::unique_ptr<PlayerObject> player;
 		std::unique_ptr<Visual::Renderer> renderer;
 		std::unique_ptr<Visual::SpriteBatcher> sprite_renderer;
 	};

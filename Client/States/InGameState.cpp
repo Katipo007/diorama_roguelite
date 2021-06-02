@@ -4,7 +4,6 @@
 
 #include "Client/ClientGame.hpp"
 #include "Client/Game/ClientGameWorld.hpp"
-#include "Client/Game/PlayerObject.hpp"
 #include "Client/Networking/ClientServer/ServerConnection.hpp"
 #include "ClientServerCommon/Networking/ClientServer/Channels.hpp"
 
@@ -90,17 +89,7 @@ namespace ClientStates
 	fsm::NoAction ClientStates::InGameState::HandleEvent( const FrameEvent& e )
 	{
 		ASSERT( !!gameworld );
-
-		auto keyboard = input.GetKeyboard( 0 );
-		ASSERT( keyboard );
-
-		if (auto* player_object = gameworld->GetPlayerObject())
-		{
-			auto& player_position = player_object->GetPosition();
-
-			player_position.z = std::clamp( std::lerp( player_position.z, keyboard->IsButtonDown( Input::Keys::Space ) ? 4.f : 0.f, e.timestep.delta * 8.f ), 0.f, 4.f );
-		}
-
+		gameworld->OnFixedUpdate( e.precise_timestep );
 
 		return fsm::NoAction{};
 	}

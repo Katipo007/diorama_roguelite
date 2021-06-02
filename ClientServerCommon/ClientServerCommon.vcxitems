@@ -14,9 +14,13 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Components\Player.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Components\Transform.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\Constants.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\GameWorld.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Systems\AbstractSystem.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Systems\BaseSystem.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Systems\Concepts.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Systems\SystemTypesEnum.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\ZoneCommon.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\ChatConstants.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Networking\ClientServer\Adapter.hpp" />
@@ -41,6 +45,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\YojimboHeader.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Game\GameWorld.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Game\Systems\BaseSystem.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Game\ZoneCommon.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Networking\ClientServer\Adapter.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Networking\ClientServer\Config.cpp" />

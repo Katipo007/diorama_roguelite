@@ -88,7 +88,6 @@
     <ClCompile Include="ClientMain.cpp" />
     <ClCompile Include="Game\ClientGameWorld.cpp" />
     <ClCompile Include="Game\ClientZone.cpp" />
-    <ClCompile Include="Game\PlayerObject.cpp" />
     <ClCompile Include="Graphical\UI\ChatWindow.cpp" />
     <ClCompile Include="Networking\ClientServer\ServerConnection.cpp" />
     <ClCompile Include="Precompiled\pch.cpp">
@@ -109,7 +108,7 @@
     <ClInclude Include="ClientGame.hpp" />
     <ClInclude Include="Game\ClientGameWorld.hpp" />
     <ClInclude Include="Game\ClientZone.hpp" />
-    <ClInclude Include="Game\PlayerObject.hpp" />
+    <ClInclude Include="Game\Components\Sprite.hpp" />
     <ClInclude Include="Graphical\UI\ChatWindow.hpp" />
     <ClInclude Include="Logging.hpp" />
     <ClInclude Include="Networking\ClientServer\ServerConnection.hpp" />
