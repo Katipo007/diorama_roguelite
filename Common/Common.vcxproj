@@ -49,6 +49,7 @@
     <ClInclude Include="Precompiled\pch.hpp" />
     <ClInclude Include="Utility\ConstExprContainers.hpp" />
     <ClInclude Include="Utility\Containers.hpp" />
+    <ClInclude Include="Utility\Entity\Entity.hpp" />
     <ClInclude Include="Utility\Entity\EnttHeader.hpp" />
     <ClInclude Include="Utility\Entity\Fwd.hpp" />
     <ClInclude Include="Utility\Hashing.hpp" />

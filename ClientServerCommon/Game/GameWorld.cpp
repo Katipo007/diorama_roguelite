@@ -1,11 +1,24 @@
 #include "GameWorld.hpp"
 
+#include "ClientServerCommon/Game/Objects/GameObjectStore.hpp"
 #include "ClientServerCommon/Game/Systems/BaseSystem.hpp"
 #include "Common/Utility/Containers.hpp"
 
 namespace Game
 {
+	struct GameWorld::Pimpl
+	{
+		GameObjectStore gameobject_store;
+
+		Pimpl( GameWorld& owner )
+			: gameobject_store( owner )
+		{
+		}
+	};
+
+
 	GameWorld::GameWorld()
+		: pimpl( new Pimpl( *this ) )
 	{
 	}
 
@@ -14,13 +27,23 @@ namespace Game
 	void GameWorld::OnFixedUpdate( const PreciseTimestep& timestep )
 	{
 		for (auto& system : systems)
-			system->OnFixedUpdate( entity_registry, timestep );
+			system->OnFixedUpdate( GetObjectStore(), timestep );
 	}
 
 	void GameWorld::OnVariableUpdate( const PreciseTimestep& timestep )
 	{
 		for (auto& system : systems)
-			system->OnVariableUpdate( entity_registry, timestep );
+			system->OnVariableUpdate( GetObjectStore(), timestep );
+	}
+
+	GameObjectStore& GameWorld::GetObjectStore() noexcept
+	{
+		return pimpl->gameobject_store;
+	}
+
+	const GameObjectStore& GameWorld::GetObjectStore() const noexcept
+	{
+		return pimpl->gameobject_store;
 	}
 
 	Systems::BaseSystem* GameWorld::GetSystem( Systems::SystemType type )
