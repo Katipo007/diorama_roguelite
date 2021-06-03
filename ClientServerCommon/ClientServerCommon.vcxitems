@@ -18,12 +18,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\Components\Player.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\Components\Transform.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Constants.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Game\EntityTemplateStore.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\GameWorld.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Objects\GameObject.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Objects\GameObjectId.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Objects\GameObjectPtr.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Objects\GameObjectWeakPtr.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Objects\GameObjectStore.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\Systems\BaseSystem.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\Systems\Concepts.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\Systems\SystemTypesEnum.hpp" />
@@ -51,9 +47,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\YojimboHeader.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Game\EntityTemplateStore.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Game\GameWorld.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Game\Objects\GameObject.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Game\Objects\GameObjectStore.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Game\Systems\BaseSystem.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Game\ZoneCommon.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Networking\ClientServer\Adapter.cpp" />

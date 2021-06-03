@@ -3,16 +3,15 @@
 #include "ClientServerCommon/Game/Systems/Concepts.hpp"
 #include "ClientServerCommon/Game/Systems/SystemTypesEnum.hpp"
 
-#include "Common/Utility/Timestep.hpp"
+#include "Common/Utility/Entity/Fwd.hpp"
 #include "Common/Utility/NonCopyable.hpp"
+#include "Common/Utility/Signal.hpp"
+#include "Common/Utility/Timestep.hpp"
 
 namespace Game::Systems { class BaseSystem; }
 
 namespace Game
 {
-	class GameObject;
-	class GameObjectStore;
-
 	// Base type for ClientWorld and ServerWorld
 	class GameWorld
 		: NonCopyable
@@ -20,11 +19,11 @@ namespace Game
 	public:
 		virtual ~GameWorld();
 
+		entt::registry& GetEntityRegistry() noexcept;
+		const entt::registry& GetEntityRegistry() const noexcept;
+
 		virtual void OnFixedUpdate( const PreciseTimestep& );
 		virtual void OnVariableUpdate( const PreciseTimestep& );
-
-		GameObjectStore& GetObjectStore() noexcept;
-		const GameObjectStore& GetObjectStore() const noexcept;
 
 #pragma region Systems
 		Systems::BaseSystem* GetSystem( Systems::SystemType type );
