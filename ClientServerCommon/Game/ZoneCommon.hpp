@@ -2,7 +2,7 @@
 
 #include <cinttypes>
 #include "Common/Geometry/Size.hpp"
-#include "ClientServerCommon/Game/Constants.hpp"
+#include "ClientServerCommon/Constants.hpp"
 
 namespace Game
 {
