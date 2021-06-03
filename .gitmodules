@@ -25,3 +25,6 @@
 [submodule "frozen"]
 	path = Common/Vendor/frozen
 	url = https://github.com/serge-sans-paille/frozen.git
+[submodule "yaml_cpp"]
+	path = Common/Vendor/yaml_cpp
+	url = https://github.com/jbeder/yaml-cpp.git

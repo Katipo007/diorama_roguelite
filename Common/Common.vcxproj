@@ -80,6 +80,7 @@
     <ClInclude Include="Utility\Timestep.hpp" />
     <ClInclude Include="Utility\TupleReflection.hpp" />
     <ClInclude Include="Utility\Unreachable.hpp" />
+    <ClInclude Include="Utility\Yaml.hpp" />
     <ClInclude Include="Version\BuildVersion.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -99,6 +100,7 @@
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Level4</WarningLevel>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Level4</WarningLevel>
     </ClCompile>
+    <ClCompile Include="Utility\Yaml.cpp" />
     <ClCompile Include="Version\BuildVersion.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -138,11 +140,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)Common\Vendor\;$(SolutionDir)Common\Vendor\glm\;$(SolutionDir)Common\Vendor\spdlog\include\;$(SolutionDir)Common\Vendor\frozen\include\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Common\Vendor\;$(SolutionDir)Common\Vendor\glm\;$(SolutionDir)Common\Vendor\spdlog\include\;$(SolutionDir)Common\Vendor\yaml_cpp\include\;$(SolutionDir)Common\Vendor\frozen\include\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)Common\Vendor\;$(SolutionDir)Common\Vendor\glm\;$(SolutionDir)Common\Vendor\spdlog\include\;$(SolutionDir)Common\Vendor\frozen\include\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Common\Vendor\;$(SolutionDir)Common\Vendor\glm\;$(SolutionDir)Common\Vendor\spdlog\include\;$(SolutionDir)Common\Vendor\yaml_cpp\include\;$(SolutionDir)Common\Vendor\frozen\include\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
