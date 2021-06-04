@@ -2,18 +2,18 @@
 
 #include "MessageFactory.hpp"
 
-namespace Networking::ClientServer
+namespace Game::Networking
 {
-	ClientServerAdapter::ClientServerAdapter()
+	Adapter::Adapter()
 		: yojimbo::Adapter()
 	{
 	}
 
-	ClientServerAdapter::~ClientServerAdapter()
+	Adapter::~Adapter()
 	{
 	}
 
-	yojimbo::MessageFactory* ClientServerAdapter::CreateMessageFactory( yojimbo::Allocator& allocator )
+	yojimbo::MessageFactory* Adapter::CreateMessageFactory( yojimbo::Allocator& allocator )
 	{
 		return YOJIMBO_NEW( allocator, MessageFactory, allocator );
 	}

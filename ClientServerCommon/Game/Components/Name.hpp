@@ -4,8 +4,8 @@
 
 namespace Game::Components
 {
-	struct Player
+	struct Name
 	{
-		std::string name;
+		std::string value;
 	};
 }

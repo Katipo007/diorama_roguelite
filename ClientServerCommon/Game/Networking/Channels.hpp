@@ -2,7 +2,7 @@
 
 #include "ClientServerCommon/Plugins/Yojimbo/Types.hpp"
 
-namespace Networking::ClientServer
+namespace Game::Networking
 {
 	enum class ChannelType : YojimboPlugin::ChannelIndex_T
 	{

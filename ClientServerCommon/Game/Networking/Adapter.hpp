@@ -1,21 +1,20 @@
 #pragma once
 
-#include "ClientServerCommon/Plugins/Yojimbo/YojimboHeader.hpp"
-#include "ClientServerCommon/Plugins/Yojimbo/Types.hpp"
+#include "ClientServerCommon/Game/Networking.hpp"
 #include "Common/Utility/Signal.hpp"
 
-namespace Networking::ClientServer
+namespace Game::Networking
 {
-	class ClientServerAdapter final
+	class Adapter final
 		: public yojimbo::Adapter
 	{
 	public:
-		ClientServerAdapter();
-		~ClientServerAdapter();
+		Adapter();
+		~Adapter();
 
 #pragma region Server Events
-		Signal::signal<ClientServerAdapter&, YojimboPlugin::ClientIndex_T> ServerClientConnected;
-		Signal::signal<ClientServerAdapter&, YojimboPlugin::ClientIndex_T> ServerClientDisconnected;
+		Signal::signal<Adapter&, ClientIndex> ServerClientConnected;
+		Signal::signal<Adapter&, ClientIndex> ServerClientDisconnected;
 #pragma endregion
 
 	private:

@@ -5,7 +5,7 @@
 
 #include "Channels.hpp"
 
-namespace Networking::ClientServer
+namespace Game::Networking
 {
 	extern const YojimboPlugin::Key_T DefaultPrivateKey;
 
