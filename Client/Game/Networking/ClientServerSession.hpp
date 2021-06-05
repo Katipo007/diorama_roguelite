@@ -2,6 +2,8 @@
 
 #include "ClientServerCommon/Game/Networking.hpp"
 #include "ClientServerCommon/Game/Networking/Adapter.hpp"
+#include "ClientServerCommon/Game/Networking/Channels.hpp"
+#include "ClientServerCommon/Game/Networking/MessageFactory.hpp"
 #include "ClientServerCommon/Plugins/Yojimbo/YojimboHeader.hpp"
 #include "ClientServerCommon/ecs.hpp"
 #include "ServerConnectionRequest.hpp"
@@ -30,21 +32,40 @@ namespace Game::Networking
 		ClientServerSession( ServerConnectionRequest request );
 		~ClientServerSession();
 
-		void OnFixedUpdate( const PreciseTimestep& ts );
-		void OnVariableUpdate( const PreciseTimestep& ts );
+		bool TestSessionFlag( Flags flag ) const noexcept { return session_flags.test( magic_enum::enum_index( flag ).value() ); }
+		const auto& GetSessionFlags() const noexcept { return session_flags; }
+
+		void SendChatMessage( std::string_view message );
+
+		template<YojimboPlugin::Concepts::Message T>
+		bool SendMessage( Networking::ChannelType channel, std::invocable<T&> auto initialiser )
+		{
+			const auto channel_idx = magic_enum::enum_integer( channel );
+
+			if (!client.IsConnected() || !client.CanSendMessage( channel_idx ))
+				return false;
+
+			if (auto* message = static_cast<T*>(client.CreateMessage( Networking::MessageFactory::GetMessageType<T>() )))
+			{
+				initialiser( *message );
+				client.SendMessage( channel_idx, message );
+				return true;
+			}
+
+			FATAL( "Failed to allocate message" );
+		}
 
 		bool IsConnected() const noexcept;
 		bool IsConnecting() const noexcept;
 		bool IsDisconnected() const noexcept;
 		void Disconnect();
 		const std::optional<std::string> GetDisconnectionReason() const noexcept { return disconnection_reason; }
-
 		const ServerConnectionRequest& GetConnectionRequest() const noexcept { return connection_request; } // return the data that was used to initialise this session
 
-		Signal::signal<ClientServerSession&> ConnectionStateChanged;
+		void OnFixedUpdate( const PreciseTimestep& ts );
+		void OnVariableUpdate( const PreciseTimestep& ts );
 
-		bool TestSessionFlag( Flags flag ) const noexcept { return session_flags.test( magic_enum::enum_index( flag ).value() ); }
-		const auto& GetSessionFlags() const noexcept { return session_flags; }
+		Signal::signal<ClientServerSession&> ConnectionStateChanged;
 
 	private:
 		void ProcessMessages();

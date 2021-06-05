@@ -11,7 +11,8 @@
 
 namespace Game::States
 {
-	InGameState::InGameState()
+	InGameState::InGameState( ClientGame& game )
+		: game( &game )
 	{
 		main_camera = std::make_shared<Visual::SphericalCamera>();
 		main_camera->SetPosition( { 0, 0, 0 } );
@@ -24,6 +25,19 @@ namespace Game::States
 
 	InGameState::~InGameState()
 	{
+	}
+
+	//fsm::Might<fsm::TransitionTo<DisconnectedFromServerState>>
+	fsm::NoAction InGameState::OnEnter()
+	{
+		client_server_session = game->GetClientServerSession();
+		ASSERT( client_server_session );
+		//if (!client_server_session)
+		//	return fsm::TransitionTo<DisconnectedFromServerState>{};
+
+		chat_window.SetClientServerSession( client_server_session );
+
+		return fsm::NoAction{};
 	}
 
 	void InGameState::OnLeave()

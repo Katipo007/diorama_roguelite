@@ -20,7 +20,7 @@ namespace Game::States
 	public:
 		using fsm::DefaultAction<fsm::NoAction>::HandleEvent;
 
-		fsm::NoAction OnEnter( const DisconnectedFromServerState& e );
+		fsm::NoAction OnEnter( const Events::DisconnectedFromServerEvent& e );
 		void OnLeave();
 
 		fsm::Might<fsm::TransitionTo<JoinMultiplayerState>> HandleEvent( const Events::DearImGuiFrameEvent& e );

@@ -35,6 +35,14 @@ namespace Game::Networking
 			client.Disconnect();
 	}
 
+	void ClientServerSession::SendChatMessage( std::string_view message )
+	{
+		SendMessage<Messages::ClientServerChatMessage>( ChannelType::Unreliable, [&]( Messages::ClientServerChatMessage& chat )
+			{
+				StringUtility::StringToArray( message, chat.message );
+			} );
+	}
+
 	void ClientServerSession::OnFixedUpdate( const PreciseTimestep& ts )
 	{
 		if (client.IsConnected())

@@ -1,5 +1,7 @@
 #include "ChatWindow.hpp"
 
+#include "Client/Game/Networking/ClientServerSession.hpp"
+
 #include "Visual/DearImGui/DearImGui.hpp"
 
 namespace
@@ -148,8 +150,7 @@ namespace UI
 		if (!client_server_session || msg.length() < 3)
 			return false;
 
-		NOT_IMPLEMENTED;
-
-		return false;
+		client_server_session->SendChatMessage( msg );
+		return true;
 	}
 }

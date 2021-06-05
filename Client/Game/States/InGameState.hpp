@@ -9,6 +9,8 @@
 #include "Common/Utility/NonCopyable.hpp"
 #include "Events.hpp"
 
+class ClientGame;
+
 namespace Visual
 {
 	class Camera;
@@ -17,23 +19,23 @@ namespace Visual
 
 namespace Game::States
 {
-	class MainMenuState;
 	class DisconnectedFromServerState;
 
-	class InGameState
+	class InGameState final
 		: public fsm::DefaultAction<fsm::NoAction>
 		, NonCopyable
 	{
 	public:
 		using fsm::DefaultAction<fsm::NoAction>::HandleEvent;
 
-		InGameState();
+		explicit InGameState( ClientGame& game );
 		~InGameState();
 
 		void AddChatMessage( std::string_view sender, std::string_view message );
 
 	public: // state machine stuffs
 
+		fsm::NoAction OnEnter();
 		void OnLeave();
 
 		fsm::NoAction HandleEvent( const Events::FrameEvent& e );
@@ -42,10 +44,7 @@ namespace Game::States
 		fsm::TransitionTo<DisconnectedFromServerState> HandleEvent( const Events::DisconnectedFromServerEvent& e );
 
 	protected:
-
-		void ChatWindowSendMessageHandler( std::string_view msg );
-
-	protected:
+		ClientGame* game = nullptr;
 		Networking::ClientServerSession* client_server_session = nullptr;
 
 		std::shared_ptr<Visual::SphericalCamera> main_camera;

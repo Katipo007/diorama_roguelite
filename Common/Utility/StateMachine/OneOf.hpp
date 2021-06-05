@@ -15,7 +15,9 @@ namespace fsm
 	class OneOf
 	{
 	public:
-		template<typename T>
+		constexpr OneOf() = default;
+
+		template<Concepts::Action T>
 		OneOf( T&& arg )
 			: options( std::forward<T>( arg ) )
 		{

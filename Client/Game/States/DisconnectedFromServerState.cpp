@@ -1,12 +1,14 @@
 #include "DisconnectedFromServerState.hpp"
 
+#include "Client/Game/Networking/ClientServerSession.hpp"
+
 #include "Visual/DearImGUI/DearImGui.hpp"
 
 namespace Game::States
 {
-	fsm::NoAction DisconnectedFromServerState::OnEnter( const DisconnectedFromServerState& e )
+	fsm::NoAction DisconnectedFromServerState::OnEnter( const Events::DisconnectedFromServerEvent& e )
 	{
-		given_reason = e.given_reason;
+		given_reason = e.session.GetDisconnectionReason();
 		return fsm::NoAction();
 	}
 
