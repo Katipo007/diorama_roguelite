@@ -1,19 +1,17 @@
 #pragma once
 
+#include "Common/Utility/NonCopyable.hpp"
 #include "Common/Utility/Signal.hpp"
 
 namespace Game::Networking { class ClientServerSession; }
 
 namespace UI
 {
-	class ChatWindow
+	class ChatWindow final
+		: NonCopyable
 	{
-		static const size_t InputBufferLen = 128;
-
 	public:
 		ChatWindow();
-		ChatWindow( const ChatWindow& to_copy ) = default;
-		ChatWindow( ChatWindow&& to_move ) = default;
 		virtual ~ChatWindow();
 
 		// returns true if we just sent a message
@@ -28,7 +26,7 @@ namespace UI
 		bool SendMessage( std::string_view msg );
 
 	protected:
-		char input_buffer[InputBufferLen];
+		std::array<char, 128> input_buffer{ 0 };
 
 		bool auto_scroll = true;
 		bool scroll_to_bottom = false;

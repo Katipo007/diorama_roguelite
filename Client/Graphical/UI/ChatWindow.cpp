@@ -17,13 +17,10 @@ namespace UI
 {
 	ChatWindow::ChatWindow()
 	{
-		Clear();
-		memset( input_buffer, 0, sizeof( input_buffer ) );
 	}
 
 	ChatWindow::~ChatWindow()
 	{
-		Clear();
 	}
 
 	bool ChatWindow::Do()
@@ -98,14 +95,14 @@ namespace UI
 					return 0;
 				};
 
-				if (ImGui::InputText( "Input", input_buffer, IM_ARRAYSIZE( input_buffer ), input_text_flags, input_callback ))
+				if (ImGui::InputText( "Input", &input_buffer[0], std::size( input_buffer ), input_text_flags, input_callback ))
 				{
-					char* s = input_buffer;
+					char* s = input_buffer.data();
 					Strtrim( s );
 					if (SendMessage( s ))
 					{
 						sent = true;
-						strncpy_s( input_buffer, "", InputBufferLen );
+						input_buffer = { 0 };
 					}
 					reclaim_focus = true;
 				}
