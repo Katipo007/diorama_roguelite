@@ -2,7 +2,6 @@
 
 #include "ClientServerCommon/Game/Networking/Config.hpp"
 #include "ClientServerCommon/Game/Networking/MessageFactory.hpp"
-#include "Client/Game/Systems/ClientSystem.hpp"
 
 #include "Common/Utility/MagicEnum.hpp"
 #include "Common/Utility/StringUtility.hpp"
@@ -13,6 +12,7 @@ namespace Game::Networking
 		: connection_request{ std::move( request_ ) }
 		, network_adapter{}
 		, client{ yojimbo::GetDefaultAllocator(), yojimbo::Address( "0.0.0.0" ), MakeConfiguration(), network_adapter, 0.0 }
+		, username{ connection_request.username }
 	{
 		yojimbo::Address destination{ connection_request.destination.data() };
 		if (!destination.IsValid())
@@ -37,7 +37,8 @@ namespace Game::Networking
 
 	void ClientServerSession::OnFixedUpdate( const PreciseTimestep& ts )
 	{
-		Systems::ClientProcessIncoming( client, registry, ts );
+		if (client.IsConnected())
+			client.ReceivePackets();
 
 		if (previous_connection_state != client.GetClientState())
 		{
@@ -54,9 +55,13 @@ namespace Game::Networking
 			}
 		}
 
+		ProcessMessages();
 		TickSimulation( ts );
 
-		Systems::ClientProcessOutgoing( client, registry, ts );
+		if (client.IsConnected())
+			client.SendPackets();
+
+		client.AdvanceTime( client.GetTime() + ts.delta );
 	}
 
 	void Game::Networking::ClientServerSession::OnVariableUpdate( const PreciseTimestep& )
@@ -72,6 +77,76 @@ namespace Game::Networking
 	bool ClientServerSession::IsConnecting() const noexcept
 	{
 		return client.IsConnecting();
+	}
+
+	void ClientServerSession::ProcessMessages()
+	{
+		if (!client.IsConnected())
+			return;
+
+		for (auto channel : magic_enum::enum_values<Game::Networking::ChannelType>())
+		{
+			const auto channel_idx = static_cast<YojimboPlugin::ChannelIndex_T>(channel);
+			yojimbo::Message* message = client.ReceiveMessage( channel_idx );
+			while (message != NULL)
+			{
+				const auto message_type = message->GetType();
+				const bool handled = ProcessMessage( *message );
+				client.ReleaseMessage( message );
+
+				if (!handled)
+				{
+					LOG_WARN( LoggingChannels::Client, "Disconnecting from server due to unhandled message of type '{}'({})", Game::Networking::MessageFactory::GetMessageName( message_type ), message_type );
+					client.Disconnect();
+					return;
+				}
+
+				message = client.ReceiveMessage( channel_idx );
+			}
+		}
+	}
+
+	bool ClientServerSession::ProcessMessage( const yojimbo::Message& message )
+	{
+		//
+		// Common messages
+		//
+		switch (message.GetType())
+		{
+			case MessageFactory::GetMessageType<Messages::ServerClientDisconnect>() :
+			{
+				const auto& disconnection = static_cast<const Messages::ServerClientDisconnect&>(message);
+				disconnection_reason = std::string_view{ disconnection.reason.data() };
+				client.Disconnect();
+				return true;
+			}
+		}
+
+		//
+		// Login messages
+		//
+		if (!TestSessionFlag( Flags::IsAccepted ))
+		{
+			switch (message.GetType())
+			{
+				case MessageFactory::GetMessageType<Messages::ServerClientLoginSuccess>() :
+				{
+					const auto& result = static_cast<const Messages::ServerClientLoginSuccess&>(message);
+					username = result.username.data();
+					SetSessionFlag( Flags::IsAccepted );
+					return true;
+				}
+			}
+		}
+		//
+		// Active messages
+		//
+		else
+		{
+
+		}
+
+		return false;
 	}
 
 	void Game::Networking::ClientServerSession::TickSimulation( const PreciseTimestep& ts )

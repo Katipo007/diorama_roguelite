@@ -13,6 +13,7 @@ namespace Game::Events { struct ConnectingToServerEvent; }
 namespace Game::States
 {
 	class DisconnectedFromServerState;
+	class InGameState;
 	class JoinMultiplayerState;
 
 	/// <summary>
@@ -28,6 +29,7 @@ namespace Game::States
 		fsm::NoAction OnEnter( const Events::ConnectingToServerEvent& );
 		void OnLeave();
 
+		fsm::Might<fsm::TransitionTo<InGameState>> HandleEvent( const Events::FrameEvent& e );
 		fsm::NoAction HandleEvent( const Events::DearImGuiFrameEvent& e );
 		fsm::TransitionTo<DisconnectedFromServerState> HandleEvent( const Events::DisconnectedFromServerEvent& e );
 

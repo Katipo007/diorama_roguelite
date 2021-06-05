@@ -87,7 +87,6 @@
     <ClCompile Include="ClientGame.cpp" />
     <ClCompile Include="ClientMain.cpp" />
     <ClCompile Include="Game\Networking\ClientIdGenerator.cpp" />
-    <ClCompile Include="Game\Systems\ClientSystem.cpp" />
     <ClCompile Include="Graphical\UI\ChatWindow.cpp" />
     <ClCompile Include="Game\Networking\ClientServerSession.cpp" />
     <ClCompile Include="Precompiled\pch.cpp">
@@ -108,7 +107,6 @@
     <ClInclude Include="Game\Networking\ClientIdGenerator.hpp" />
     <ClInclude Include="Game\Networking\ServerConnectionRequest.hpp" />
     <ClInclude Include="Game\States\ExitGameState.hpp" />
-    <ClInclude Include="Game\Systems\ClientSystem.hpp" />
     <ClInclude Include="Graphical\UI\ChatWindow.hpp" />
     <ClInclude Include="Logging.hpp" />
     <ClInclude Include="Game\Networking\ClientServerSession.hpp" />

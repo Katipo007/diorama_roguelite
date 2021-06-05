@@ -18,6 +18,14 @@ namespace Game::States
 		client_server_session = nullptr;
 	}
 
+	fsm::Might<fsm::TransitionTo<InGameState>> States::ConnectingToServerState::HandleEvent( const Events::FrameEvent& )
+	{
+		if( client_server_session && client_server_session->TestSessionFlag( Networking::ClientServerSession::Flags::IsAccepted ) )
+			return fsm::TransitionTo<InGameState>{};
+
+		return fsm::NoAction{};
+	}
+
 	fsm::NoAction ConnectingToServerState::HandleEvent( const Events::DearImGuiFrameEvent& )
 	{
 		if (ImGui::Begin( "ConnectingToServerState", NULL, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove ))
