@@ -1,15 +1,14 @@
 #pragma once
 
-#include "Client/States/Events.hpp"
+#include "Events.hpp"
 #include "Common/Utility/StateMachine/DefaultAction.hpp"
 #include "Common/Utility/StateMachine/Might.hpp"
 #include "Common/Utility/StateMachine/TransitionTo.hpp"
 
+#include "Common/Utility/NonCopyable.hpp"
 #include "Common/Utility/Signal.hpp"
 
-namespace Game { class ClientGame; }
-
-namespace ClientStates
+namespace Game::States
 {
 	class MainMenuState;
 	class ConnectingToServerState;
@@ -19,6 +18,7 @@ namespace ClientStates
 	/// </summary>
 	class JoinMultiplayerState
 		: public fsm::DefaultAction<fsm::NoAction>
+		, NonCopyable
 	{
 		using ExitActions = fsm::OneOf< fsm::NoAction,
 			fsm::TransitionTo<MainMenuState>,
@@ -28,22 +28,15 @@ namespace ClientStates
 	public:
 		using fsm::DefaultAction<fsm::NoAction>::HandleEvent;
 
-		explicit JoinMultiplayerState( Game::ClientGame& client );
-		explicit JoinMultiplayerState( JoinMultiplayerState&& to_move );
-		virtual ~JoinMultiplayerState();
+		ExitActions HandleEvent( const Events::FrameEvent& e );
+		ExitActions HandleEvent( const Events::DearImGuiFrameEvent& e );
+		ExitActions HandleEvent( const Events::ConnectedToServerEvent& e );
+		ExitActions HandleEvent( const Events::ConnectingToServerEvent& e );
 
-		ExitActions HandleEvent( const FrameEvent& e );
-		ExitActions HandleEvent( const DearImGuiFrameEvent& e );
-		ExitActions HandleEvent( const ConnectedToServerEvent& e );
-		ExitActions HandleEvent( const ConnectingToServerEvent& e );
 
+		Signal::signal<std::string_view> ConnectToServerClicked;
 
 	protected:
-		Game::ClientGame& client;
 		std::string status_message;
-
-	private:
-		JoinMultiplayerState( const JoinMultiplayerState& ) = delete;
-		JoinMultiplayerState operator=( const JoinMultiplayerState& ) = delete;
 	};
 }

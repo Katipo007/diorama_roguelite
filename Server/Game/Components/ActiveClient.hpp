@@ -2,7 +2,7 @@
 
 namespace Game::Components
 {
-	struct ServerPlayer
+	struct ActiveClient final
 	{
 		
 	};

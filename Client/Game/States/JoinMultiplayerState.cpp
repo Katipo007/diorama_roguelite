@@ -1,10 +1,9 @@
 #include "JoinMultiplayerState.hpp"
 
 #include "Client/ClientGame.hpp"
-#include "Client/Networking/ClientServer/ServerConnection.hpp"
-#include "ClientServerCommon/Plugins/Yojimbo/YojimboHeader.hpp"
 
 #include "Common/Game/Character/CharacterUtility.hpp"
+#include "Common/Utility/Unreachable.hpp"
 
 #include "Visual/DearImGui/DearImGui.hpp"
 
@@ -17,23 +16,14 @@ namespace
 	const auto username_textbox_handler = []( ImGuiInputTextCallbackData* ) -> int { return 0; };
 }
 
-namespace ClientStates
+namespace Game::States
 {
-	JoinMultiplayerState::JoinMultiplayerState( Game::ClientGame& _client )
-		: client( _client )
-	{
-	}
-
-	JoinMultiplayerState::JoinMultiplayerState( JoinMultiplayerState&& to_move ) = default;
-
-	JoinMultiplayerState::~JoinMultiplayerState() = default;
-
-	JoinMultiplayerState::ExitActions JoinMultiplayerState::HandleEvent( const FrameEvent& )
+	JoinMultiplayerState::ExitActions JoinMultiplayerState::HandleEvent( const Events::FrameEvent& )
 	{
 		return fsm::NoAction{};
 	}
 
-	JoinMultiplayerState::ExitActions JoinMultiplayerState::HandleEvent( const DearImGuiFrameEvent& e )
+	JoinMultiplayerState::ExitActions JoinMultiplayerState::HandleEvent( const Events::DearImGuiFrameEvent& e )
 	{
 		(void)e;
 
@@ -46,7 +36,7 @@ namespace ClientStates
 			ImGui::InputText( "Username", &username_textbox_value[0], std::size( username_textbox_value ), ImGuiInputTextFlags_EnterReturnsTrue, address_textbox_handler );
 
 			if (ImGui::Button( "Connect" ))
-				client.ConnectToServer( address_textbox_value.data(), username_textbox_value.data() );
+				ConnectToServerClicked( address_textbox_value.data() );
 
 			// return to menu
 			if (ImGui::Button( "Back" ))
@@ -64,19 +54,14 @@ namespace ClientStates
 		return fsm::NoAction{};
 	}
 
-	JoinMultiplayerState::ExitActions JoinMultiplayerState::HandleEvent( const ConnectedToServerEvent& e )
+	JoinMultiplayerState::ExitActions JoinMultiplayerState::HandleEvent( const Events::ConnectedToServerEvent& )
 	{
-		if (&e.connection == &client.GetServerConnection())
-			return fsm::TransitionTo<ConnectingToServerState>{};
-		else
-			return fsm::NoAction{};
+		FATAL( "We shouldn't be able to get here" );
+		//return fsm::TransitionTo<ConnectingToServerState>{};
 	}
 
-	JoinMultiplayerState::ExitActions JoinMultiplayerState::HandleEvent( const ConnectingToServerEvent& e )
+	JoinMultiplayerState::ExitActions JoinMultiplayerState::HandleEvent( const Events::ConnectingToServerEvent& )
 	{
-		if (&e.connection == &client.GetServerConnection())
-			return fsm::TransitionTo<ConnectingToServerState>{};
-		else
-			return fsm::NoAction{};
+		return fsm::TransitionTo<ConnectingToServerState>{};
 	}
 }

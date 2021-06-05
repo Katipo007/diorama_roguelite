@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ClientServerCommon/Game/Networking.hpp"
+#include "ClientServerCommon/Plugins/Yojimbo/YojimboHeader.hpp"
 #include "Common/Utility/Signal.hpp"
 
 namespace Game::Networking

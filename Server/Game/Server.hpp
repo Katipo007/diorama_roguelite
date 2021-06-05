@@ -3,9 +3,6 @@
 #include <optional>
 #include <variant>
 
-#include "Server/Game/Networking/ActiveClientState.hpp"
-#include "Server/Game/Networking/ClientHandle.hpp"
-#include "Server/Game/Networking/LoginClientState.hpp"
 #include "ClientServerCommon/ecs.hpp"
 #include "ClientServerCommon/Game/Networking/Adapter.hpp"
 #include "ClientServerCommon/Plugins/Yojimbo/YojimboHeader.hpp"
@@ -19,17 +16,14 @@ namespace Game
 {
 	class Server final
 	{
-		using LoginClientsContainer_T = std::unordered_map<Networking::ClientIndex, Networking::LoginClientState>;
-		using ActiveClientsContainer_T = std::unordered_map<Networking::ClientIndex, Networking::ActiveClientState>;
-
 	public:
-		Server( Core& core );
+		Server( Core& core, yojimbo::Address host_address );
 		~Server();
 
 		ecs::Registry& GetRegistry() noexcept { return registry; }
 		::yojimbo::Server& GetServer() noexcept { return server; }
-		Networking::ClientHandle GetClientByIndex( Networking::ClientIndex client_index );
-		Networking::ClientHandle GetClientById( const Networking::ClientId& client_id );
+		ecs::EntityHandle GetClientByIndex( Networking::ClientIndex client_index );
+		ecs::EntityHandle GetClientById( const Networking::ClientId& client_id );
 
 		void OnFixedUpdate( const PreciseTimestep& ts );
 		void OnVariableUpdate( const PreciseTimestep& ts );
@@ -38,8 +32,6 @@ namespace Game
 		void ClientConnectedHandler( Networking::Adapter& adapter, Networking::ClientIndex index );
 		void ClientDisconnectedHandler( Networking::Adapter& adapter, Networking::ClientIndex index );
 
-		void ProcessMessages();
-		bool HandleMessage( Networking::ClientIndex index, const yojimbo::Message& message );
 		void TickSimulation( const PreciseTimestep& ts );
 
 	private:
@@ -55,7 +47,6 @@ namespace Game
 		ecs::Registry registry;
 
 		std::unordered_map<Networking::ClientId, Networking::ClientIndex> client_id_index_mapping;
-		LoginClientsContainer_T unauthed_clients;
-		ActiveClientsContainer_T active_clients;
+		std::unordered_map<Networking::ClientIndex, ecs::EntityHandle> client_entities;
 	};
 }

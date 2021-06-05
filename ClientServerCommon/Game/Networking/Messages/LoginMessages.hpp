@@ -4,7 +4,7 @@
 
 #include "Helpers/HelperDefines.hpp"
 
-namespace Networking::ClientServer::Messages
+namespace Game::Networking::Messages
 {
 	BEGIN_MESSAGE( ClientServerLoginStart )
 		std::array<char, Game::CharacterUtility::CharacterNameMaxLength> username;

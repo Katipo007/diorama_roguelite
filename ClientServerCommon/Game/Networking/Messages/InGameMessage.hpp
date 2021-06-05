@@ -2,7 +2,7 @@
 
 #include "Helpers/HelperDefines.hpp"
 
-namespace Networking::ClientServer::Messages
+namespace Game::Networking::Messages
 {
 	BEGIN_MESSAGE( ClientServerChatMessage )
 		std::array<char, 128> message;

@@ -21,7 +21,7 @@
     <ClCompile Include="DedicatedServerMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ServerGame.cpp">
+    <ClCompile Include="DedicatedServerGame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Plugins\CLI\SystemCLI.cpp">
@@ -32,7 +32,7 @@
     <ClInclude Include="Precompiled\pch.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ServerGame.hpp">
+    <ClInclude Include="DedicatedServerGame.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Plugins\CLI\SystemCLI.hpp">

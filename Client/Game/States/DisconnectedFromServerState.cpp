@@ -2,7 +2,7 @@
 
 #include "Visual/DearImGUI/DearImGui.hpp"
 
-namespace ClientStates
+namespace Game::States
 {
 	fsm::NoAction DisconnectedFromServerState::OnEnter( const DisconnectedFromServerState& e )
 	{
@@ -12,17 +12,17 @@ namespace ClientStates
 
 	void DisconnectedFromServerState::OnLeave()
 	{
-		given_reason.clear();
+		given_reason.reset();
 	}
 
-	fsm::Might<fsm::TransitionTo<JoinMultiplayerState>> DisconnectedFromServerState::HandleEvent( const DearImGuiFrameEvent& )
+	fsm::Might<fsm::TransitionTo<JoinMultiplayerState>> DisconnectedFromServerState::HandleEvent( const Events::DearImGuiFrameEvent& )
 	{
 		if (ImGui::Begin( "DisconnectedFromServerState", NULL, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove ))
 		{
 			ImGui::Text( "Disconnected from server" );
 
-			if (!given_reason.empty())
-				ImGui::Text( "Reason: %s", given_reason.c_str() );
+			if (given_reason.has_value())
+				ImGui::Text( "Reason: %s", given_reason.value().c_str() );
 
 			if (ImGui::Button( "Back" ))
 			{

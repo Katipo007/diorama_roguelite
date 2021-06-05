@@ -2,7 +2,7 @@
 
 #include "Helpers/HelperDefines.hpp"
 
-namespace Networking::ClientServer::Messages
+namespace Game::Networking::Messages
 {
 	DEFINE_EMPTY_MESSAGE( DummyMessage );
 

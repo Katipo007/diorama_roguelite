@@ -18,13 +18,13 @@ namespace Game::Networking
 		return YOJIMBO_NEW( allocator, MessageFactory, allocator );
 	}
 
-	void ClientServerAdapter::OnServerClientConnected( YojimboPlugin::ClientIndex_T client_index )
+	void Adapter::OnServerClientConnected( YojimboPlugin::ClientIndex_T client_index )
 	{
-		ServerClientConnected( *this, client_index );
+		ServerClientConnected( *this, static_cast<ClientIndex>( client_index ) );
 	}
 
-	void ClientServerAdapter::OnServerClientDisconnected( YojimboPlugin::ClientIndex_T client_index )
+	void Adapter::OnServerClientDisconnected( YojimboPlugin::ClientIndex_T client_index )
 	{
-		ServerClientDisconnected( *this, client_index );
+		ServerClientDisconnected( *this, static_cast<ClientIndex>(client_index) );
 	}
 }

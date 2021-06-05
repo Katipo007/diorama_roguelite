@@ -27,6 +27,9 @@
     <ClCompile Include="Game\Networking\ClientHandle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Game\Systems\ServerSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precompiled\pch.hpp">
@@ -47,16 +50,22 @@
     <ClInclude Include="Game\Helpers\NetworkingHelpers.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Networking\ActiveClientState.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Networking\LoginClientState.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Game\Networking\ClientHandle.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Game\Networking\Constants.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Components\ServerClientConnection.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Systems\ServerSystem.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Components\ActiveClient.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Components\PendingClient.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

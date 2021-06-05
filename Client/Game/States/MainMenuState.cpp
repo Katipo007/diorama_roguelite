@@ -1,33 +1,11 @@
 #include "MainMenuState.hpp"
 
-#include "Client/ClientGame.hpp"
 #include "Common/Version/BuildVersion.hpp"
 #include "Visual/DearImGui/DearImGui.hpp"
 
-namespace
+namespace Game::States
 {
-
-}
-
-namespace ClientStates
-{
-	MainMenuState::MainMenuState( Game::ClientGame& _client )
-		: client( _client )
-	{
-	}
-
-	MainMenuState::~MainMenuState()
-	{
-	}
-
-	fsm::NoAction MainMenuState::HandleEvent( const FrameEvent& e )
-	{
-		(void)e;
-
-		return fsm::NoAction{};
-	}
-
-	MainMenuState::OutTransitionActions MainMenuState::HandleEvent( const DearImGuiFrameEvent& )
+	fsm::Might<fsm::TransitionTo<JoinMultiplayerState>, fsm::TransitionTo<ExitGameState>> MainMenuState::HandleEvent( const Events::DearImGuiFrameEvent& )
 	{
 		bool do_join = false;
 		bool do_exit = false;
@@ -56,7 +34,7 @@ namespace ClientStates
 		if( do_join )
 			return fsm::TransitionTo<JoinMultiplayerState>{};
 		else if( do_exit )
-			client.Exit( 0 );
+			return fsm::TransitionTo<ExitGameState>{};
 
 		return fsm::NoAction{};
 	}

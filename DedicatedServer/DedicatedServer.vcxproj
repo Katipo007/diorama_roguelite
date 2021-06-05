@@ -91,13 +91,13 @@
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Level4</WarningLevel>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="ServerGame.cpp" />
+    <ClCompile Include="DedicatedServerGame.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Plugins\CLI\SystemCLI.hpp" />
     <ClInclude Include="Plugins\PluginTypes.hpp" />
     <ClInclude Include="Precompiled\pch.hpp" />
-    <ClInclude Include="ServerGame.hpp" />
+    <ClInclude Include="DedicatedServerGame.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Server\Server.vcxproj">

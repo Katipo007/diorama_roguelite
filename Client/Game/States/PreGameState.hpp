@@ -1,11 +1,12 @@
 #pragma once
 
-#include "Client/States/Events.hpp"
+#include "Events.hpp"
 #include "Common/Utility/StateMachine/DefaultAction.hpp"
 #include "Common/Utility/StateMachine/Might.hpp"
 #include "Common/Utility/StateMachine/TransitionTo.hpp"
+#include "Common/Utility/NonCopyable.hpp"
 
-namespace ClientStates
+namespace Game::States
 {
 	class MainMenuState;
 
@@ -14,20 +15,11 @@ namespace ClientStates
 	/// </summary>
 	class PreGameState final
 		: public fsm::DefaultAction<fsm::NoAction>
+		, NonCopyable
 	{
 	public:
 		using fsm::DefaultAction<fsm::NoAction>::HandleEvent;
 
-		explicit PreGameState();
-		explicit PreGameState( PreGameState&& to_move ) = default;
-		~PreGameState();
-
-		fsm::Might<fsm::TransitionTo<MainMenuState>> HandleEvent( const FrameEvent& e );
-
-	protected:
-
-	private:
-		PreGameState( const PreGameState& ) = delete;
-		PreGameState operator=( const PreGameState& ) = delete;
+		fsm::Might<fsm::TransitionTo<MainMenuState>> HandleEvent( const Events::FrameEvent& e );
 	};
 }

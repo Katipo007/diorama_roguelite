@@ -14,7 +14,7 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Components\Concepts.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Concepts.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)ecs.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\Components\Name.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\Networking.hpp" />

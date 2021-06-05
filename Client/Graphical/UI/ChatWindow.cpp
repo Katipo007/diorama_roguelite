@@ -100,13 +100,11 @@ namespace UI
 				{
 					char* s = input_buffer;
 					Strtrim( s );
-					if (s[0])
+					if (SendMessage( s ))
 					{
-						EnteredMessage( s );
 						sent = true;
+						strncpy_s( input_buffer, "", InputBufferLen );
 					}
-
-					strncpy_s( input_buffer, "", InputBufferLen );
 					reclaim_focus = true;
 				}
 
@@ -130,5 +128,28 @@ namespace UI
 	void ChatWindow::Clear()
 	{
 		messages.clear();
+	}
+
+	void ChatWindow::SetClientServerSession( Game::Networking::ClientServerSession* const session )
+	{
+		if (client_server_session != nullptr)
+		{
+		}
+
+		client_server_session = session;
+
+		if (client_server_session != nullptr)
+		{
+		}
+	}
+
+	bool ChatWindow::SendMessage( std::string_view msg )
+	{
+		if (!client_server_session || msg.length() < 3)
+			return false;
+
+		NOT_IMPLEMENTED;
+
+		return false;
 	}
 }

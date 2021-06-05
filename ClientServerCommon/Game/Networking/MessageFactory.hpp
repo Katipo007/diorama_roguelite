@@ -3,7 +3,7 @@
 #include "Messages.hpp"
 #include "ClientServerCommon/Plugins/Yojimbo/TemplateMessageFactory.hpp"
 
-namespace Networking::ClientServer
+namespace Game::Networking
 {
 	using MessageFactory = YojimboPlugin::TemplateMessageFactory<
 		// message types go here

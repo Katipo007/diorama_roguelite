@@ -13,50 +13,42 @@ class Core;
 class ResourceManager;
 
 namespace API { class DearImGuiAPI; }
-namespace yojimbo { class Message; }
-namespace Networking::ClientServer { class ServerConnection; }
+namespace Game::Networking { class ClientServerSession; }
 
-namespace Game
+class ClientGame final
+	: public AbstractGame
+	, NonCopyable
 {
-	class ClientGame final
-		: public AbstractGame
-		, NonCopyable
-	{
-		friend class ::Core;
+public:
+	explicit ClientGame();
+	~ClientGame();
 
-	public:
-		explicit ClientGame();
-		~ClientGame();
+	Core& GetCore() const { return *core; }
+	ResourceManager& GetResourceManager() const { return *resource_manager; }
 
-		Core& GetCore() const { return *core; }
-		ResourceManager& GetResourceManager() const { return *resource_manager; }
+	Game::Networking::ClientServerSession* GetClientServerSession() noexcept { return client_server_session.get(); }
+	const Game::Networking::ClientServerSession* GetClientServerSession() const noexcept { return client_server_session.get(); }
+	bool IsConnectedToServer() const noexcept { return GetClientServerSession() != nullptr; }
 
-		Networking::ClientServer::ServerConnection& GetServerConnection();
-		const Networking::ClientServer::ServerConnection& GetServerConnection() const;
-		bool IsConnectedToServer() const noexcept;
+	void ConnectToServer( std::string_view address );
+	void DisconnectFromServer();
 
-		std::string_view GetUsername() const;
+protected:
+	virtual void Init() override;
+	virtual void OnGameEnd() override;
 
-		void ConnectToServer( std::string_view address, std::string_view username );
-		void DisconnectFromServer( std::optional<std::string> reason = std::nullopt );
+	virtual void OnFixedUpdate( const PreciseTimestep& ts ) override;
+	virtual void OnVariableUpdate( const PreciseTimestep& ts ) override;
+	virtual void OnRender( const PreciseTimestep& ts ) override;
+	void DoDearImGuiFrame();
 
-	protected:
-		virtual void Init() override;
-		virtual void OnGameEnd() override;
+	void ServerConnectionStateChangedHandler( Game::Networking::ClientServerSession& );
 
-		virtual void OnFixedUpdate( const PreciseTimestep& ts ) override;
-		virtual void OnVariableUpdate( const PreciseTimestep& ts ) override;
-		virtual void OnRender( const PreciseTimestep& ts ) override;
-		void DoDearImGuiFrame();
+protected:
+	::API::DearImGuiAPI* dearimgui = nullptr;
 
-		void ServerConnectionStateChangedHandler( Networking::ClientServer::ServerConnection& connection );
-		bool ServerConnectionMessageHandler( Networking::ClientServer::ServerConnection& connection, const yojimbo::Message& message );
-
-	protected:
-		::API::DearImGuiAPI* dearimgui = nullptr;
-
-	private:
-		struct Pimpl;
-		std::unique_ptr<Pimpl> pimpl;
-	};
-}
+private:
+	std::unique_ptr<Game::Networking::ClientServerSession> client_server_session;
+	struct Pimpl;
+	std::unique_ptr<Pimpl> pimpl;
+};

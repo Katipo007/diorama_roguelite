@@ -8,243 +8,154 @@
 #include "Common/Utility/StateMachine/StateMachine.hpp"
 #include "Common/Utility/Timestep.hpp"
 
-#include "Client/States/Events.hpp"
-#include "Client/States/PreGameState.hpp"
-#include "Client/States/MainMenuState.hpp"
-#include "Client/States/JoinMultiplayerState.hpp"
-#include "Client/States/ConnectingToServerState.hpp"
-#include "Client/States/DisconnectedFromServerState.hpp"
-#include "Client/States/InGameState.hpp"
+#include "Client/Game/States/Events.hpp"
+#include "Client/Game/States/PreGameState.hpp"
+#include "Client/Game/States/MainMenuState.hpp"
+#include "Client/Game/States/JoinMultiplayerState.hpp"
+#include "Client/Game/States/ConnectingToServerState.hpp"
+#include "Client/Game/States/DisconnectedFromServerState.hpp"
+#include "Client/Game/States/InGameState.hpp"
+#include "Client/Game/States/ExitGameState.hpp"
 
-#include "ClientServerCommon/Plugins/Yojimbo/YojimboHeader.hpp"
-#include "Client/Networking/ClientServer/ServerConnection.hpp"
+#include "Client/Game/Networking/ClientIdGenerator.hpp"
+#include "Client/Game/Networking/ClientServerSession.hpp"
 
 #include "Visual/Resources/SpriteSheet.hpp"
 
-namespace ClientStates
+namespace
 {
     using States = fsm::States<
-        PreGameState
-        , MainMenuState
-        , JoinMultiplayerState
-        , ConnectingToServerState
-        , DisconnectedFromServerState
-        , InGameState
+        Game::States::PreGameState
+        , Game::States::MainMenuState
+        , Game::States::JoinMultiplayerState
+        , Game::States::ConnectingToServerState
+        , Game::States::DisconnectedFromServerState
+        , Game::States::InGameState
+        , Game::States::ExitGameState
     >;
 
     using Events = fsm::Events<
-        FrameEvent
-        , RenderEvent
-        , DearImGuiFrameEvent
-        , ConnectedToServerEvent
-        , ConnectingToServerEvent
-        , DisconnectedFromServerEvent
-        , ServerMessageEvent
+        Game::Events::FrameEvent
+        , Game::Events::RenderEvent
+        , Game::Events::DearImGuiFrameEvent
+        , Game::Events::ConnectedToServerEvent
+        , Game::Events::ConnectingToServerEvent
+        , Game::Events::DisconnectedFromServerEvent
     >;
 
-    using Machine = fsm::Machine<States, Events>;
+    using Client = fsm::Machine<States, Events>;
 }
 
-namespace
+struct ClientGame::Pimpl
 {
-    bool CanHaveServerConnectionInState( const ClientStates::Machine& machine )
-    {
-        return !machine.IsInState<ClientStates::PreGameState>()
-            && !machine.IsInState<ClientStates::MainMenuState>()
-            && !machine.IsInState<ClientStates::JoinMultiplayerState>()
-            && !machine.IsInState<ClientStates::DisconnectedFromServerState>()
-            ;
-    }
+    Client client{};
+};
+
+
+///
+/// ClientGame
+/// 
+
+ClientGame::ClientGame()
+{
 }
 
-namespace Game
+ClientGame::~ClientGame()
 {
-    struct ClientGame::Pimpl
-    {
-        ClientStates::Machine state_machine;
-        Networking::ClientServer::ServerConnection server_connection;
+}
 
-        std::string username;
-        std::string disconnect_reason;
-
-        Pimpl( ClientGame& owner )
-            : state_machine(
-                ClientStates::PreGameState{}
-                , ClientStates::MainMenuState{ owner }
-                , ClientStates::JoinMultiplayerState{ owner }
-                , ClientStates::ConnectingToServerState{ owner }
-                , ClientStates::DisconnectedFromServerState{}
-                , ClientStates::InGameState{ owner }
-            )
-            , server_connection( std::bind( &ClientGame::ServerConnectionMessageHandler, &owner, std::placeholders::_1, std::placeholders::_2 ) )
-        {
-            (void)owner;
-        }
-    };
-
-
-    ///
-    /// ClientGame
-    /// 
-
-    ClientGame::ClientGame()
-    {
-    }
-
-    ClientGame::~ClientGame()
-    {
-    }
-
-    Networking::ClientServer::ServerConnection& ClientGame::GetServerConnection()
-    {
-        return pimpl->server_connection;
-    }
-
-    const Networking::ClientServer::ServerConnection& ClientGame::GetServerConnection() const
-    {
-        return pimpl->server_connection;
-    }
-
-    bool ClientGame::IsConnectedToServer() const noexcept
-    {
-        return pimpl->server_connection.IsConnected();
-    }
-
-    std::string_view ClientGame::GetUsername() const
-    {
-        return pimpl->username;
-    }
-
-    void ClientGame::ConnectToServer( std::string_view address, std::string_view username )
-    {
-        yojimbo::Address target_address( address.data() );
-
+void ClientGame::ConnectToServer( std::string_view address )
+{
+    if (client_server_session != nullptr)
         DisconnectFromServer();
-        pimpl->username = username;
-        pimpl->disconnect_reason = "";
-        if (target_address.IsValid())
-            pimpl->server_connection.Connect( target_address );
-        else
-            LOG_WARN( LoggingChannels::Client, "Failed to connect to server, invalid address" );
-    }
 
-    void ClientGame::DisconnectFromServer( std::optional<std::string> reason )
-    {
-        if (!pimpl->server_connection.IsDisconnected())
-        {
-            pimpl->disconnect_reason = reason.value_or( "" );
-            pimpl->server_connection.Disconnect();
-        }
-    }
+    ASSERT( client_server_session == nullptr );
+    client_server_session.reset( new Game::Networking::ClientServerSession( Game::Networking::GenerateClientId(), yojimbo::Address{ address.data() } ) );
+    client_server_session->ConnectionStateChanged.connect( &ClientGame::ServerConnectionStateChangedHandler, this );
+    
+    pimpl->client.Handle( Game::Events::ConnectingToServerEvent{ *client_server_session } );
+}
 
-    void ClientGame::Init()
-    {
-        ASSERT( core != nullptr );
-        auto& video = core->GetRequiredAPI<API::VideoAPI>();
-        dearimgui = core->GetAPI<API::DearImGuiAPI>();
+void ClientGame::DisconnectFromServer()
+{
+    if (client_server_session == nullptr)
+        return;
 
-        // Preload sprite sheets
-        resource_manager->Preload<Graphics::SpriteSheet>( "Art/2DArt/texture.json" );
+    pimpl->client.Handle( Game::Events::DisconnectedFromServerEvent{ *client_server_session } );
+    client_server_session.reset();
+}
+
+void ClientGame::Init()
+{
+    ASSERT( core != nullptr );
+    auto& video = core->GetRequiredAPI<API::VideoAPI>();
+    dearimgui = core->GetAPI<API::DearImGuiAPI>();
+
+    // Preload sprite sheets
+    resource_manager->Preload<Graphics::SpriteSheet>( "Art/2DArt/texture.json" );
             
-        Graphics::WindowDefinition window_def;
-        window_def.title = "Diorama Roguelite";
-        window_def.size = { 800, 600 };
-        video.SetWindow( std::move( window_def ) );
+    Graphics::WindowDefinition window_def;
+    window_def.title = "Diorama Roguelite";
+    window_def.size = { 800, 600 };
+    video.SetWindow( std::move( window_def ) );
 
-        ASSERT( video.HasWindow() );
+    ASSERT( video.HasWindow() );
 
-        pimpl.reset( new Pimpl( *this ) );
-        pimpl->server_connection.ConnectionStateChanged.connect( &ClientGame::ServerConnectionStateChangedHandler, this );
-    }
+    pimpl.reset( new Pimpl() );
 
-    void ClientGame::OnGameEnd()
-    {
-        pimpl.reset();
-    }
-
-    void ClientGame::OnFixedUpdate( const PreciseTimestep& ts )
-    {
-        pimpl->server_connection.OnFixedUpdate( ts );
-        pimpl->state_machine.Handle( ClientStates::FrameEvent( ts ) );
-
-        if (!pimpl->server_connection.IsDisconnected() && !CanHaveServerConnectionInState( pimpl->state_machine ))
-            pimpl->server_connection.Disconnect();
-    }
-
-    void ClientGame::OnVariableUpdate( const PreciseTimestep& ts )
-    {
-        (void)ts;
-        DoDearImGuiFrame();
-    }
-
-    void ClientGame::OnRender( const PreciseTimestep& ts )
-    {
-        (void)ts; // TODO: use
-        pimpl->state_machine.Handle( ClientStates::RenderEvent() );
-    }
-
-    void ClientGame::DoDearImGuiFrame()
-    {
-        if (!dearimgui || !dearimgui->GetEnabled())
-            return;
-
-        pimpl->state_machine.Handle( ClientStates::DearImGuiFrameEvent( *dearimgui ) );
-    }
-
-    void ClientGame::ServerConnectionStateChangedHandler( Networking::ClientServer::ServerConnection& connection )
-    {
-        if (&connection == &pimpl->server_connection)
+    // temporary solution
+    pimpl->client.GetState<Game::States::JoinMultiplayerState>().ConnectToServerClicked.connect( [this]( std::string_view address )
         {
-            switch (connection.GetClientState())
-            {
-            case yojimbo::ClientState::CLIENT_STATE_CONNECTED:
-                pimpl->state_machine.Handle( ClientStates::ConnectedToServerEvent{ connection } );
-                break;
+            ConnectToServer( address );
+        } );
+}
 
-            case yojimbo::ClientState::CLIENT_STATE_CONNECTING:
-                pimpl->state_machine.Handle( ClientStates::ConnectingToServerEvent{ connection } );
-                break;
+void ClientGame::OnGameEnd()
+{
+    pimpl.reset();
+}
 
-            case yojimbo::ClientState::CLIENT_STATE_DISCONNECTED:
-                pimpl->state_machine.Handle( ClientStates::DisconnectedFromServerEvent{ connection, pimpl->disconnect_reason } );
-                break;
+void ClientGame::OnFixedUpdate( const PreciseTimestep& ts )
+{
+    ASSERT( pimpl );
+    if (client_server_session)
+        client_server_session->OnFixedUpdate( ts );
 
-            case yojimbo::ClientState::CLIENT_STATE_ERROR:
-                pimpl->state_machine.Handle( ClientStates::DisconnectedFromServerEvent( connection, "Internal Error" ) );
-                NOT_IMPLEMENTED;
-                break;
-            }
-        }
-    }
+    pimpl->client.Handle( Game::Events::FrameEvent{ ts } );
 
-    bool ClientGame::ServerConnectionMessageHandler( Networking::ClientServer::ServerConnection& connection, const yojimbo::Message& message )
+    if (client_server_session && client_server_session->IsDisconnected())
+        DisconnectFromServer();
+
+    if (pimpl->client.IsInState<Game::States::ExitGameState>())
+        Exit( 0 );
+}
+
+void ClientGame::OnVariableUpdate( const PreciseTimestep& )
+{
+    ASSERT( pimpl );
+    DoDearImGuiFrame();
+}
+
+void ClientGame::OnRender( const PreciseTimestep& )
+{
+    ASSERT( pimpl );
+    pimpl->client.Handle( Game::Events::RenderEvent{} );
+}
+
+void ClientGame::DoDearImGuiFrame()
+{
+    ASSERT( pimpl );
+    if (!dearimgui || !dearimgui->GetEnabled())
+        return;
+
+    pimpl->client.Handle( Game::Events::DearImGuiFrameEvent{ *dearimgui } );
+}
+
+void ClientGame::ServerConnectionStateChangedHandler( Game::Networking::ClientServerSession& session )
+{
+    if (client_server_session && (&session == client_server_session.get()))
     {
-        if (&connection == &pimpl->server_connection)
-        {
-            using namespace Networking::ClientServer;
-            using Factory_T = ServerConnection::FactoryType;
-
-            switch (message.GetType())
-            {
-                case Factory_T::GetMessageType<Messages::ServerClientDisconnect>() :
-                {
-                    auto& msg = static_cast<const Messages::ServerClientDisconnect&>(message);
-                    const auto disconnect_reason = std::string{ msg.reason.data() };
-                    DisconnectFromServer( !disconnect_reason.empty() ? std::make_optional( disconnect_reason ) : std::nullopt );
-                    return true;
-                    break;
-                }
-
-                default:
-                    break;
-            }
-
-            // Unhandled at this point, pass to state machine for handling
-            ClientStates::ServerMessageEvent e( connection, message );
-            pimpl->state_machine.Handle( e );
-            return e.handled;
-        }
-
-        return false;
+        if (session.IsConnected())
+            pimpl->client.Handle( Game::Events::ConnectedToServerEvent{ session } );
     }
 }
