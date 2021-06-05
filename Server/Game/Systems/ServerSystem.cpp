@@ -3,6 +3,9 @@
 #include "ClientServerCommon/Game/Networking/Channels.hpp"
 #include "ClientServerCommon/Plugins/Yojimbo/YojimboHeader.hpp"
 #include "Server/Game/Components/ServerClientConnection.hpp"
+#include "Server/Game/Components/PendingClient.hpp"
+
+#include <chrono>
 
 namespace
 {
@@ -44,8 +47,19 @@ namespace Game::Systems
 		{
 			server.ReceivePackets();
 
+			const auto now = std::chrono::system_clock::now();
 			registry.view<Components::ServerClientConnection>().each( [&]( const auto entity, Components::ServerClientConnection& client )
 				{
+					if (auto* pending = registry.try_get<Components::PendingClient>( entity ))
+					{
+						if (std::chrono::duration_cast<std::chrono::seconds>(now - client.connected_at).count() > 5)
+						{
+							LOG_INFO( LoggingChannels::Server, "Disconnecting client ({}) due to taking too long to log in", client.client_index );
+							server.DisconnectClient( client.client_index );
+							return; // entity is deleted at this point, no further processing should be done.
+						}
+					}
+
 					if (!ProcessMessagesForClient( server, ecs::EntityHandle{ registry, entity }, client ))
 					{
 						LOG_WARN( LoggingChannels::Server, "Disconnecting client ({}) due to an unhandled message", client.client_index );

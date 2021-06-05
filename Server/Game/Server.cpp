@@ -76,7 +76,13 @@ namespace Game
 	{
 		LOG_INFO( LoggingChannels::Server, "Client ({}) disconnected", index );
 		const auto client_id = server.GetClientId( index );
-		client_entities.erase( index );
+
+		if (const auto entity_it = client_entities.find( index ); entity_it != std::end( client_entities ))
+		{
+			entity_it->second.destroy();
+			client_entities.erase( entity_it );
+		}
+
 		client_id_index_mapping.erase( client_id );
 	}
 
