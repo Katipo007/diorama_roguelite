@@ -4,6 +4,6 @@ namespace Game::Components
 {
 	struct ActiveClient final
 	{
-		
+		bool dummy;
 	};
 }

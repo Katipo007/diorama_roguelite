@@ -65,7 +65,7 @@ namespace Game
 		const auto client_id = server.GetClientId( index );
 
 		const auto entity = registry.create();
-		registry.emplace<Components::ServerClientConnection>( entity, index );
+		registry.emplace<Components::ServerClientConnection>( entity, server, index );
 		registry.emplace<Components::PendingClient>( entity );
 
 		client_entities[index] = ecs::EntityHandle( registry, entity );

@@ -4,6 +4,6 @@ namespace Game::Components
 {
 	struct ServerPlayer
 	{
-		
+		bool dummy;
 	};
 }

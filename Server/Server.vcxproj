@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Game\Helpers\NetworkingHelpers.cpp" />
     <ClCompile Include="Game\Helpers\PlayerHelpers.cpp" />
     <ClCompile Include="Game\Networking\ClientHandle.cpp" />
     <ClCompile Include="Game\Server.cpp" />

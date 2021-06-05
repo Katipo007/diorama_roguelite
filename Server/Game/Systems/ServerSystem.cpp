@@ -1,15 +1,43 @@
 #include "ServerSystem.hpp"
 
 #include "ClientServerCommon/Game/Networking/Channels.hpp"
+#include "ClientServerCommon/Game/Networking/MessageFactory.hpp"
 #include "ClientServerCommon/Plugins/Yojimbo/YojimboHeader.hpp"
 #include "Server/Game/Components/ServerClientConnection.hpp"
 #include "Server/Game/Components/PendingClient.hpp"
+#include "Server/Game/Components/ActiveClient.hpp"
+#include "Server/Game/Helpers/NetworkingHelpers.hpp"
 
 #include <chrono>
 
 namespace
 {
-	bool ProcessClientMessage( ecs::EntityHandle& entity, Game::Components::ServerClientConnection& client, const yojimbo::Message& message )
+	template<typename T>
+	constexpr auto MsgType = Game::Networking::MessageFactory::GetMessageType<T>();
+
+	bool ProcessPendingClientMessage( ecs::EntityHandle& entity, Game::Components::ServerClientConnection&, const yojimbo::Message& message )
+	{
+		using namespace Game::Networking::Messages;
+		switch (message.GetType())
+		{
+		case MsgType<ClientServerLoginStart>:
+		{
+			const auto& request = static_cast<const ClientServerLoginStart&>(message);
+
+			const std::string_view requested_name{ request.username.data() };
+
+			if (requested_name.length() >= 3)
+				Game::Helpers::AcceptClient( entity, requested_name );
+			else
+				Game::Helpers::DisconnectClient( entity, "Invalid requested username, name too short" );
+			return true;
+		}
+		}
+
+		return false;
+	}
+
+	bool ProcessActiveClientMessage( ecs::EntityHandle& entity, Game::Components::ServerClientConnection& client, const yojimbo::Message& message )
 	{
 		NOT_IMPLEMENTED;
 		(void)entity;
@@ -27,11 +55,27 @@ namespace
 			yojimbo::Message* message = server.ReceiveMessage( client.client_index, channel_idx );
 			while (message != NULL)
 			{
-				const bool handled = ProcessClientMessage( entity, client, *message );
+				const auto message_type = message->GetType();
+				bool handled = false;
+
+				if (auto* pending = entity.try_get<Game::Components::PendingClient>())
+				{
+					handled |= ProcessPendingClientMessage( entity, client, *message );
+				}
+				else if (auto* active = entity.try_get<Game::Components::ActiveClient>())
+				{
+					handled |= ProcessActiveClientMessage( entity, client, *message );
+				}
+
 				server.ReleaseMessage( client.client_index, message );
 
 				if (!handled)
+				{
+					LOG_ERROR( LoggingChannels::Server, "Unhandled message of type '{}'({})", Game::Networking::MessageFactory::GetMessageName( message_type ), message_type );
 					return false;
+				}
+
+				message = server.ReceiveMessage( client.client_index, channel_idx );
 			}
 		}
 

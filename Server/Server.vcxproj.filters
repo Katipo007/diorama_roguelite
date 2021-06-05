@@ -30,6 +30,9 @@
     <ClCompile Include="Game\Systems\ServerSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Game\Helpers\NetworkingHelpers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precompiled\pch.hpp">

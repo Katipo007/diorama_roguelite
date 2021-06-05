@@ -1,6 +1,7 @@
 #include "JoinMultiplayerState.hpp"
 
 #include "Client/ClientGame.hpp"
+#include "Client/Game/Networking/ClientIdGenerator.hpp"
 
 #include "Common/Game/Character/CharacterUtility.hpp"
 #include "Common/Utility/Unreachable.hpp"
@@ -36,7 +37,7 @@ namespace Game::States
 			ImGui::InputText( "Username", &username_textbox_value[0], std::size( username_textbox_value ), ImGuiInputTextFlags_EnterReturnsTrue, address_textbox_handler );
 
 			if (ImGui::Button( "Connect" ))
-				ConnectToServerClicked( address_textbox_value.data() );
+				ConnectToServer();
 
 			// return to menu
 			if (ImGui::Button( "Back" ))
@@ -63,5 +64,16 @@ namespace Game::States
 	JoinMultiplayerState::ExitActions JoinMultiplayerState::HandleEvent( const Events::ConnectingToServerEvent& )
 	{
 		return fsm::TransitionTo<ConnectingToServerState>{};
+	}
+
+	void States::JoinMultiplayerState::ConnectToServer()
+	{
+		Networking::ServerConnectionRequest request
+		{
+			.destination{ address_textbox_value.data() },
+			.username{ username_textbox_value.data() },
+			.client_id{ Networking::GenerateClientId() },
+		};
+		ConnectToServerClicked( std::move( request ) );
 	}
 }

@@ -64,13 +64,13 @@ ClientGame::~ClientGame()
 {
 }
 
-void ClientGame::ConnectToServer( std::string_view address )
+void ClientGame::ConnectToServer( Game::Networking::ServerConnectionRequest&& request )
 {
     if (client_server_session != nullptr)
         DisconnectFromServer();
 
     ASSERT( client_server_session == nullptr );
-    client_server_session.reset( new Game::Networking::ClientServerSession( Game::Networking::GenerateClientId(), yojimbo::Address{ address.data() } ) );
+    client_server_session.reset( new Game::Networking::ClientServerSession{ std::move( request ) } );
     client_server_session->ConnectionStateChanged.connect( &ClientGame::ServerConnectionStateChangedHandler, this );
     
     pimpl->client.Handle( Game::Events::ConnectingToServerEvent{ *client_server_session } );
@@ -104,9 +104,9 @@ void ClientGame::Init()
     pimpl.reset( new Pimpl() );
 
     // temporary solution
-    pimpl->client.GetState<Game::States::JoinMultiplayerState>().ConnectToServerClicked.connect( [this]( std::string_view address )
+    pimpl->client.GetState<Game::States::JoinMultiplayerState>().ConnectToServerClicked.connect( [this]( Game::Networking::ServerConnectionRequest request )
         {
-            ConnectToServer( address );
+            ConnectToServer( std::move( request ) );
         } );
 }
 

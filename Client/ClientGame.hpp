@@ -13,7 +13,11 @@ class Core;
 class ResourceManager;
 
 namespace API { class DearImGuiAPI; }
-namespace Game::Networking { class ClientServerSession; }
+namespace Game::Networking
+{
+	class ClientServerSession;
+	struct ServerConnectionRequest;
+}
 
 class ClientGame final
 	: public AbstractGame
@@ -30,7 +34,7 @@ public:
 	const Game::Networking::ClientServerSession* GetClientServerSession() const noexcept { return client_server_session.get(); }
 	bool IsConnectedToServer() const noexcept { return GetClientServerSession() != nullptr; }
 
-	void ConnectToServer( std::string_view address );
+	void ConnectToServer( Game::Networking::ServerConnectionRequest&& request );
 	void DisconnectFromServer();
 
 protected:

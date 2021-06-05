@@ -1,6 +1,7 @@
 #include "ClientSystem.hpp"
 
 #include "ClientServerCommon/Plugins/Yojimbo/YojimboHeader.hpp"
+#include "ClientServerCommon/Game/Networking/MessageFactory.hpp"
 #include "ClientServerCommon/Game/Networking/Channels.hpp"
 #include "Common/Utility/MagicEnum.hpp"
 
@@ -20,7 +21,7 @@ namespace
 
 				if (!handled)
 				{
-					LOG_WARN( LoggingChannels::Client, "Disconnecting from server due to unhandled message of type '{}'", message_type );
+					LOG_WARN( LoggingChannels::Client, "Disconnecting from server due to unhandled message of type '{}'({})", Game::Networking::MessageFactory::GetMessageName(message_type), message_type );
 					client.Disconnect();
 					return false;
 				}

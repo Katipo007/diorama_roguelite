@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Events.hpp"
+#include "Client/Game/Networking/ServerConnectionRequest.hpp"
+
 #include "Common/Utility/StateMachine/DefaultAction.hpp"
 #include "Common/Utility/StateMachine/Might.hpp"
 #include "Common/Utility/StateMachine/TransitionTo.hpp"
@@ -16,7 +18,7 @@ namespace Game::States
 	/// <summary>
 	/// Screen to join an existing multi-player game
 	/// </summary>
-	class JoinMultiplayerState
+	class JoinMultiplayerState final
 		: public fsm::DefaultAction<fsm::NoAction>
 		, NonCopyable
 	{
@@ -34,7 +36,10 @@ namespace Game::States
 		ExitActions HandleEvent( const Events::ConnectingToServerEvent& e );
 
 
-		Signal::signal<std::string_view> ConnectToServerClicked;
+		Signal::signal<Networking::ServerConnectionRequest> ConnectToServerClicked;
+
+	protected:
+		void ConnectToServer();
 
 	protected:
 		std::string status_message;

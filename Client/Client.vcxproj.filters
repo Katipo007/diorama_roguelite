@@ -104,5 +104,8 @@
     <ClInclude Include="Game\States\ExitGameState.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Game\Networking\ServerConnectionRequest.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
