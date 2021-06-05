@@ -49,17 +49,6 @@ namespace
 struct ClientGame::Pimpl
 {
     Client client;
-
-    Pimpl( ClientGame& game )
-        : client( Game::States::PreGameState{}
-            , Game::States::MainMenuState{}
-            , Game::States::JoinMultiplayerState{}
-            , Game::States::ConnectingToServerState{}
-            , Game::States::DisconnectedFromServerState{}
-            , Game::States::InGameState{ game }
-            , Game::States::ExitGameState{}
-        )
-    {}
 };
 
 
@@ -112,7 +101,7 @@ void ClientGame::Init()
 
     ASSERT( video.HasWindow() );
 
-    pimpl.reset( new Pimpl( *this ) );
+    pimpl.reset( new Pimpl{} );
 
     // temporary solution
     pimpl->client.GetState<Game::States::JoinMultiplayerState>().ConnectToServerClicked.connect( [this]( Game::Networking::ServerConnectionRequest request )

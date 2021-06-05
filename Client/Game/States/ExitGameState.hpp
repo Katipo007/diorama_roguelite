@@ -11,6 +11,5 @@ namespace Game::States
 		: public fsm::DefaultAction<fsm::NoAction>
 		, NonCopyable
 	{
-
 	};
 }

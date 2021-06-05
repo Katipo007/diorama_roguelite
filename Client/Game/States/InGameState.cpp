@@ -11,8 +11,7 @@
 
 namespace Game::States
 {
-	InGameState::InGameState( ClientGame& game )
-		: game( &game )
+	InGameState::InGameState()
 	{
 		main_camera = std::make_shared<Visual::SphericalCamera>();
 		main_camera->SetPosition( { 0, 0, 0 } );
@@ -30,6 +29,7 @@ namespace Game::States
 	//fsm::Might<fsm::TransitionTo<DisconnectedFromServerState>>
 	fsm::NoAction InGameState::OnEnter()
 	{
+		ASSERT( game );
 		client_server_session = game->GetClientServerSession();
 		ASSERT( client_server_session );
 		//if (!client_server_session)

@@ -28,7 +28,7 @@ namespace Game::States
 	public:
 		using fsm::DefaultAction<fsm::NoAction>::HandleEvent;
 
-		explicit InGameState( ClientGame& game );
+		explicit InGameState();
 		~InGameState();
 
 		void AddChatMessage( std::string_view sender, std::string_view message );
