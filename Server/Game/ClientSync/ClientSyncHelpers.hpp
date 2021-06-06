@@ -22,7 +22,10 @@ namespace Game::ClientSync::Helpers
 	inline void WriteComponent( C& component, Serialiser& serialiser, const bool include_identitier = true )
 	{
 		if (include_identitier)
+		{
+			static_assert(sizeof( component_id ) == 4);
 			serialiser.value4b( ComponentIdentifiers::template type<C> );
+		}
 		component.Serialise( serialiser );
 	}
 
