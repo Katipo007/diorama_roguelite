@@ -16,7 +16,6 @@ namespace Game::Networking
 		: connection_request{ std::move( request_ ) }
 		, network_adapter{}
 		, client{ yojimbo::GetDefaultAllocator(), yojimbo::Address( "0.0.0.0" ), MakeConfiguration(), network_adapter, 0.0 }
-		, username{ connection_request.username }
 	{
 		yojimbo::Address destination{ connection_request.destination.data() };
 		if (!destination.IsValid())
@@ -145,7 +144,7 @@ namespace Game::Networking
 				case MessageFactory::GetMessageType<Messages::ServerClientLoginSuccess>() :
 				{
 					const auto& result = static_cast<const Messages::ServerClientLoginSuccess&>(message);
-					username = result.username.data();
+					(void)result;
 					SetSessionFlag( Flags::IsAccepted );
 					return true;
 				}

@@ -17,16 +17,7 @@ namespace Game::Networking::Messages
 		}
 	END_MESSAGE();
 
-	BEGIN_MESSAGE( ServerClientLoginSuccess )
-		std::array<char, Game::CharacterUtility::CharacterNameMaxLength> username;
-		
-		template<YojimboPlugin::Concepts::SerializeStream STREAM>
-		bool Serialize( STREAM& stream )
-		{
-			serialize_string( stream, &username[0], static_cast<int>(std::size( username )) );
-			return true;
-		}
-	END_MESSAGE();
+	DEFINE_EMPTY_MESSAGE( ServerClientLoginSuccess );
 }
 
 #include "MessageUndefines.hpp"

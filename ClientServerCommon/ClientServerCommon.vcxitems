@@ -19,6 +19,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\Concepts.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)ecs.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\Name\NameComponent.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Name\NameHelpers.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\Networking.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\ClientSync\ClientSyncMessages.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\Sprite\SpriteComponent.hpp" />
@@ -47,6 +48,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\YojimboHeader.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Game\Name\NameHelpers.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Game\Networking\Adapter.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Game\Networking\Config.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\YojimboPlugin.cpp" />

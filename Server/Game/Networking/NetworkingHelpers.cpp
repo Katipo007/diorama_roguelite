@@ -1,6 +1,6 @@
 #include "NetworkingHelpers.hpp"
 
-#include "ClientServerCommon/Game/Name/NameComponent.hpp"
+#include "ClientServerCommon/Game/Name/NameHelpers.hpp"
 #include "Server/Game/ClientSync/ClientSyncHelpers.hpp"
 #include "ActiveClientComponent.hpp"
 #include "PendingClientComponent.hpp"
@@ -19,16 +19,11 @@ namespace Game::Networking::Helpers
 
 		entity.remove<PendingClientComponent>();
 		entity.emplace<ActiveClientComponent>();
-		auto& name = entity.emplace<Name::NameComponent>();
-		StringUtility::StringToArray( username, name.value );
+		Name::Helpers::SetName( entity, username );
 		ClientSync::Helpers::MakeSerialisable( entity );
 		
-		SendMessage<Networking::Messages::ServerClientLoginSuccess>( connection, Networking::ChannelType::Reliable, [&]( Networking::Messages::ServerClientLoginSuccess& message )
-			{
-				StringUtility::StringToArray( name.value.data(), message.username );
-			} );
-
 		LOG_INFO( LoggingChannels::Server, "Accepted login from ({})", connection.client_index );
+		SendMessage<Networking::Messages::ServerClientLoginSuccess>( connection, Networking::ChannelType::Reliable, [&]( Networking::Messages::ServerClientLoginSuccess& ) {} );
 	}
 
 	void DisconnectClient( ecs::EntityHandle entity, std::optional<std::string_view> reason )
@@ -42,7 +37,7 @@ namespace Game::Networking::Helpers
 		SendMessage<Networking::Messages::ServerClientDisconnect>( connection, Networking::ChannelType::Reliable, [&]( Networking::Messages::ServerClientDisconnect& message )
 			{
 				if (reason)
-					StringUtility::StringToArray( *reason, message.reason );
+					message.reason = *reason;
 			} );
 
 		LOG_INFO( LoggingChannels::Server, "Disconnecting client ({}), reason: '{}'", connection.client_index, reason ? *reason : "<None>" );
@@ -67,8 +62,8 @@ namespace Game::Networking::Helpers
 			{
 				SendMessage<Networking::Messages::ServerClientChatMessage>( connection, Networking::ChannelType::Unreliable, [&]( Networking::Messages::ServerClientChatMessage& chat )
 					{
-						StringUtility::StringToArray( sender, chat.sender );
-						StringUtility::StringToArray( message, chat.message );
+						chat.sender = std::string{ sender };
+						chat.message = std::string{ message };
 					} );
 			} );
 	}

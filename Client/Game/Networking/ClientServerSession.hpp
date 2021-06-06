@@ -88,7 +88,6 @@ namespace Game::Networking
 		std::optional<std::string> disconnection_reason;
 
 		std::bitset<magic_enum::enum_count<Flags>()> session_flags;
-		std::string username;
 
 		yojimbo::ClientState previous_connection_state = yojimbo::ClientState::CLIENT_STATE_DISCONNECTED;
 	};

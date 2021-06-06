@@ -16,14 +16,14 @@ namespace Game::Networking::Messages
 	END_MESSAGE();
 
 	BEGIN_MESSAGE( ServerClientChatMessage )
-		std::array<char, 32> sender;
-		std::array<char, 128> message;
+		std::string sender;
+		std::string message;
 
 	template<YojimboPlugin::Concepts::SerializeStream STREAM>
 	bool Serialize( STREAM& stream )
 	{
-		serialize_string( stream, &sender[0], static_cast<int>(std::size( sender )) );
-		serialize_string( stream, &message[0], static_cast<int>(std::size( message )) );
+		serialize_string( stream, sender.data(), 32 );
+		serialize_string( stream, message.data(), 128 );
 		return true;
 	}
 	END_MESSAGE();

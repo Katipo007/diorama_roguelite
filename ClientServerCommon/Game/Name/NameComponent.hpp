@@ -7,11 +7,12 @@ namespace Game::Name
 {
 	struct NameComponent final
 	{
-		std::array<char, 128> value;
+		static constexpr std::size_t MaxNameLength = 48;
+		std::string value;
 
 		void Serialise( typename auto& s )
 		{
-			s.container1b( value );
+			s.text1b( value, MaxNameLength );
 		}
 	};
 }
