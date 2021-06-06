@@ -140,11 +140,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)Common\Vendor\;$(SolutionDir)Common\Vendor\glm\;$(SolutionDir)Common\Vendor\spdlog\include\;$(SolutionDir)Common\Vendor\yaml_cpp\include\;$(SolutionDir)Common\Vendor\frozen\include\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Common\Vendor\glm\;$(SolutionDir)Common\Vendor\spdlog\include\;$(SolutionDir)Common\Vendor\yaml_cpp\include\;$(SolutionDir)Common\Vendor\bitsery\include\;$(SolutionDir)Common\Vendor\frozen\include\;$(SolutionDir)Common\Vendor\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)Common\Vendor\;$(SolutionDir)Common\Vendor\glm\;$(SolutionDir)Common\Vendor\spdlog\include\;$(SolutionDir)Common\Vendor\yaml_cpp\include\;$(SolutionDir)Common\Vendor\frozen\include\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Common\Vendor\glm\;$(SolutionDir)Common\Vendor\spdlog\include\;$(SolutionDir)Common\Vendor\yaml_cpp\include\;$(SolutionDir)Common\Vendor\bitsery\include\;$(SolutionDir)Common\Vendor\frozen\include\;$(SolutionDir)Common\Vendor\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

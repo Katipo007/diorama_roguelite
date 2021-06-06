@@ -28,3 +28,6 @@
 [submodule "yaml_cpp"]
 	path = Common/Vendor/yaml_cpp
 	url = https://github.com/jbeder/yaml-cpp.git
+[submodule "bitsery"]
+	path = Common/Vendor/bitsery
+	url = https://github.com/fraillt/bitsery.git
