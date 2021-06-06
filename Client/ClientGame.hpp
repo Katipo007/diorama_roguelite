@@ -53,6 +53,7 @@ protected:
 
 private:
 	std::unique_ptr<Game::Networking::ClientServerSession> client_server_session;
+
 	struct Pimpl;
 	std::unique_ptr<Pimpl> pimpl;
 };

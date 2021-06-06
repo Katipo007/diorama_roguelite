@@ -33,6 +33,8 @@ namespace Game::States
 
 		void AddChatMessage( std::string_view sender, std::string_view message );
 
+		void SetGameReference( ClientGame& game );
+
 	public: // state machine stuffs
 
 		fsm::NoAction OnEnter();

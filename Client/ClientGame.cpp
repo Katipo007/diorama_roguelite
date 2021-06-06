@@ -103,6 +103,7 @@ void ClientGame::Init()
 
     pimpl.reset( new Pimpl{} );
 
+    pimpl->client.GetState<Game::States::InGameState>().SetGameReference( *this );
     // temporary solution
     pimpl->client.GetState<Game::States::JoinMultiplayerState>().ConnectToServerClicked.connect( [this]( Game::Networking::ServerConnectionRequest request )
         {

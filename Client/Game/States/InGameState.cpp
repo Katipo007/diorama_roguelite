@@ -76,4 +76,9 @@ namespace Game::States
 		std::string to_display = "["s + sender.data() + "] " + message.data();
 		chat_window.AddMessage( to_display );
 	}
+
+	void States::InGameState::SetGameReference( ClientGame& game_ )
+	{
+		game = &game_;
+	}
 }
