@@ -51,15 +51,15 @@ namespace fsm
 		using EventsVariant_T = std::variant<_Events...>;
 
 		Machine()
-			: states()
-			, current_state( &std::get<0>( states ) )
+			: states{}
+			, current_state{ &std::get<0>( states ) }
 		{}
 		virtual ~Machine() noexcept {}
 
 		// contruct the machine with pre-created states
 		explicit Machine( _States&&... states_ )
-			: states( std::forward<_States>( states_ )... )
-			, current_state( &std::get<0>( states ) )
+			: states{ std::forward<_States>( states_ )... }
+			, current_state{ &std::get<0>( states ) }
 		{
 		}
 

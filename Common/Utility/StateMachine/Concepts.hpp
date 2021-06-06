@@ -6,11 +6,10 @@
 namespace fsm::Concepts
 {
 	template<class T>
-	concept State = requires
-	{
-		std::movable<T>;
-		std::is_trivially_move_constructible<T>::value; // All state types must be moveable
-	};
+	concept State =
+		std::is_default_constructible<T>::value
+		|| (std::movable<T> && std::copyable<T> )
+		;
 
 	template<class T>
 	concept Event = requires

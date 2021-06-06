@@ -15,6 +15,8 @@ namespace fsm
 	struct Might
 		: public OneOf<Action..., NoAction>
 	{
+		constexpr Might() = default;
+
 		using OneOf<Action..., NoAction>::OneOf;
 	};
 }

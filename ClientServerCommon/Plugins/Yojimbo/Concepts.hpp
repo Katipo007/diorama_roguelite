@@ -23,12 +23,6 @@ namespace YojimboPlugin::Concepts
 	};
 
 	template<class T>
-	concept MessageInitialiser = requires(T x) {
-		std::derived_from<T, ::yojimbo::Message>;
-		std::invocable<T&>;
-	};
-
-	template<class T>
 	concept SerializeStream = requires
 	{
 		std::derived_from<T, yojimbo::WriteStream> || std::derived_from<T, yojimbo::ReadStream> || std::derived_from<T, yojimbo::MeasureStream>;

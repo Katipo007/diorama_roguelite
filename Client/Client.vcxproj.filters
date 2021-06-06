@@ -21,40 +21,34 @@
     <ClCompile Include="Precompiled\pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="States\InGameState.cpp">
+    <ClCompile Include="Game\States\InGameState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ClientGame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Game\ClientGameWorld.cpp">
+    <ClCompile Include="Game\States\PreGameState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="States\PreGameState.cpp">
+    <ClCompile Include="Game\States\MainMenuState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="States\MainMenuState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="States\JoinMultiplayerState.cpp">
+    <ClCompile Include="Game\States\JoinMultiplayerState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Graphical\UI\ChatWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Game\ClientZone.cpp">
+    <ClCompile Include="Game\Networking\ClientServerSession.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Networking\ClientServer\ServerConnection.cpp">
+    <ClCompile Include="Game\States\ConnectingToServerState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="States\Events.cpp">
+    <ClCompile Include="Game\States\DisconnectedFromServerState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="States\ConnectingToServerState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="States\DisconnectedFromServerState.cpp">
+    <ClCompile Include="Game\Networking\ClientIdGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -62,49 +56,52 @@
     <ClInclude Include="Precompiled\pch.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="States\InGameState.hpp">
+    <ClInclude Include="Game\States\InGameState.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ClientGame.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Game\ClientGameWorld.hpp">
+    <ClInclude Include="Game\States\Events.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="States\Events.hpp">
+    <ClInclude Include="Game\States\PreGameState.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="States\PreGameState.hpp">
+    <ClInclude Include="Game\States\MainMenuState.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="States\MainMenuState.hpp">
+    <ClInclude Include="Game\States\JoinMultiplayerState.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="States\JoinMultiplayerState.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="States\ConnectingToServerState.hpp">
+    <ClInclude Include="Game\States\ConnectingToServerState.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Graphical\UI\ChatWindow.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Game\ClientZone.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Plugins\PluginTypes.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Networking\ClientServer\ServerConnection.hpp">
+    <ClInclude Include="Game\Networking\ClientServerSession.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="States\DisconnectedFromServerState.hpp">
+    <ClInclude Include="Game\States\DisconnectedFromServerState.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Logging.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Components\Sprite.hpp">
+    <ClInclude Include="Game\Networking\ClientIdGenerator.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\States\ExitGameState.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Networking\ServerConnectionRequest.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Networking\ClientServerSessionEvents.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

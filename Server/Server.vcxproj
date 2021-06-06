@@ -19,10 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Networking\ClientServer\GameServer.cpp" />
-    <ClCompile Include="Networking\ClientServer\ActiveClient.cpp" />
-    <ClCompile Include="Networking\ClientServer\BaseClientConnection.cpp" />
-    <ClCompile Include="Networking\ClientServer\UnauthenticatedClient.cpp" />
+    <ClCompile Include="Game\Helpers\NetworkingHelpers.cpp" />
+    <ClCompile Include="Game\Helpers\PlayerHelpers.cpp" />
+    <ClCompile Include="Game\Networking\ClientHandle.cpp" />
+    <ClCompile Include="Game\Server.cpp" />
+    <ClCompile Include="Game\Systems\ServerSystem.cpp" />
     <ClCompile Include="Precompiled\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -31,11 +32,17 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game\Components\ActiveClient.hpp" />
+    <ClInclude Include="Game\Components\PendingClient.hpp" />
+    <ClInclude Include="Game\Components\ServerClientConnection.hpp" />
+    <ClInclude Include="Game\Components\ServerPlayer.hpp" />
+    <ClInclude Include="Game\Helpers\NetworkingHelpers.hpp" />
+    <ClInclude Include="Game\Helpers\PlayerHelpers.hpp" />
+    <ClInclude Include="Game\Networking\ClientHandle.hpp" />
+    <ClInclude Include="Game\Networking\Constants.hpp" />
+    <ClInclude Include="Game\Systems\ServerSystem.hpp" />
     <ClInclude Include="Logging.hpp" />
-    <ClInclude Include="Networking\ClientServer\GameServer.hpp" />
-    <ClInclude Include="Networking\ClientServer\ActiveClient.hpp" />
-    <ClInclude Include="Networking\ClientServer\BaseClientConnection.hpp" />
-    <ClInclude Include="Networking\ClientServer\UnauthenticatedClient.hpp" />
+    <ClInclude Include="Game\Server.hpp" />
     <ClInclude Include="Precompiled\pch.hpp" />
   </ItemGroup>
   <ItemGroup>

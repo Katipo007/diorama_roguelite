@@ -14,27 +14,24 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Components\Concepts.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Components\Player.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Concepts.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)ecs.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Components\Name.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Networking.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Components\Sprite.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\Components\Transform.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Constants.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Game\EntityTemplateStore.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Game\GameWorld.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Systems\BaseSystem.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Systems\Concepts.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Systems\SystemTypesEnum.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Game\ZoneCommon.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)ChatConstants.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Networking\ClientServer\Adapter.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Networking\ClientServer\Channels.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Networking\ClientServer\Config.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Networking\ClientServer\MessageFactory.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Networking\ClientServer\Messages.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Networking\ClientServer\Messages\CommonMessages.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Networking\ClientServer\Messages\Helpers\HelperDefines.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Networking\ClientServer\Messages\InGameMessage.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Networking\ClientServer\Messages\Helpers\RemoveHelperDefines.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Networking\ClientServer\Messages\LoginMessages.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Networking\Adapter.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Networking\Channels.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Networking\Config.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Networking\MessageFactory.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Networking\Messages.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Networking\Messages\CommonMessages.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Networking\Messages\Helpers\HelperDefines.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Networking\Messages\InGameMessage.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Networking\Messages\Helpers\RemoveHelperDefines.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Networking\Messages\LoginMessages.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\PluginTypes.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\Basic\Client.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\Concepts.hpp" />
@@ -47,12 +44,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\YojimboHeader.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)Game\EntityTemplateStore.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Game\GameWorld.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Game\Systems\BaseSystem.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Game\ZoneCommon.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Networking\ClientServer\Adapter.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Networking\ClientServer\Config.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Game\Networking\Adapter.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Game\Networking\Config.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\YojimboPlugin.cpp" />
   </ItemGroup>
 </Project>

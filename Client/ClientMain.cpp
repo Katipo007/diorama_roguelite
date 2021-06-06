@@ -97,7 +97,7 @@ int main( int argc, char** argv )
 
 	InitLogger();
 
-	auto core = std::make_unique<Core>( GenerateCoreProperties(), std::make_unique<Game::ClientGame>() );
+	auto core = std::make_unique<Core>( GenerateCoreProperties(), std::make_unique<ClientGame>() );
 	core->Init();
 	int exit_code = core->Dispatch();
 	core.reset();

@@ -9,7 +9,7 @@
 
 #include "ClientServerCommon/Plugins/Yojimbo/YojimboPlugin.hpp"
 
-#include "DedicatedServer/ServerGame.hpp"
+#include "DedicatedServer/DedicatedServerGame.hpp"
 #include "DedicatedServer/Plugins/PluginTypes.hpp"
 #include "DedicatedServer/Plugins/CLI/SystemCLI.hpp"
 
@@ -79,7 +79,7 @@ int main( int argc, char** argv )
 
 	InitLogger();
 
-	auto core = std::make_unique<Core>( GenerateCoreProperties(), std::make_unique<Game::ServerGame>() );
+	auto core = std::make_unique<Core>( GenerateCoreProperties(), std::make_unique<DedicatedServerGame>() );
 	core->Init();
 
 	const int exit_code = core->Dispatch();

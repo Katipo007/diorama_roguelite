@@ -86,41 +86,40 @@
   <ItemGroup>
     <ClCompile Include="ClientGame.cpp" />
     <ClCompile Include="ClientMain.cpp" />
-    <ClCompile Include="Game\ClientGameWorld.cpp" />
-    <ClCompile Include="Game\ClientZone.cpp" />
+    <ClCompile Include="Game\Networking\ClientIdGenerator.cpp" />
     <ClCompile Include="Graphical\UI\ChatWindow.cpp" />
-    <ClCompile Include="Networking\ClientServer\ServerConnection.cpp" />
+    <ClCompile Include="Game\Networking\ClientServerSession.cpp" />
     <ClCompile Include="Precompiled\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Level4</WarningLevel>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Level4</WarningLevel>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="States\ConnectingToServerState.cpp" />
-    <ClCompile Include="States\DisconnectedFromServerState.cpp" />
-    <ClCompile Include="States\Events.cpp" />
-    <ClCompile Include="States\InGameState.cpp" />
-    <ClCompile Include="States\JoinMultiplayerState.cpp" />
-    <ClCompile Include="States\MainMenuState.cpp" />
-    <ClCompile Include="States\PreGameState.cpp" />
+    <ClCompile Include="Game\States\ConnectingToServerState.cpp" />
+    <ClCompile Include="Game\States\DisconnectedFromServerState.cpp" />
+    <ClCompile Include="Game\States\InGameState.cpp" />
+    <ClCompile Include="Game\States\JoinMultiplayerState.cpp" />
+    <ClCompile Include="Game\States\MainMenuState.cpp" />
+    <ClCompile Include="Game\States\PreGameState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ClientGame.hpp" />
-    <ClInclude Include="Game\ClientGameWorld.hpp" />
-    <ClInclude Include="Game\ClientZone.hpp" />
-    <ClInclude Include="Game\Components\Sprite.hpp" />
+    <ClInclude Include="Game\Networking\ClientIdGenerator.hpp" />
+    <ClInclude Include="Game\Networking\ClientServerSessionEvents.hpp" />
+    <ClInclude Include="Game\Networking\ServerConnectionRequest.hpp" />
+    <ClInclude Include="Game\States\ExitGameState.hpp" />
     <ClInclude Include="Graphical\UI\ChatWindow.hpp" />
     <ClInclude Include="Logging.hpp" />
-    <ClInclude Include="Networking\ClientServer\ServerConnection.hpp" />
+    <ClInclude Include="Game\Networking\ClientServerSession.hpp" />
     <ClInclude Include="Plugins\PluginTypes.hpp" />
     <ClInclude Include="Precompiled\pch.hpp" />
-    <ClInclude Include="States\DisconnectedFromServerState.hpp" />
-    <ClInclude Include="States\Events.hpp" />
-    <ClInclude Include="States\InGameState.hpp" />
-    <ClInclude Include="States\JoinMultiplayerState.hpp" />
-    <ClInclude Include="States\ConnectingToServerState.hpp" />
-    <ClInclude Include="States\MainMenuState.hpp" />
-    <ClInclude Include="States\PreGameState.hpp" />
+    <ClInclude Include="Game\States\DisconnectedFromServerState.hpp" />
+    <ClInclude Include="Game\States\Events.hpp" />
+    <ClInclude Include="Game\States\InGameState.hpp" />
+    <ClInclude Include="Game\States\JoinMultiplayerState.hpp" />
+    <ClInclude Include="Game\States\ConnectingToServerState.hpp" />
+    <ClInclude Include="Game\States\MainMenuState.hpp" />
+    <ClInclude Include="Game\States\PreGameState.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.vcxproj">

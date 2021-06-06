@@ -42,10 +42,13 @@ namespace fsm
 	class TransitionTo
 	{
 	public:
+		constexpr TransitionTo() = default;
+
 		template<typename Machine, Concepts::State PreviousState, Concepts::Event Event>
 		void Execute( Machine& machine, PreviousState& previous_state, const Event& event )
 		{
 			static_assert(Concepts::State<TargetState>); // we have this concept requirement inside the definition so that we can using in-complete types
+			static_assert(Concepts::Event<Event>);
 
 #pragma warning(push)
 #pragma warning(disable:4839)
