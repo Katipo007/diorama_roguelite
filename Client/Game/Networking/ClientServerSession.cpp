@@ -2,6 +2,7 @@
 
 #include "ClientServerCommon/Game/Networking/Config.hpp"
 #include "ClientServerCommon/Game/Networking/MessageFactory.hpp"
+#include "Client/Game/ClientSync/ClientSyncHelpers.hpp"
 #include "ClientServerSessionEvents.hpp"
 
 #include "Common/Utility/MagicEnum.hpp"
@@ -161,6 +162,14 @@ namespace Game::Networking
 				{
 					const auto& chat = static_cast<const Messages::ServerClientChatMessage&>(message);
 					dispatcher.trigger<Events::ChatMessageReceived>( chat.sender.data(), chat.message.data() );
+					return true;
+				}
+
+				case MessageFactory::GetMessageType<ClientSync::Messages::ServerClientEntitySync>() :
+				{
+					const auto& sync = static_cast<const ClientSync::Messages::ServerClientEntitySync&>(message);
+					ClientSync::Buffer_T data{ sync.GetBlockData(), sync.GetBlockData() + sync.GetBlockSize() };
+					ClientSync::Helpers::UpdateEntity( {}, data );
 					return true;
 				}
 			}

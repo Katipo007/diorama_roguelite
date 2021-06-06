@@ -4,7 +4,8 @@
 #include "Server/Game/Networking/ConnectionComponent.hpp"
 #include "Server/Game/Networking/PendingClientComponent.hpp"
 #include "Server/Game/Networking/Constants.hpp"
-#include "Server/Game/Networking/System.hpp"
+#include "Server/Game/Networking/NetworkingSystem.hpp"
+#include "Server/Game/ClientSync/ClientSyncSystem.hpp"
 
 #include "Common/Utility/Containers.hpp"
 #include "Common/Utility/MagicEnum.hpp"
@@ -51,6 +52,7 @@ namespace Game
 	{
 		Networking::IncomingSystem( server, registry, ts );
 		TickSimulation( ts );
+		ClientSync::ClientSyncSystem( registry );
 		Networking::OutgoingSystem( server, registry, ts );
 	}
 

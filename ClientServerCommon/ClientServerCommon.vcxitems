@@ -14,7 +14,6 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)Game\ClientSync\ClientSyncHelpers.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\ClientSync\ClientSyncTypes.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\ClientSync\SyncableComponents.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\Concepts.hpp" />
@@ -48,7 +47,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\YojimboHeader.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)Game\ClientSync\ClientSyncHelpers.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Game\Networking\Adapter.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Game\Networking\Config.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\YojimboPlugin.cpp" />

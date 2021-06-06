@@ -39,9 +39,11 @@ namespace Game::Networking::Helpers
 	}
 
 	template<YojimboPlugin::Concepts::BlockMessage T>
-	bool SendBlockMessage( ConnectionComponent& connection, Networking::ChannelType channel, std::invocable<T&> auto initialiser, const Bytes& data )
+	bool SendBlockMessage( ConnectionComponent& connection, Networking::ChannelType channel, std::invocable<T&> auto initialiser, const uint8_t* data, size_t data_size )
 	{
-		ASSERT( std::size( data ) < std::numeric_limits<int>::max() );
+		ASSERT( data_size < std::numeric_limits<int>::max() );
+		if( data_size >= std::numeric_limits<int>::max())
+			throw std::runtime_error{ "Data block too large for message" };
 
 		auto& server = connection.GetOwner();
 		const auto client_idx = connection.client_index;
@@ -52,8 +54,13 @@ namespace Game::Networking::Helpers
 
 		if (auto* message = static_cast<T*>(server.CreateMessage( client_idx, Networking::MessageFactory::GetMessageType<T>() )))
 		{
+			uint8_t* block = server.AllocateBlock( client_idx, static_cast<int>(data_size) );
+			if (block == NULL)
+				throw std::runtime_error{ "Could not allocate block memory for message" };
+
+			std::copy( data, data + data_size, block );
 			initialiser( *message );
-			server.AttachBlockToMessage( client_idx, message, data.data(), static_cast<int>(std::size( data )) );
+			server.AttachBlockToMessage( client_idx, message, block, static_cast<int>(data_size) );
 
 			server.SendMessage( client_idx, channel_idx, message );
 			return true;

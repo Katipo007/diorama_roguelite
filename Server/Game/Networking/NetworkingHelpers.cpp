@@ -1,6 +1,7 @@
 #include "NetworkingHelpers.hpp"
 
 #include "ClientServerCommon/Game/Name/NameComponent.hpp"
+#include "Server/Game/ClientSync/ClientSyncHelpers.hpp"
 #include "ActiveClientComponent.hpp"
 #include "PendingClientComponent.hpp"
 #include "ConnectionComponent.hpp"
@@ -18,11 +19,13 @@ namespace Game::Networking::Helpers
 
 		entity.remove<PendingClientComponent>();
 		entity.emplace<ActiveClientComponent>();
-		const auto& name = entity.emplace<Name::NameComponent>( Name::NameComponent{ .value = username.data() } );
+		auto& name = entity.emplace<Name::NameComponent>();
+		StringUtility::StringToArray( username, name.value );
+		ClientSync::Helpers::MakeSerialisable( entity );
 		
 		SendMessage<Networking::Messages::ServerClientLoginSuccess>( connection, Networking::ChannelType::Reliable, [&]( Networking::Messages::ServerClientLoginSuccess& message )
 			{
-				StringUtility::StringToArray( name.value, message.username );
+				StringUtility::StringToArray( name.value.data(), message.username );
 			} );
 
 		LOG_INFO( LoggingChannels::Server, "Accepted login from ({})", connection.client_index );
@@ -52,7 +55,7 @@ namespace Game::Networking::Helpers
 		ASSERT( from.valid() );
 
 		if (auto* name = from.try_get<Name::NameComponent>())
-			BroadcastChatMessage( *from.registry(), name->value, message );
+			BroadcastChatMessage( *from.registry(), name->value.data(), message );
 	}
 
 	void BroadcastChatMessage( ecs::Registry& registry, std::string_view sender, std::string_view message )

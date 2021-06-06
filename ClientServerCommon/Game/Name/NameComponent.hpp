@@ -9,12 +9,9 @@ namespace Game::Name
 	{
 		std::array<char, 128> value;
 
-		ClientSync::OComponentDataStream& Serialise( ClientSync::OComponentDataStream& stream ) const
+		void Serialise( ClientSync::Serialiser auto& s )
 		{
-			const auto len = static_cast<uint8_t>(std::size( value ));
-			stream << len << 
-
-			return stream;
+			s.container1b( value );
 		}
 	};
 }

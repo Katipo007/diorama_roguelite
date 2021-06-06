@@ -86,6 +86,7 @@
   <ItemGroup>
     <ClCompile Include="ClientGame.cpp" />
     <ClCompile Include="ClientMain.cpp" />
+    <ClCompile Include="Game\ClientSync\ClientSyncHelpers.cpp" />
     <ClCompile Include="Game\Networking\ClientIdGenerator.cpp" />
     <ClCompile Include="Graphical\UI\ChatWindow.cpp" />
     <ClCompile Include="Game\Networking\ClientServerSession.cpp" />
@@ -104,6 +105,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ClientGame.hpp" />
+    <ClInclude Include="Game\ClientSync\ClientSyncHelpers.hpp" />
     <ClInclude Include="Game\Networking\ClientIdGenerator.hpp" />
     <ClInclude Include="Game\Networking\ClientServerSessionEvents.hpp" />
     <ClInclude Include="Game\Networking\ServerConnectionRequest.hpp" />

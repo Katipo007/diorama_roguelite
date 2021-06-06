@@ -15,5 +15,6 @@ namespace Game::Networking
 
 		, Messages::ClientServerChatMessage
 		, Messages::ServerClientChatMessage
+		, ClientSync::Messages::ServerClientEntitySync
 		>;
 }

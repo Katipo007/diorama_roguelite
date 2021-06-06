@@ -27,6 +27,8 @@ namespace Game::ClientSync
 
 					Helpers::SyncEntityToClient( ecs::EntityHandle{ registry, entity }, client_connection );
 				}
+
+				sync.dirty = false;
 			} );
 	}
 }
