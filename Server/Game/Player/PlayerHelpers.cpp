@@ -1,6 +1,6 @@
 #include "PlayerHelpers.hpp"
 
-namespace Game::Helpers
+namespace Game::Player::Helpers
 {
     
 }

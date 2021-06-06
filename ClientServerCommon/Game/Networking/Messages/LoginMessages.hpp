@@ -2,7 +2,7 @@
 
 #include "Common/Game/Character/CharacterUtility.hpp"
 
-#include "Helpers/HelperDefines.hpp"
+#include "MessageDefines.hpp"
 
 namespace Game::Networking::Messages
 {
@@ -29,4 +29,4 @@ namespace Game::Networking::Messages
 	END_MESSAGE();
 }
 
-#include "Helpers/RemoveHelperDefines.hpp"
+#include "MessageUndefines.hpp"

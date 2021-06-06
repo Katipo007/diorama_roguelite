@@ -6,11 +6,13 @@
 #include "ClientServerCommon/Game/Networking.hpp"
 #include "Common/Utility/MagicEnum.hpp"
 
-namespace Game::Components
+namespace yojimbo { class Server; }
+
+namespace Game::Networking
 {
-	struct ServerClientConnection final
+	struct ConnectionComponent final
 	{
-		ServerClientConnection( yojimbo::Server& owner, Networking::ClientIndex client_index )
+		ConnectionComponent( yojimbo::Server& owner, Networking::ClientIndex client_index )
 			: owner{ &owner }, client_index{ client_index }
 		{}
 

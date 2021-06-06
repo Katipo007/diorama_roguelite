@@ -4,10 +4,12 @@
 
 namespace Graphics { class Sprite; }
 
-namespace Game::Components
+namespace Game::Sprite
 {
-	struct Sprite
+	struct SpriteComponent
 	{
+		virtual ~SpriteComponent() = default;
+
 		Resources::ResourceHandle<Graphics::Sprite> sprite;
 	};
 }

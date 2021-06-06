@@ -1,10 +1,10 @@
 #include "Server.hpp"
 
 #include "ClientServerCommon/Game/Networking/Config.hpp"
-#include "Server/Game/Components/ServerClientConnection.hpp"
-#include "Server/Game/Components/PendingClient.hpp"
+#include "Server/Game/Networking/ConnectionComponent.hpp"
+#include "Server/Game/Networking/PendingClientComponent.hpp"
 #include "Server/Game/Networking/Constants.hpp"
-#include "Server/Game/Systems/ServerSystem.hpp"
+#include "Server/Game/Networking/System.hpp"
 
 #include "Common/Utility/Containers.hpp"
 #include "Common/Utility/MagicEnum.hpp"
@@ -49,9 +49,9 @@ namespace Game
 
 	void Server::OnFixedUpdate( const PreciseTimestep& ts )
 	{
-		Systems::ServerProcessIncoming( server, registry, ts );
+		Networking::IncomingSystem( server, registry, ts );
 		TickSimulation( ts );
-		Systems::ServerProcessOutgoing( server, registry, ts );
+		Networking::OutgoingSystem( server, registry, ts );
 	}
 
 	void Server::OnVariableUpdate( const PreciseTimestep& )
@@ -65,8 +65,8 @@ namespace Game
 		const auto client_id = server.GetClientId( index );
 
 		const auto entity = registry.create();
-		registry.emplace<Components::ServerClientConnection>( entity, server, index );
-		registry.emplace<Components::PendingClient>( entity );
+		registry.emplace<Networking::ConnectionComponent>( entity, server, index );
+		registry.emplace<Networking::PendingClientComponent>( entity );
 
 		client_entities[index] = ecs::EntityHandle( registry, entity );
 		client_id_index_mapping[client_id] = index;

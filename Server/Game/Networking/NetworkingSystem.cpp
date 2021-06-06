@@ -1,21 +1,23 @@
-#include "ServerSystem.hpp"
+#include "NetworkingSystem.hpp"
 
 #include "ClientServerCommon/Game/Networking/Channels.hpp"
 #include "ClientServerCommon/Game/Networking/MessageFactory.hpp"
 #include "ClientServerCommon/Plugins/Yojimbo/YojimboHeader.hpp"
-#include "Server/Game/Components/ServerClientConnection.hpp"
-#include "Server/Game/Components/PendingClient.hpp"
-#include "Server/Game/Components/ActiveClient.hpp"
-#include "Server/Game/Helpers/NetworkingHelpers.hpp"
+#include "ConnectionComponent.hpp"
+#include "PendingClientComponent.hpp"
+#include "ActiveClientComponent.hpp"
+#include "NetworkingHelpers.hpp"
 
 #include <chrono>
 
 namespace
 {
+	using namespace Game::Networking;
+
 	template<typename T>
 	constexpr auto MsgType = Game::Networking::MessageFactory::GetMessageType<T>();
 
-	bool ProcessPendingClientMessage( ecs::EntityHandle& entity, Game::Components::ServerClientConnection&, const yojimbo::Message& message )
+	bool ProcessPendingClientMessage( ecs::EntityHandle& entity, ConnectionComponent&, const yojimbo::Message& message )
 	{
 		using namespace Game::Networking::Messages;
 		switch (message.GetType())
@@ -27,9 +29,9 @@ namespace
 			const std::string_view requested_name{ request.username.data() };
 
 			if (requested_name.length() >= 3)
-				Game::Helpers::AcceptClient( entity, requested_name );
+				Helpers::AcceptClient( entity, requested_name );
 			else
-				Game::Helpers::DisconnectClient( entity, "Invalid requested username, name too short" );
+				Helpers::DisconnectClient( entity, "Invalid requested username, name too short" );
 			return true;
 		}
 		}
@@ -37,7 +39,7 @@ namespace
 		return false;
 	}
 
-	bool ProcessActiveClientMessage( ecs::EntityHandle& entity, Game::Components::ServerClientConnection& client, const yojimbo::Message& message )
+	bool ProcessActiveClientMessage( ecs::EntityHandle& entity, ConnectionComponent& client, const yojimbo::Message& message )
 	{
 		(void)client;
 
@@ -47,7 +49,7 @@ namespace
 		case MsgType<ClientServerChatMessage>:
 		{
 			const auto& chat = static_cast<const ClientServerChatMessage&>(message);
-			Game::Helpers::BroadcastChatMessage( entity, chat.message.data() );
+			Helpers::BroadcastChatMessage( entity, chat.message.data() );
 			return true;
 		}
 		}
@@ -55,7 +57,7 @@ namespace
 		return false;
 	}
 
-	bool ProcessMessagesForClient( yojimbo::Server& server, ecs::EntityHandle entity, Game::Components::ServerClientConnection& client )
+	bool ProcessMessagesForClient( yojimbo::Server& server, ecs::EntityHandle entity, ConnectionComponent& client )
 	{
 		for (auto channel : magic_enum::enum_values<Game::Networking::ChannelType>())
 		{
@@ -66,11 +68,11 @@ namespace
 				const auto message_type = message->GetType();
 				bool handled = false;
 
-				if (auto* pending = entity.try_get<Game::Components::PendingClient>())
+				if (auto* pending = entity.try_get<PendingClientComponent>())
 				{
 					handled |= ProcessPendingClientMessage( entity, client, *message );
 				}
-				else if (auto* active = entity.try_get<Game::Components::ActiveClient>())
+				else if (auto* active = entity.try_get<ActiveClientComponent>())
 				{
 					handled |= ProcessActiveClientMessage( entity, client, *message );
 				}
@@ -79,7 +81,7 @@ namespace
 
 				if (!handled)
 				{
-					LOG_ERROR( LoggingChannels::Server, "Unhandled message of type '{}'({})", Game::Networking::MessageFactory::GetMessageName( message_type ), message_type );
+					LOG_ERROR( LoggingChannels::Server, "Unhandled message of type '{}'({})", MessageFactory::GetMessageName( message_type ), message_type );
 					return false;
 				}
 
@@ -91,18 +93,18 @@ namespace
 	}
 }
 
-namespace Game::Systems
+namespace Game::Networking
 {
-	void ServerProcessIncoming( yojimbo::Server& server, ecs::Registry& registry, const PreciseTimestep& )
+	void IncomingSystem( yojimbo::Server& server, ecs::Registry& registry, const PreciseTimestep& )
 	{
 		if (server.IsRunning())
 		{
 			server.ReceivePackets();
 
 			const auto now = std::chrono::system_clock::now();
-			registry.view<Components::ServerClientConnection>().each( [&]( const auto entity, Components::ServerClientConnection& client )
+			registry.view<ConnectionComponent>().each( [&]( const auto entity, ConnectionComponent& client )
 				{
-					if (auto* pending = registry.try_get<Components::PendingClient>( entity ))
+					if (auto* pending = registry.try_get<PendingClientComponent>( entity ))
 					{
 						if (std::chrono::duration_cast<std::chrono::seconds>(now - client.connected_at).count() > 5)
 						{
@@ -122,7 +124,7 @@ namespace Game::Systems
 		}
 	}
 
-	void ServerProcessOutgoing( yojimbo::Server& server, ecs::Registry&, const PreciseTimestep& ts )
+	void OutgoingSystem( yojimbo::Server& server, ecs::Registry&, const PreciseTimestep& ts )
 	{
 		if( server.IsRunning() )
 			server.SendPackets();

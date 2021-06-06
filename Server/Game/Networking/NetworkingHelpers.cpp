@@ -1,13 +1,12 @@
 #include "NetworkingHelpers.hpp"
 
-#include "ClientServerCommon/Game/Components/Name.hpp"
-#include "Server/Game/Components/ActiveClient.hpp"
-#include "Server/Game/Components/PendingClient.hpp"
-#include "Server/Game/Components/ServerPlayer.hpp"
-#include "Server/Game/Components/ServerClientConnection.hpp"
+#include "ClientServerCommon/Game/Name/NameComponent.hpp"
+#include "ActiveClientComponent.hpp"
+#include "PendingClientComponent.hpp"
+#include "ConnectionComponent.hpp"
 #include "Common/Utility/StringUtility.hpp"
 
-namespace Game::Helpers
+namespace Game::Networking::Helpers
 {
 	void AcceptClient( ecs::EntityHandle entity, std::string_view username )
 	{
@@ -15,12 +14,11 @@ namespace Game::Helpers
 		if (!entity.valid())
 			return;
 
-		auto& connection = entity.get<Components::ServerClientConnection>();
+		auto& connection = entity.get<ConnectionComponent>();
 
-		entity.remove<Components::PendingClient>();
-		entity.emplace<Components::ActiveClient>();
-		entity.emplace<Components::ServerPlayer>();
-		const auto& name = entity.emplace<Components::Name>( Components::Name{ .value = username.data() } );
+		entity.remove<PendingClientComponent>();
+		entity.emplace<ActiveClientComponent>();
+		const auto& name = entity.emplace<Name::NameComponent>( Name::NameComponent{ .value = username.data() } );
 		
 		SendMessage<Networking::Messages::ServerClientLoginSuccess>( connection, Networking::ChannelType::Reliable, [&]( Networking::Messages::ServerClientLoginSuccess& message )
 			{
@@ -36,7 +34,7 @@ namespace Game::Helpers
 		if (!entity.valid())
 			return;
 
-		auto& connection = entity.get<Components::ServerClientConnection>();
+		auto& connection = entity.get<ConnectionComponent>();
 
 		SendMessage<Networking::Messages::ServerClientDisconnect>( connection, Networking::ChannelType::Reliable, [&]( Networking::Messages::ServerClientDisconnect& message )
 			{
@@ -53,7 +51,7 @@ namespace Game::Helpers
 	{
 		ASSERT( from.valid() );
 
-		if (auto* name = from.try_get<Components::Name>())
+		if (auto* name = from.try_get<Name::NameComponent>())
 			BroadcastChatMessage( *from.registry(), name->value, message );
 	}
 
@@ -62,7 +60,7 @@ namespace Game::Helpers
 		if (sender.empty() || message.empty())
 			return;
 
-		registry.view<Components::ServerClientConnection, Components::ActiveClient>().each( [&]( auto, Components::ServerClientConnection& connection, Components::ActiveClient& )
+		registry.view<ConnectionComponent, ActiveClientComponent>().each( [&]( auto, ConnectionComponent& connection, ActiveClientComponent& )
 			{
 				SendMessage<Networking::Messages::ServerClientChatMessage>( connection, Networking::ChannelType::Unreliable, [&]( Networking::Messages::ServerClientChatMessage& chat )
 					{

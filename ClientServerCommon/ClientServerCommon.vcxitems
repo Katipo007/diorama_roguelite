@@ -14,11 +14,15 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Game\ClientSync\ClientSyncHelpers.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Game\ClientSync\ClientSyncTypes.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Game\ClientSync\SyncableComponents.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\Concepts.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)ecs.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Components\Name.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Name\NameComponent.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\Networking.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Components\Sprite.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Game\ClientSync\ClientSyncMessages.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Sprite\SpriteComponent.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\Components\Transform.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Constants.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)ChatConstants.hpp" />
@@ -28,9 +32,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\Networking\MessageFactory.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\Networking\Messages.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\Networking\Messages\CommonMessages.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Networking\Messages\Helpers\HelperDefines.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Networking\Messages\MessageDefines.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\Networking\Messages\InGameMessage.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Networking\Messages\Helpers\RemoveHelperDefines.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Networking\Messages\MessageUndefines.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\Networking\Messages\LoginMessages.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\PluginTypes.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\Basic\Client.hpp" />
@@ -44,6 +48,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\YojimboHeader.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Game\ClientSync\ClientSyncHelpers.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Game\Networking\Adapter.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Game\Networking\Config.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\YojimboPlugin.cpp" />
