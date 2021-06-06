@@ -23,7 +23,7 @@ namespace Game::ClientSync::Helpers
 	{
 		if (include_identitier)
 		{
-			static_assert(sizeof( component_id ) == 4);
+			static_assert(sizeof( ComponentIdentifiers::identifier_type ) == 4);
 			serialiser.value4b( ComponentIdentifiers::template type<C> );
 		}
 		component.Serialise( serialiser );
