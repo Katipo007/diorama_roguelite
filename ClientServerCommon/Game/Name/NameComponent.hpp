@@ -9,7 +9,7 @@ namespace Game::Name
 	{
 		std::array<char, 128> value;
 
-		void Serialise( ClientSync::Serialiser auto& s )
+		void Serialise( typename auto& s )
 		{
 			s.container1b( value );
 		}

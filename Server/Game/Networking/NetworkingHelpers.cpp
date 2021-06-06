@@ -11,8 +11,8 @@ namespace Game::Networking::Helpers
 {
 	void AcceptClient( ecs::EntityHandle entity, std::string_view username )
 	{
-		ASSERT( entity.valid() );
-		if (!entity.valid())
+		ASSERT( !!entity );
+		if (!entity)
 			return;
 
 		auto& connection = entity.get<ConnectionComponent>();
@@ -33,8 +33,8 @@ namespace Game::Networking::Helpers
 
 	void DisconnectClient( ecs::EntityHandle entity, std::optional<std::string_view> reason )
 	{
-		ASSERT( entity.valid() );
-		if (!entity.valid())
+		ASSERT( !!entity );
+		if (!entity)
 			return;
 
 		auto& connection = entity.get<ConnectionComponent>();
@@ -52,7 +52,7 @@ namespace Game::Networking::Helpers
 
 	void BroadcastChatMessage( ecs::EntityHandle from, std::string_view message )
 	{
-		ASSERT( from.valid() );
+		ASSERT( !!from );
 
 		if (auto* name = from.try_get<Name::NameComponent>())
 			BroadcastChatMessage( *from.registry(), name->value.data(), message );

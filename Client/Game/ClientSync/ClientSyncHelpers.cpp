@@ -2,24 +2,24 @@
 
 namespace Game::ClientSync::Helpers
 {
-    void UpdateEntity( const ecs::EntityHandle entity, Buffer_T& component_data )
+    void UpdateEntity( const ecs::EntityHandle entity, const Buffer_T& component_data )
     {
-        ASSERT( entity.valid() );
+        ASSERT( !!entity );
         ASSERT( !component_data.empty() );
 
         if (component_data.empty())
             return;
 
-        ReaderS serialiser{ std::begin( component_data ), std::size( component_data ) };
-        uint32_t component_id;
-        do
+        Deserialiser deserialiser{ Reader( std::begin( component_data ), std::end( component_data ) ) };
+        ComponentIdentifiers::identifier_type component_id;
+        while (!deserialiser.adapter().isCompletedSuccessfully())
         {
             static_assert(sizeof( component_id ) == 4);
-            serialiser.value4b( component_id );
+            deserialiser.value4b( component_id );
             switch (component_id)
             {
             case ComponentIdentifiers::type<Name::NameComponent>:
-                ReadComponent<Name::NameComponent>( entity, serialiser, false );
+                ReadComponent<Name::NameComponent>( entity, deserialiser, false );
                 break;
 
             //case ComponentIdentifiers::type<Sprite::SpriteComponent>:
@@ -30,6 +30,6 @@ namespace Game::ClientSync::Helpers
                 throw std::runtime_error{ "Unrecognised component identifier" };
             }
 
-        } while (true);
+        }
     }
 }

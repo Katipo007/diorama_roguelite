@@ -64,17 +64,16 @@ namespace Game::ClientSync::Helpers
 
 	Buffer_T WriteComponents( const ecs::EntityHandle entity )
 	{
+		if (!entity)
+			return {};
+
 		Buffer_T data;
-		WriterS serialiser{ data };
+		Serialiser serialiser{ data };
 		
-		if (entity.valid())
-		{
-			WriteComponent<Name::NameComponent>( entity, serialiser );
-		}
+		WriteComponent<Name::NameComponent>( entity, serialiser );
 
 		serialiser.adapter().flush();
 		const auto used_num_bytes = serialiser.adapter().writtenBytesCount();
-		data.resize( used_num_bytes );
-		return data;
+		return { std::begin( data ), std::begin( data ) + used_num_bytes };
 	}
 }

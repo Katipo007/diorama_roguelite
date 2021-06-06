@@ -21,17 +21,14 @@ namespace Game::ClientSync
 	using Writer = bitsery::OutputBufferAdapter<Buffer_T>;
 	using Reader = bitsery::InputBufferAdapter<Buffer_T>;
 
-	using WriterS = bitsery::Serializer<Writer>;
-	using ReaderS = bitsery::Serializer<Reader>;
+	using Serialiser = bitsery::Serializer<Writer>;
+	using Deserialiser = bitsery::Deserializer<Reader>;
 
 	template<typename T>
-	concept Serialiser = std::same_as<T, WriterS> || std::same_as<T, ReaderS>;
-
-	template<typename T>
-	concept SerialisableComponent = requires( T t )
+	concept SerialisableComponent = requires(T t)
 	{
 		Component<T>;
-		{ t.Serialise( std::declval<WriterS&>() ) } -> std::same_as<void>;
-		{ t.Serialise( std::declval<ReaderS&>() ) } -> std::same_as<void>;
+		{ t.Serialise( std::declval<Serialiser&>() ) } -> std::same_as<void>;
+		{ t.Serialise( std::declval<Deserialiser&>() ) } -> std::same_as<void>;
 	};
 }

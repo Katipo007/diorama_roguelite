@@ -19,7 +19,7 @@ namespace Game::ClientSync::Helpers
 	Buffer_T WriteComponents( const ecs::EntityHandle entity );
 
 	template<SerialisableComponent C>
-	inline void WriteComponent( C& component, WriterS& serialiser, const bool include_identitier = true )
+	inline void WriteComponent( C& component, Serialiser& serialiser, const bool include_identitier = true )
 	{
 		if (include_identitier)
 			serialiser.value4b( ComponentIdentifiers::template type<C> );
@@ -27,9 +27,9 @@ namespace Game::ClientSync::Helpers
 	}
 
 	template<SerialisableComponent C>
-	bool WriteComponent( const ecs::EntityHandle entity, WriterS& serialiser, const bool include_identifier = true )
+	bool WriteComponent( const ecs::EntityHandle entity, Serialiser& serialiser, const bool include_identifier = true )
 	{
-		ASSERT( entity.valid() );
+		ASSERT( !!entity );
 		if (auto* component = entity.try_get<C>())
 		{
 			WriteComponent<C>( *component, serialiser, include_identifier );
