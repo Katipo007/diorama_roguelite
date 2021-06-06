@@ -105,6 +105,7 @@
   <ItemGroup>
     <ClInclude Include="ClientGame.hpp" />
     <ClInclude Include="Game\Networking\ClientIdGenerator.hpp" />
+    <ClInclude Include="Game\Networking\ClientServerSessionEvents.hpp" />
     <ClInclude Include="Game\Networking\ServerConnectionRequest.hpp" />
     <ClInclude Include="Game\States\ExitGameState.hpp" />
     <ClInclude Include="Graphical\UI\ChatWindow.hpp" />

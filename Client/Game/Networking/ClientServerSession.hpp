@@ -67,6 +67,9 @@ namespace Game::Networking
 
 		Signal::signal<ClientServerSession&> ConnectionStateChanged;
 
+		template<class Event>
+		[[nodiscard]] decltype(auto) Sink() { return dispatcher.sink<Event>(); }
+
 	private:
 		void ProcessMessages();
 		bool ProcessMessage( const yojimbo::Message& message );
@@ -80,6 +83,7 @@ namespace Game::Networking
 		Networking::Adapter network_adapter;
 		yojimbo::Client client;
 		ecs::Registry registry;
+		entt::dispatcher dispatcher;
 
 		std::optional<std::string> disconnection_reason;
 

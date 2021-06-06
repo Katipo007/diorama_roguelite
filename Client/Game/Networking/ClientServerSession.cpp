@@ -2,9 +2,12 @@
 
 #include "ClientServerCommon/Game/Networking/Config.hpp"
 #include "ClientServerCommon/Game/Networking/MessageFactory.hpp"
+#include "ClientServerSessionEvents.hpp"
 
 #include "Common/Utility/MagicEnum.hpp"
 #include "Common/Utility/StringUtility.hpp"
+
+namespace Events = Game::Networking::ClientServerSessionEvents;
 
 namespace Game::Networking
 {
@@ -64,6 +67,7 @@ namespace Game::Networking
 		}
 
 		ProcessMessages();
+		dispatcher.update();
 		TickSimulation( ts );
 
 		if (client.IsConnected())
@@ -151,7 +155,15 @@ namespace Game::Networking
 		//
 		else
 		{
-
+			switch (message.GetType())
+			{
+				case MessageFactory::GetMessageType<Messages::ServerClientChatMessage>() :
+				{
+					const auto& chat = static_cast<const Messages::ServerClientChatMessage&>(message);
+					dispatcher.trigger<Events::ChatMessageReceived>( chat.sender.data(), chat.message.data() );
+					return true;
+				}
+			}
 		}
 
 		return false;

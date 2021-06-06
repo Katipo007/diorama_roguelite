@@ -1,6 +1,7 @@
 #include "ChatWindow.hpp"
 
 #include "Client/Game/Networking/ClientServerSession.hpp"
+#include "Client/Game/Networking/ClientServerSessionEvents.hpp"
 
 #include "Visual/DearImGui/DearImGui.hpp"
 
@@ -131,15 +132,15 @@ namespace UI
 
 	void ChatWindow::SetClientServerSession( Game::Networking::ClientServerSession* const session )
 	{
+		using namespace Game::Networking::ClientServerSessionEvents;
+
 		if (client_server_session != nullptr)
-		{
-		}
+			client_server_session->Sink<ChatMessageReceived>().disconnect( this );
 
 		client_server_session = session;
 
 		if (client_server_session != nullptr)
-		{
-		}
+			client_server_session->Sink<ChatMessageReceived>().connect<&ChatWindow::ChatMessageReceivedHandler>( this );
 	}
 
 	bool ChatWindow::SendMessage( std::string_view msg )
@@ -149,5 +150,13 @@ namespace UI
 
 		client_server_session->SendChatMessage( msg );
 		return true;
+	}
+
+	void ChatWindow::ChatMessageReceivedHandler( Game::Networking::ClientServerSessionEvents::ChatMessageReceived& chat )
+	{
+		std::stringstream ss;
+		ss << "[" << chat.sender << "] " << chat.message;
+
+		AddMessage( ss.str() );
 	}
 }

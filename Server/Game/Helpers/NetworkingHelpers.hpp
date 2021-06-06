@@ -13,6 +13,9 @@ namespace Game::Helpers
 	void AcceptClient( ecs::EntityHandle entity, std::string_view username );
 	void DisconnectClient( ecs::EntityHandle entity, std::optional<std::string_view> reason = std::nullopt );
 
+	void BroadcastChatMessage( ecs::EntityHandle from, std::string_view message );
+	void BroadcastChatMessage( ecs::Registry& registry, std::string_view sender, std::string_view message );
+
 	template<YojimboPlugin::Concepts::Message T>
 	bool SendMessage( Components::ServerClientConnection& connection, Networking::ChannelType channel, std::invocable<T&> auto initialiser )
 	{

@@ -48,4 +48,27 @@ namespace Game::Helpers
 
 		connection.GetOwner().DisconnectClient( connection.client_index );
 	}
+
+	void BroadcastChatMessage( ecs::EntityHandle from, std::string_view message )
+	{
+		ASSERT( from.valid() );
+
+		if (auto* name = from.try_get<Components::Name>())
+			BroadcastChatMessage( *from.registry(), name->value, message );
+	}
+
+	void BroadcastChatMessage( ecs::Registry& registry, std::string_view sender, std::string_view message )
+	{
+		if (sender.empty() || message.empty())
+			return;
+
+		registry.view<Components::ServerClientConnection, Components::ActiveClient>().each( [&]( auto, Components::ServerClientConnection& connection, Components::ActiveClient& )
+			{
+				SendMessage<Networking::Messages::ServerClientChatMessage>( connection, Networking::ChannelType::Unreliable, [&]( Networking::Messages::ServerClientChatMessage& chat )
+					{
+						StringUtility::StringToArray( sender, chat.sender );
+						StringUtility::StringToArray( message, chat.message );
+					} );
+			} );
+	}
 }

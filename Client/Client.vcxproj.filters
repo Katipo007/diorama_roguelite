@@ -101,5 +101,8 @@
     <ClInclude Include="Game\Networking\ServerConnectionRequest.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Game\Networking\ClientServerSessionEvents.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

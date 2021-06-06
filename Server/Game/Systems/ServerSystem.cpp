@@ -39,10 +39,18 @@ namespace
 
 	bool ProcessActiveClientMessage( ecs::EntityHandle& entity, Game::Components::ServerClientConnection& client, const yojimbo::Message& message )
 	{
-		NOT_IMPLEMENTED;
-		(void)entity;
 		(void)client;
-		(void)message;
+
+		using namespace Game::Networking::Messages;
+		switch (message.GetType())
+		{
+		case MsgType<ClientServerChatMessage>:
+		{
+			const auto& chat = static_cast<const ClientServerChatMessage&>(message);
+			Game::Helpers::BroadcastChatMessage( entity, chat.message.data() );
+			return true;
+		}
+		}
 
 		return false;
 	}

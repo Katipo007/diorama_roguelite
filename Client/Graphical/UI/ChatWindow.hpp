@@ -3,7 +3,14 @@
 #include "Common/Utility/NonCopyable.hpp"
 #include "Common/Utility/Signal.hpp"
 
-namespace Game::Networking { class ClientServerSession; }
+namespace Game::Networking
+{ 
+	class ClientServerSession;
+	namespace ClientServerSessionEvents
+	{
+		struct ChatMessageReceived;
+	}
+}
 
 namespace UI
 {
@@ -24,6 +31,8 @@ namespace UI
 
 	protected:
 		bool SendMessage( std::string_view msg );
+
+		void ChatMessageReceivedHandler( Game::Networking::ClientServerSessionEvents::ChatMessageReceived& chat );
 
 	protected:
 		std::array<char, 128> input_buffer{ 0 };
