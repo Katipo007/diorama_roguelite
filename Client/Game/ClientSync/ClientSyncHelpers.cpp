@@ -73,6 +73,7 @@ namespace Game::ClientSync::Helpers
             return true;
         }
 
+        LOG_TRACE( LoggingChannels::Client, "Adding entity with sync id '{}'", msg.entity_sync_id );
         const auto entity = registry.create();
         map[msg.entity_sync_id] = ecs::EntityHandle{ registry, entity };
         
@@ -91,6 +92,7 @@ namespace Game::ClientSync::Helpers
             return false;
         }
 
+        LOG_TRACE( LoggingChannels::Client, "Updating entity with sync id '{}'", msg.entity_sync_id );
         Buffer_T data{ msg.GetBlockData(), msg.GetBlockData() + msg.GetBlockSize() };
         UpdateEntity( entity_it->second, data );
         return true;
@@ -101,6 +103,7 @@ namespace Game::ClientSync::Helpers
         const auto found_it = map.find( msg.entity_sync_id );
         if (found_it != std::end( map ))
         {
+            LOG_TRACE( LoggingChannels::Client, "Removing entity with sync id '{}'", msg.entity_sync_id );
             found_it->second.destroy();
             map.erase( found_it );
         }
