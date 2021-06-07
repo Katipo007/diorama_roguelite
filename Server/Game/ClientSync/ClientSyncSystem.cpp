@@ -69,8 +69,11 @@ namespace Game::ClientSync
 						client_sync_record.known_entities.emplace( syncable_entity );
 					}
 					
-					auto& client_connection = registry.get<Networking::ConnectionComponent>( client_entity );
-					Helpers::SyncEntityToClient( to_sync, client_connection, client_knows_of_this ? to_sync_component.dirty_components : ComponentTypeMaskAll, !client_knows_of_this );
+					if (!client_knows_of_this || to_sync_component.dirty_components.any())
+					{
+						auto& client_connection = registry.get<Networking::ConnectionComponent>( client_entity );
+						Helpers::SyncEntityToClient( to_sync, client_connection, client_knows_of_this ? to_sync_component.dirty_components : ComponentTypeMaskAll, !client_knows_of_this );
+					}
 				}
 
 				to_sync_component.dirty_components.reset();
