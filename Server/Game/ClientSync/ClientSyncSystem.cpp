@@ -10,6 +10,8 @@
 
 namespace Game::ClientSync
 {
+	static_assert( ComponentIdentifiers::type<detail::LastComponent> < std::size( ComponentTypeMaskAll ), "ComponentTypeMask size needs expanding!");
+
 	namespace
 	{
 		void OnSyncableDestroyed( ecs::Registry& registry, ecs::Entity entity )
@@ -32,10 +34,17 @@ namespace Game::ClientSync
 				} );
 		}
 
+		template<SerialisableComponent C>
+		void DirtyComponent( ecs::Registry& registry, ecs::Entity entity )
+		{
+			if (auto* syncable = registry.try_get<SyncableComponent>( entity ))
+				syncable->dirty_components.set( ComponentIdentifiers::template type<C> );
+		}
+
 		void DirtyEntity( ecs::Registry& registry, ecs::Entity entity )
 		{
 			if (auto* syncable = registry.try_get<SyncableComponent>( entity ))
-				syncable->dirty = true;
+				syncable->dirty_components.set();
 		}
 	}
 
@@ -50,9 +59,6 @@ namespace Game::ClientSync
 
 				for (auto& client_entity : clients)
 				{
-					if (!to_sync_component.select.empty() && !to_sync_component.select.contains( client_entity ))
-						continue;
-
 					auto& client_sync_record = registry.get_or_emplace<SyncRecordComponent>( client_entity );
 					const bool client_knows_of_this = client_sync_record.known_entities.contains( syncable_entity );
 
@@ -63,14 +69,11 @@ namespace Game::ClientSync
 						client_sync_record.known_entities.emplace( syncable_entity );
 					}
 					
-					if (to_sync_component.dirty || !client_knows_of_this)
-					{
-						auto& client_connection = registry.get<Networking::ConnectionComponent>( client_entity );
-						Helpers::SyncEntityToClient( to_sync, client_connection );
-					}
+					auto& client_connection = registry.get<Networking::ConnectionComponent>( client_entity );
+					Helpers::SyncEntityToClient( to_sync, client_connection, client_knows_of_this ? to_sync_component.dirty_components : ComponentTypeMaskAll );
 				}
 
-				to_sync_component.dirty = false;
+				to_sync_component.dirty_components.reset();
 			} );
 	}
 
@@ -81,7 +84,8 @@ namespace Game::ClientSync
 #pragma push_macro("X")
 #define X( COMPONENT ) \
 		registry.on_construct<COMPONENT>().connect<&DirtyEntity>(); \
-		registry.on_update<COMPONENT>().connect<&DirtyEntity>();
+		registry.on_update<COMPONENT>().connect<&DirtyComponent<COMPONENT>>(); \
+		registry.on_destroy<COMPONENT>().connect<&DirtyComponent<COMPONENT>>();
 
 		CLIENT_SYNCABLE_COMPONENTS
 		
@@ -95,7 +99,8 @@ namespace Game::ClientSync
 #pragma push_macro("X")
 #define X( COMPONENT ) \
 		registry.on_construct<COMPONENT>().disconnect<&DirtyEntity>(); \
-		registry.on_update<COMPONENT>().disconnect<&DirtyEntity>();
+		registry.on_update<COMPONENT>().disconnect<&DirtyComponent<COMPONENT>>(); \
+		registry.on_destroy<COMPONENT>().disconnect<&DirtyComponent<COMPONENT>>();
 
 		CLIENT_SYNCABLE_COMPONENTS
 

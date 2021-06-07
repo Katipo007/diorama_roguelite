@@ -44,7 +44,7 @@ namespace Game::ClientSync::Helpers
 			return false;
 		}
 
-		Buffer_T WriteComponents( const ecs::EntityHandle entity )
+		Buffer_T WriteComponents( const ecs::EntityHandle entity, ComponentTypeMask component_mask )
 		{
 			if (!entity)
 				return {};
@@ -56,10 +56,20 @@ namespace Game::ClientSync::Helpers
 			// Add components which should be serialised here
 			//
 
+			if (component_mask.all() || component_mask.none())
+			{
 #pragma push_macro("X")
 #define X( COMPONENT ) WriteComponent<COMPONENT>( entity, serialiser );
-			CLIENT_SYNCABLE_COMPONENTS
+				CLIENT_SYNCABLE_COMPONENTS
 #pragma pop_macro("X")
+			}
+			else
+			{
+#pragma push_macro("X")
+#define X( COMPONENT ) if( component_mask.test( ComponentIdentifiers::template type<COMPONENT> ) ) WriteComponent<COMPONENT>( entity, serialiser );
+				CLIENT_SYNCABLE_COMPONENTS
+#pragma pop_macro("X")
+			}
 
 			//
 			// end serialising components
@@ -87,8 +97,10 @@ namespace Game::ClientSync::Helpers
 		}
 	}
 
-	void SyncEntityToClient( ecs::EntityHandle to_sync, Networking::ConnectionComponent& client )
+	void SyncEntityToClient( ecs::EntityHandle to_sync, Networking::ConnectionComponent& client, ComponentTypeMask component_mask, const bool force_reliable )
 	{
+		static const thread_local ComponentTypeMask unreliable_mask = ComponentTypeMask{}.set( ComponentIdentifiers::type<Transform::PositionComponent> );
+
 		if (!to_sync)
 			return;
 
@@ -97,13 +109,17 @@ namespace Game::ClientSync::Helpers
 			ASSERT( syncable->sync_id > 0 );
 
 			// Serialise the component data
-			const auto component_data = WriteComponents( to_sync );
+			const auto component_data = WriteComponents( to_sync, component_mask );
 			if (component_data.empty())
 				return;
 
+			const bool reliable = force_reliable || ((component_mask & unreliable_mask) != component_mask);
+			if (reliable)
+				LOG_INFO( LoggingChannels::Server, "Did reliable entity sync of '{}' to client ({})", syncable->sync_id, client.client_index);
+
 			Networking::Helpers::SendBlockMessage<Messages::ServerClientEntitySync>(
 				client
-				, Networking::ChannelType::Reliable
+				, reliable ? Networking::ChannelType::Reliable : Networking::ChannelType::Unreliable
 				, [&]( Messages::ServerClientEntitySync& msg ) { msg.entity_sync_id = syncable->sync_id; }
 				, component_data.data(), std::size( component_data )
 				);
@@ -125,6 +141,22 @@ namespace Game::ClientSync::Helpers
 		}
 	}
 
+	void RemoveComponentFromClient( const ecs::EntityConstHandle entity, ComponentTypeId component_type, Networking::ConnectionComponent& client )
+	{
+		if (!entity)
+			return;
+
+		if (auto* syncable = entity.try_get<SyncableComponent>())
+		{
+			ASSERT( syncable->sync_id > 0 );
+			Networking::Helpers::SendMessage<Messages::ServerClientEntityComponentRemoved>( client, Networking::ChannelType::Reliable, [&]( Messages::ServerClientEntityComponentRemoved& msg )
+				{
+					msg.entity_sync_id = syncable->sync_id;
+					msg.component_type = component_type;
+				} );
+		}
+	}
+
 	void MakeSerialisable( const ecs::EntityHandle entity )
 	{
 		auto& sync = entity.get_or_emplace<SyncableComponent>();
@@ -139,9 +171,9 @@ namespace Game::ClientSync::Helpers
 		if (auto* sync = entity.try_get<SyncableComponent>())
 		{
 			if (specific_component)
-				NOT_IMPLEMENTED;
-			else if( !sync->dirty )
-				sync->dirty = true;
+				sync->dirty_components.set( *specific_component );
+			else
+				sync->dirty_components.set(); // set all
 		}
 	}
 }

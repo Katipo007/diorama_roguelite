@@ -3,6 +3,7 @@
 #include "ClientServerCommon/ecs.hpp"
 #include "ClientServerCommon/Game/Concepts.hpp"
 
+#include <bitset>
 #include <concepts>
 #include <unordered_map>
 #include <bitsery/include/bitsery/bitsery.h>
@@ -15,6 +16,8 @@ namespace Game::ClientSync
 {
 	using EntitySyncId = uint64_t;
 	using ComponentTypeId = entt::id_type;
+	using ComponentTypeMask = std::bitset<100>;
+	static const ComponentTypeMask ComponentTypeMaskAll = std::move( ComponentTypeMask{}.set() );
 
 	using Buffer_T = std::vector<uint8_t>;
 	using Writer = bitsery::OutputBufferAdapter<Buffer_T>;

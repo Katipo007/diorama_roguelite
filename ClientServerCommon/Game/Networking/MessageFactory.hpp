@@ -19,5 +19,6 @@ namespace Game::Networking
 		, ClientSync::Messages::ServerClientAddEntity
 		, ClientSync::Messages::ServerClientEntitySync
 		, ClientSync::Messages::ServerClientRemoveEntity
+		, ClientSync::Messages::ServerClientEntityComponentRemoved
 		>;
 }
