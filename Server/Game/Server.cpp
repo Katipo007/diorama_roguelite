@@ -55,12 +55,12 @@ namespace Game
 	{
 		Networking::IncomingSystem( server, registry, ts );
 		TickSimulation( ts );
-		ClientSync::System( registry );
 		Networking::OutgoingSystem( server, registry, ts );
 	}
 
 	void Server::OnVariableUpdate( const PreciseTimestep& )
 	{
+		ClientSync::System( registry );
 	}
 
 	void Server::ClientConnectedHandler( Networking::Adapter&, Networking::ClientIndex index )
