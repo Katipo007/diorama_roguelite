@@ -79,6 +79,9 @@ void InitLogger()
 			.name = "Client",
 			.output_filename = ClientFilename,
 			.window_output_pattern = DefaultWindowPattern,
+#if _DEBUG
+			.level = Logger::Level::Trace,
+#endif
 		} );
 
 	logger.AddSink( LoggingChannels::OpenGL,
