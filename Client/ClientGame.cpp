@@ -20,8 +20,6 @@
 #include "Client/Game/Networking/ClientIdGenerator.hpp"
 #include "Client/Game/Networking/ClientServerSession.hpp"
 
-#include "Visual/Resources/SpriteSheet.hpp"
-
 namespace
 {
     using States = fsm::States<
@@ -90,9 +88,6 @@ void ClientGame::Init()
     ASSERT( core != nullptr );
     auto& video = core->GetRequiredAPI<API::VideoAPI>();
     dearimgui = core->GetAPI<API::DearImGuiAPI>();
-
-    // Preload sprite sheets
-    resource_manager->Preload<Graphics::SpriteSheet>( "Art/2DArt/texture.json" );
             
     Graphics::WindowDefinition window_def;
     window_def.title = "Diorama Roguelite";

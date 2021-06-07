@@ -2,6 +2,7 @@
 
 #include "ClientServerCommon/Game/ClientSync/ClientSyncMessages.hpp"
 #include "ClientServerCommon/Game/ClientSync/SyncableComponents.hpp"
+#include "Client/Game/Sprite/SpriteComponent.hpp"
 #include "Common/DataTypes/Bytes.hpp"
 #include "Common/Utility/Math/Vec3.hpp"
 
@@ -9,8 +10,8 @@ namespace Game::ClientSync::Helpers
 {
     namespace
     {
-        template<SerialisableComponent C>
-        inline void ReadComponent( C& component, Deserialiser& deserialiser, const bool expects_identifier = true )
+        template<SerialisableComponent C, SerialisableComponent As = C>
+        inline void ReadComponent( As& component, Deserialiser& deserialiser, const bool expects_identifier = true )
         {
             if (expects_identifier)
             {
@@ -25,12 +26,12 @@ namespace Game::ClientSync::Helpers
             return component.Serialise( deserialiser );
         }
 
-        template<SerialisableComponent C>
+        template<SerialisableComponent C, SerialisableComponent As = C>
         void ReadComponent( const ecs::EntityHandle entity, Deserialiser& deserialiser, const bool expects_identifier = true )
         {
             ASSERT( !!entity );
-            auto& component = entity.get_or_emplace<C>();
-            return ReadComponent( component, deserialiser, expects_identifier );
+            auto& component = entity.get_or_emplace<As>();
+            return ReadComponent<C, As>( component, deserialiser, expects_identifier );
         }
 
         void UpdateEntity( const ecs::EntityHandle entity, const Buffer_T& component_data )
@@ -53,9 +54,9 @@ namespace Game::ClientSync::Helpers
                     ReadComponent<Name::NameComponent>( entity, deserialiser, false );
                     break;
 
-                    //case ComponentIdentifiers::type<Sprite::SpriteComponent>:
-                    //    ReadComponent<Sprite::SpriteComponent>( entity, serialiser, false );
-                    //    break;
+                case ComponentIdentifiers::type<Sprite::CommonSpriteComponent>:
+                    ReadComponent<Sprite::CommonSpriteComponent, Sprite::SpriteComponent>( entity, deserialiser, false );
+                    break;
 
                 default:
                     throw std::runtime_error{ "Unrecognised component identifier" };

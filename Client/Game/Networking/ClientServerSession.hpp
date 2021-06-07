@@ -68,6 +68,9 @@ namespace Game::Networking
 
 		Signal::signal<ClientServerSession&> ConnectionStateChanged;
 
+		ecs::Registry& GetRegistry() noexcept { return registry; }
+		const ecs::Registry& GetRegistry() const noexcept { return registry; }
+
 		template<class Event>
 		[[nodiscard]] decltype(auto) Sink() { return dispatcher.sink<Event>(); }
 

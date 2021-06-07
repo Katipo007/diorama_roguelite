@@ -14,7 +14,9 @@ class ClientGame;
 namespace Visual
 {
 	class Camera;
+	class Renderer;
 	class SphericalCamera;
+	class SpriteBatcher;
 }
 
 namespace Game::States
@@ -49,6 +51,8 @@ namespace Game::States
 		ClientGame* game = nullptr;
 		Networking::ClientServerSession* client_server_session = nullptr;
 
+		std::unique_ptr<Visual::Renderer> renderer;
+		std::unique_ptr<Visual::SpriteBatcher> sprite_batcher;
 		std::shared_ptr<Visual::SphericalCamera> main_camera;
 		UI::ChatWindow chat_window;
 	};

@@ -52,7 +52,10 @@ namespace Game::ClientSync::Helpers
 			Buffer_T data;
 			Serialiser serialiser{ data };
 
+			// Add components which should be serialised here
+
 			WriteComponent<Name::NameComponent>( entity, serialiser );
+			WriteComponent<Sprite::CommonSpriteComponent>( entity, serialiser );
 
 			serialiser.adapter().flush();
 			const auto used_num_bytes = serialiser.adapter().writtenBytesCount();

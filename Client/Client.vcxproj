@@ -88,6 +88,7 @@
     <ClCompile Include="ClientMain.cpp" />
     <ClCompile Include="Game\ClientSync\ClientSyncHelpers.cpp" />
     <ClCompile Include="Game\Networking\ClientIdGenerator.cpp" />
+    <ClCompile Include="Game\Sprite\SpriteSystem.cpp" />
     <ClCompile Include="Graphical\UI\ChatWindow.cpp" />
     <ClCompile Include="Game\Networking\ClientServerSession.cpp" />
     <ClCompile Include="Precompiled\pch.cpp">
@@ -109,6 +110,8 @@
     <ClInclude Include="Game\Networking\ClientIdGenerator.hpp" />
     <ClInclude Include="Game\Networking\ClientServerSessionEvents.hpp" />
     <ClInclude Include="Game\Networking\ServerConnectionRequest.hpp" />
+    <ClInclude Include="Game\Sprite\SpriteComponent.hpp" />
+    <ClInclude Include="Game\Sprite\SpriteSystem.hpp" />
     <ClInclude Include="Game\States\ExitGameState.hpp" />
     <ClInclude Include="Graphical\UI\ChatWindow.hpp" />
     <ClInclude Include="Logging.hpp" />

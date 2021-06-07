@@ -1,6 +1,7 @@
 #include "NetworkingHelpers.hpp"
 
 #include "ClientServerCommon/Game/Name/NameHelpers.hpp"
+#include "ClientServerCommon/Game/Sprite/SpriteHelpers.hpp"
 #include "Server/Game/ClientSync/ClientSyncHelpers.hpp"
 #include "Components/ActiveClientComponent.hpp"
 #include "Components/PendingClientComponent.hpp"
@@ -20,6 +21,7 @@ namespace Game::Networking::Helpers
 		entity.remove<PendingClientComponent>();
 		entity.emplace<ActiveClientComponent>();
 		Name::Helpers::SetName( entity, username );
+		Sprite::Helpers::SetSprite( entity, "2DArt/NPCs/Male" );
 		ClientSync::Helpers::MakeSerialisable( entity );
 		
 		LOG_INFO( LoggingChannels::Server, "Accepted login from ({})", connection.client_index );

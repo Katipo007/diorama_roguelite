@@ -54,6 +54,9 @@
     <ClCompile Include="Game\ClientSync\ClientSyncHelpers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Game\Sprite\SpriteSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precompiled\pch.hpp">
@@ -108,6 +111,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Game\ClientSync\ClientSyncHelpers.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Sprite\SpriteComponent.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Sprite\SpriteSystem.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

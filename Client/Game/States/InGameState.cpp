@@ -3,11 +3,17 @@
 #include <functional>
 
 #include "Client/ClientGame.hpp"
+#include "Client/Game/Networking/ClientServerSession.hpp"
+#include "Client/Game/Sprite/SpriteSystem.hpp"
 
 #include "Common/Core/Core.hpp"
 #include "Common/Core/API/VideoAPI.hpp"
+#include "Common/Core/ResourceManager.hpp"
 
 #include "Visual/Camera.hpp"
+#include "Visual/Renderer.hpp"
+#include "Visual/SpriteBatcher.hpp"
+#include "Visual/Resources/SpriteSheet.hpp"
 
 namespace Game::States
 {
@@ -37,11 +43,21 @@ namespace Game::States
 
 		chat_window.SetClientServerSession( client_server_session );
 
+		auto& video = game->GetCore().GetRequiredAPI<API::VideoAPI>();
+
+		// Preload sprite sheets
+		game->GetResourceManager().Preload<Graphics::SpriteSheet>( "Art/2DArt/texture.json" );
+
+		renderer = std::make_unique<Visual::Renderer>( video );
+		sprite_batcher = std::make_unique<Visual::SpriteBatcher>( video );
+
 		return fsm::NoAction{};
 	}
 
 	void InGameState::OnLeave()
 	{
+		sprite_batcher.reset();
+		renderer.reset();
 		chat_window.SetClientServerSession( nullptr );
 		client_server_session = nullptr;
 	}
@@ -53,7 +69,13 @@ namespace Game::States
 
 	fsm::NoAction InGameState::HandleEvent( const Events::RenderEvent& )
 	{
-		// scene->Render();
+		renderer->BeginScene( *main_camera );
+		sprite_batcher->Begin( *main_camera );
+		
+		Sprite::ClientSystem( client_server_session->GetRegistry(), game->GetResourceManager(), *sprite_batcher );
+
+		sprite_batcher->EndScene();
+		renderer->EndScene();
 
 		return fsm::NoAction();
 	}
