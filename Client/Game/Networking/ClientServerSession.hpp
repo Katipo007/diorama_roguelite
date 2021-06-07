@@ -4,6 +4,7 @@
 #include "ClientServerCommon/Game/Networking/Adapter.hpp"
 #include "ClientServerCommon/Game/Networking/Channels.hpp"
 #include "ClientServerCommon/Game/Networking/MessageFactory.hpp"
+#include "ClientServerCommon/Game/ClientSync/ClientSyncTypes.hpp"
 #include "ClientServerCommon/Plugins/Yojimbo/YojimboHeader.hpp"
 #include "ClientServerCommon/ecs.hpp"
 #include "ServerConnectionRequest.hpp"
@@ -84,6 +85,8 @@ namespace Game::Networking
 		yojimbo::Client client;
 		ecs::Registry registry;
 		entt::dispatcher dispatcher;
+
+		ClientSync::SyncedEntityMap_T synced_entities;
 
 		std::optional<std::string> disconnection_reason;
 

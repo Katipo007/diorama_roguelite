@@ -164,13 +164,14 @@ namespace Game::Networking
 					return true;
 				}
 
+				case MessageFactory::GetMessageType<ClientSync::Messages::ServerClientAddEntity>() :
+					return ClientSync::Helpers::HandleMessage( registry, synced_entities, static_cast<const ClientSync::Messages::ServerClientAddEntity&>(message) );
+
 				case MessageFactory::GetMessageType<ClientSync::Messages::ServerClientEntitySync>() :
-				{
-					const auto& sync = static_cast<const ClientSync::Messages::ServerClientEntitySync&>(message);
-					ClientSync::Buffer_T data{ sync.GetBlockData(), sync.GetBlockData() + sync.GetBlockSize() };
-					ClientSync::Helpers::UpdateEntity( {}, data );
-					return true;
-				}
+					return ClientSync::Helpers::HandleMessage( synced_entities, static_cast<const ClientSync::Messages::ServerClientEntitySync&>(message) );
+
+				case MessageFactory::GetMessageType<ClientSync::Messages::ServerClientRemoveEntity>() :
+					return ClientSync::Helpers::HandleMessage( synced_entities, static_cast<const ClientSync::Messages::ServerClientRemoveEntity&>(message) );
 			}
 		}
 

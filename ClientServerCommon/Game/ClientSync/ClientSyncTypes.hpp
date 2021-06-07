@@ -2,10 +2,9 @@
 
 #include "ClientServerCommon/ecs.hpp"
 #include "ClientServerCommon/Game/Concepts.hpp"
-#include "Common/DataTypes/Bytes.hpp"
 
 #include <concepts>
-#include <sstream>
+#include <unordered_map>
 #include <bitsery/include/bitsery/bitsery.h>
 #include <bitsery/include/bitsery/adapter/buffer.h>
 #include <bitsery/include/bitsery/traits/array.h>
@@ -31,4 +30,6 @@ namespace Game::ClientSync
 		{ t.Serialise( std::declval<Serialiser&>() ) } -> std::same_as<void>;
 		{ t.Serialise( std::declval<Deserialiser&>() ) } -> std::same_as<void>;
 	};
+
+	using SyncedEntityMap_T = std::unordered_map<EntitySyncId, ecs::EntityHandle>;
 }
