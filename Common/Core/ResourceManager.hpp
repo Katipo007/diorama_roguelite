@@ -35,13 +35,13 @@ public:
 	}
 
 	template<Resources::Concepts::Resource RESOURCE>
-	bool Exists( std::string_view resource_id ) const { return GetCache<RESOURCE>().Exists( resource_id ); }
+	[[nodiscard]] bool Exists( std::string_view resource_id ) const { return GetCache<RESOURCE>().Exists( resource_id ); }
 
 	template<Resources::Concepts::Resource RESOURCE>
-	bool IsLoaded( std::string_view resource_id ) const { return GetCache<RESOURCE>().IsLoaded( resource_id ); }
+	[[nodiscard]] bool IsLoaded( std::string_view resource_id ) const { return GetCache<RESOURCE>().IsLoaded( resource_id ); }
 
 	template<Resources::Concepts::Resource RESOURCE>
-	Resources::ResourceHandle<const RESOURCE> Get( std::string_view resource_id ) const { return Resources::ResourceHandle<const RESOURCE>( GetCache<RESOURCE>().Get( resource_id ) ); }
+	[[nodiscard]] Resources::ResourceHandle<const RESOURCE> Get( std::string_view resource_id ) const { return Resources::ResourceHandle<const RESOURCE>( GetCache<RESOURCE>().Get( resource_id ) ); }
 
 	template<Resources::Concepts::Resource RESOURCE>
 	bool Preload( std::string_view resource_id ) const { return GetCache<RESOURCE>().Preload( resource_id ); }
