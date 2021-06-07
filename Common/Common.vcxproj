@@ -53,6 +53,7 @@
     <ClInclude Include="Utility\Entity\Entity.hpp" />
     <ClInclude Include="Utility\Entity\EnttHeader.hpp" />
     <ClInclude Include="Utility\Entity\Fwd.hpp" />
+    <ClInclude Include="Utility\HashedString.hpp" />
     <ClInclude Include="Utility\Hashing.hpp" />
     <ClInclude Include="Utility\json.hpp" />
     <ClInclude Include="Utility\Literals.hpp" />
