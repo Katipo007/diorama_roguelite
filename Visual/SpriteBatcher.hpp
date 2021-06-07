@@ -1,9 +1,9 @@
 #pragma once
 
+#include "Common/DataTypes/Colour.hpp"
 #include "Common/Utility/Math/Vec2.hpp"
 #include "Common/Utility/Math/Vec3.hpp"
 #include "Common/Utility/Math/Mat4.hpp"
-#include "Visual/Colour.hpp"
 
 #include "Common/Core/Resources/ResourceHandle.hpp"
 

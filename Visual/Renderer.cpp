@@ -2,8 +2,8 @@
 
 #include "Common/Core/API/VideoAPI.hpp"
 #include "Common/Core/Graphics/Window.hpp"
+#include "Common/DataTypes/Colour.hpp"
 #include "Visual/Camera.hpp"
-#include "Visual/Colour.hpp"
 #include "Visual/Graphics/Shader.hpp"
 #include "Visual/Graphics/Texture.hpp"
 #include "Visual/Graphics/VertexArray.hpp"

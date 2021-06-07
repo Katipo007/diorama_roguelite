@@ -228,6 +228,9 @@
     <ClInclude Include="Utility\Yaml.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DataTypes\Colour.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Resources\ResourceCache.cpp">

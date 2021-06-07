@@ -38,6 +38,7 @@
     <ClInclude Include="Core\Resources\ResourceTypes.hpp" />
     <ClInclude Include="Core\Resources\StandardResources.hpp" />
     <ClInclude Include="DataTypes\Bytes.hpp" />
+    <ClInclude Include="DataTypes\Colour.hpp" />
     <ClInclude Include="Deployment\Configurations\Development\Header.hpp" />
     <ClInclude Include="Deployment\Deployment.hpp" />
     <ClInclude Include="File\FileOps.hpp" />
