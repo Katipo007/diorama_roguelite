@@ -48,9 +48,7 @@ namespace Game::Networking::Helpers
 	void BroadcastChatMessage( ecs::EntityHandle from, std::string_view message )
 	{
 		ASSERT( !!from );
-
-		if (auto* name = from.try_get<Name::NameComponent>())
-			BroadcastChatMessage( *from.registry(), name->value.data(), message );
+		BroadcastChatMessage( *from.registry(), Name::Helpers::GetName( from ), message );
 	}
 
 	void BroadcastChatMessage( ecs::Registry& registry, std::string_view sender, std::string_view message )
