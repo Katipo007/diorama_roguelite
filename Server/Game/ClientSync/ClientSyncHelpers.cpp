@@ -4,7 +4,6 @@
 #include "ClientServerCommon/Game/ClientSync/SyncableComponents.hpp"
 #include "Server/Game/Networking/NetworkingHelpers.hpp"
 #include "Components/SyncableComponent.hpp"
-#include "Components/SyncRecordComponent.hpp"
 #include "Common/Utility/StringUtility.hpp"
 
 namespace

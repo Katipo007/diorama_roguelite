@@ -51,7 +51,7 @@ namespace Game::ClientSync
 	void System( ecs::Registry& registry )
 	{
 		const auto client_syncables = registry.view<SyncableComponent>();
-		const auto clients = registry.view<Networking::ConnectionComponent>( entt::exclude<Networking::PendingClientComponent> );
+		const auto clients = registry.view<Networking::ActiveClientComponent>();
 
 		client_syncables.each( [&]( const ecs::Entity syncable_entity, SyncableComponent& to_sync_component )
 			{
