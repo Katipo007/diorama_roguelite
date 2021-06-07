@@ -108,25 +108,25 @@
     <ClInclude Include="Version\BuildVersion.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\Math\Mat3.hpp">
+    <ClInclude Include="DataTypes\Mat3.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\Math\Mat4.hpp">
+    <ClInclude Include="DataTypes\Mat4.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\Math\Matrix.hpp">
+    <ClInclude Include="DataTypes\Matrix.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\Math\Vec2.hpp">
+    <ClInclude Include="DataTypes\Vec2.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\Math\Vec3.hpp">
+    <ClInclude Include="DataTypes\Vec3.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\Math\Vec4.hpp">
+    <ClInclude Include="DataTypes\Vec4.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\Math\Vector.hpp">
+    <ClInclude Include="DataTypes\Vector.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Utility\StateMachine\Might.hpp">
@@ -153,7 +153,7 @@
     <ClInclude Include="Utility\StateMachine\Will.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\Containers.hpp">
+    <ClInclude Include="Utility\ContainerOperations.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Utility\Hashing.hpp">

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Common/Utility/Math/Vec3.hpp"
+#include "Common/DataTypes/Vec3.hpp"
 
 namespace Worldspace
 {

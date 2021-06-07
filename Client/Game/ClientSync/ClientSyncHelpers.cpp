@@ -4,7 +4,7 @@
 #include "ClientServerCommon/Game/ClientSync/SyncableComponents.hpp"
 #include "Client/Game/Sprite/SpriteComponent.hpp"
 #include "Common/DataTypes/Bytes.hpp"
-#include "Common/Utility/Math/Vec3.hpp"
+#include "Common/DataTypes/Vec3.hpp"
 
 namespace Game::ClientSync::Helpers
 {

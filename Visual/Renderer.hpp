@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Common/Utility/Math/Mat4.hpp"
+#include "Common/DataTypes/Mat4.hpp"
 
 namespace API { class VideoAPI; }
 
