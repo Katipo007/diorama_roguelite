@@ -70,7 +70,7 @@ namespace Game::ClientSync
 					}
 					
 					auto& client_connection = registry.get<Networking::ConnectionComponent>( client_entity );
-					Helpers::SyncEntityToClient( to_sync, client_connection, client_knows_of_this ? to_sync_component.dirty_components : ComponentTypeMaskAll );
+					Helpers::SyncEntityToClient( to_sync, client_connection, client_knows_of_this ? to_sync_component.dirty_components : ComponentTypeMaskAll, !client_knows_of_this );
 				}
 
 				to_sync_component.dirty_components.reset();
