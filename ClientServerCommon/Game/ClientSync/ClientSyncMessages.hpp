@@ -5,6 +5,8 @@
 
 namespace Game::ClientSync::Messages
 {
+#pragma warning(disable:4127)
+
 	BEGIN_MESSAGE( ServerClientAddEntity )
 		EntitySyncId entity_sync_id{ 0 };
 		std::array<char, 128> entity_type{ 0 };
@@ -41,6 +43,21 @@ namespace Game::ClientSync::Messages
 			return true;
 		}
 	END_MESSAGE();
+
+	BEGIN_MESSAGE( ServerClientEntityComponentRemoved )
+		EntitySyncId entity_sync_id{ 0 };
+		ComponentTypeId component_type;
+
+		template<YojimboPlugin::Concepts::SerializeStream Stream>
+		bool Serialize( Stream& stream )
+		{
+			serialize_varint64( stream, entity_sync_id );
+			serialize_uint32( stream, component_type ); static_assert(sizeof( component_type ) == 4);
+			return true;
+		}
+	END_MESSAGE();
 }
+
+#pragma warning(default:4127)
 
 #include "ClientServerCommon/Game/Networking/Messages/MessageUndefines.hpp"
