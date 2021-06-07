@@ -97,7 +97,7 @@ namespace Game::ClientSync::Helpers
             return false;
         }
 
-        LOG_TRACE( LoggingChannels::Client, "Updating entity with sync id '{}'", msg.entity_sync_id );
+        //LOG_TRACE( LoggingChannels::Client, "Updating entity with sync id '{}'", msg.entity_sync_id );
         Buffer_T data{ msg.GetBlockData(), msg.GetBlockData() + msg.GetBlockSize() };
         UpdateEntity( entity_it->second, data );
         return true;
