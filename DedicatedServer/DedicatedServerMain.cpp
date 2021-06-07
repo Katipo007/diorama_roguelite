@@ -16,7 +16,7 @@
 CoreProperties GenerateCoreProperties()
 {
 	CoreProperties props;
-	props.fps = 0;
+	props.fps = 30;
 	props.max_plugins = DedicatedServerPlugins::NumDedicatedServerPlugins;
 
 	props.plugin_factory = []( Core& core, APIType type ) -> std::unique_ptr<API::BaseAPI>
