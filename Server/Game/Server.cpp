@@ -6,6 +6,7 @@
 #include "Server/Game/Networking/Constants.hpp"
 #include "Server/Game/Networking/NetworkingSystem.hpp"
 #include "Server/Game/ClientSync/ClientSyncSystem.hpp"
+#include "Server/Game/Movement/TestMovementSystem.hpp"
 
 #include "Common/Utility/ContainerOperations.hpp"
 #include "Common/Utility/MagicEnum.hpp"
@@ -92,7 +93,7 @@ namespace Game
 
 	void Server::TickSimulation( const PreciseTimestep& ts )
 	{
-		// TODO: call systems
 		(void)ts;
+		Movement::TestSystem( registry, ts );
 	}
 }

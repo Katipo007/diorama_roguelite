@@ -23,7 +23,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\Networking.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\ClientSync\ClientSyncMessages.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\Sprite\CommonSpriteComponent.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Components\Transform.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Transform\Components\PositionComponent.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Constants.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)ChatConstants.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\Networking\Adapter.hpp" />
@@ -38,6 +38,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\Networking\Messages\LoginMessages.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\Sprite\SpriteHelpers.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\Sprite\Types.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Transform\TransformHelpers.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\PluginTypes.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\Basic\Client.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\Concepts.hpp" />
@@ -54,6 +55,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Game\Networking\Adapter.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Game\Networking\Config.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Game\Sprite\SpriteHelpers.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Game\Transform\TransformHelpers.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Plugins\Yojimbo\YojimboPlugin.cpp" />
   </ItemGroup>
 </Project>

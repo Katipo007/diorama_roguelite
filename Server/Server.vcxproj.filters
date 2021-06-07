@@ -36,6 +36,9 @@
     <ClCompile Include="Game\ClientSync\ClientSyncHelpers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Game\Movement\TestMovementSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precompiled\pch.hpp">
@@ -81,6 +84,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Game\ClientSync\Components\SyncRecordComponent.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Movement\TestMovementSystem.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

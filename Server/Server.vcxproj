@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="Game\ClientSync\ClientSyncHelpers.cpp" />
     <ClCompile Include="Game\ClientSync\ClientSyncSystem.cpp" />
+    <ClCompile Include="Game\Movement\TestMovementSystem.cpp" />
     <ClCompile Include="Game\Networking\NetworkingHelpers.cpp" />
     <ClCompile Include="Game\Player\PlayerHelpers.cpp" />
     <ClCompile Include="Game\Server.cpp" />
@@ -35,6 +36,7 @@
   <ItemGroup>
     <ClInclude Include="Game\ClientSync\ClientSyncHelpers.hpp" />
     <ClInclude Include="Game\ClientSync\Components\SyncRecordComponent.hpp" />
+    <ClInclude Include="Game\Movement\TestMovementSystem.hpp" />
     <ClInclude Include="Game\Networking\Components\ActiveClientComponent.hpp" />
     <ClInclude Include="Game\Networking\Components\PendingClientComponent.hpp" />
     <ClInclude Include="Game\Networking\Components\ConnectionComponent.hpp" />

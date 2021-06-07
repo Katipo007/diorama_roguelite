@@ -3,6 +3,7 @@
 #include "Server/Game/Networking/Components/ActiveClientComponent.hpp"
 #include "Server/Game/Networking/Components/ConnectionComponent.hpp"
 #include "Server/Game/Networking/Components/PendingClientComponent.hpp"
+#include "ClientServerCommon/Game/ClientSync/SyncableComponents.hpp"
 #include "Components/SyncableComponent.hpp"
 #include "Components/SyncRecordComponent.hpp"
 #include "ClientSyncHelpers.hpp"
@@ -29,6 +30,12 @@ namespace Game::ClientSync
 						record.known_entities.erase( entity );
 					}
 				} );
+		}
+
+		void DirtyEntity( ecs::Registry& registry, ecs::Entity entity )
+		{
+			if (auto* syncable = registry.try_get<SyncableComponent>( entity ))
+				syncable->dirty = true;
 		}
 	}
 
@@ -69,11 +76,29 @@ namespace Game::ClientSync
 
 	void AttachHandlers( ecs::Registry& registry )
 	{
-		registry.on_destroy<SyncableComponent>().connect<OnSyncableDestroyed>();
+		registry.on_destroy<SyncableComponent>().connect<&OnSyncableDestroyed>();
+
+#pragma push_macro("X")
+#define X( COMPONENT ) \
+		registry.on_construct<COMPONENT>().connect<&DirtyEntity>(); \
+		registry.on_update<COMPONENT>().connect<&DirtyEntity>();
+
+		CLIENT_SYNCABLE_COMPONENTS
+		
+#pragma pop_macro("X")
 	}
 
 	void DetatchHandlers( ecs::Registry& registry )
 	{
-		registry.on_destroy<SyncableComponent>().disconnect<OnSyncableDestroyed>();
+		registry.on_destroy<SyncableComponent>().disconnect<&OnSyncableDestroyed>();
+
+#pragma push_macro("X")
+#define X( COMPONENT ) \
+		registry.on_construct<COMPONENT>().disconnect<&DirtyEntity>(); \
+		registry.on_update<COMPONENT>().disconnect<&DirtyEntity>();
+
+		CLIENT_SYNCABLE_COMPONENTS
+
+#pragma pop_macro("X")
 	}
 }

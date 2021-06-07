@@ -11,7 +11,7 @@ namespace Game::ClientSync::Helpers
     namespace
     {
         template<SerialisableComponent C, SerialisableComponent As = C>
-        inline void ReadComponent( As& component, Deserialiser& deserialiser, const bool expects_identifier = true )
+        inline void ReadComponent( As& component, Deserialiser& deserialiser, const bool expects_identifier = false )
         {
             if (expects_identifier)
             {
@@ -27,7 +27,7 @@ namespace Game::ClientSync::Helpers
         }
 
         template<SerialisableComponent C, SerialisableComponent As = C>
-        void ReadComponent( const ecs::EntityHandle entity, Deserialiser& deserialiser, const bool expects_identifier = true )
+        void ReadComponent( const ecs::EntityHandle entity, Deserialiser& deserialiser, const bool expects_identifier = false )
         {
             ASSERT( !!entity );
             auto& component = entity.get_or_emplace<As>();
@@ -51,11 +51,15 @@ namespace Game::ClientSync::Helpers
                 switch (component_id)
                 {
                 case ComponentIdentifiers::type<Name::NameComponent>:
-                    ReadComponent<Name::NameComponent>( entity, deserialiser, false );
+                    ReadComponent<Name::NameComponent>( entity, deserialiser );
                     break;
 
                 case ComponentIdentifiers::type<Sprite::CommonSpriteComponent>:
-                    ReadComponent<Sprite::CommonSpriteComponent, Sprite::SpriteComponent>( entity, deserialiser, false );
+                    ReadComponent<Sprite::CommonSpriteComponent, Sprite::SpriteComponent>( entity, deserialiser );
+                    break;
+
+                case ComponentIdentifiers::type<Transform::PositionComponent>:
+                    ReadComponent<Transform::PositionComponent>( entity, deserialiser );
                     break;
 
                 default:
