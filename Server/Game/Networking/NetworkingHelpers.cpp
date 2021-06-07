@@ -38,7 +38,7 @@ namespace Game::Networking::Helpers
 
 		auto& connection = entity.get<ConnectionComponent>();
 
-		SendMessage<Networking::Messages::ServerClientDisconnect>( connection, Networking::ChannelType::Reliable, [&]( Networking::Messages::ServerClientDisconnect& message )
+		SendMessage<Networking::Messages::ServerClientDisconnect>( connection, Networking::ChannelType::Unreliable, [&]( Networking::Messages::ServerClientDisconnect& message )
 			{
 				if (reason)
 					message.reason = *reason;
@@ -62,7 +62,7 @@ namespace Game::Networking::Helpers
 
 		registry.view<ConnectionComponent, ActiveClientComponent>().each( [&]( auto, ConnectionComponent& connection, ActiveClientComponent& )
 			{
-				SendMessage<Networking::Messages::ServerClientChatMessage>( connection, Networking::ChannelType::Unreliable, [&]( Networking::Messages::ServerClientChatMessage& chat )
+				SendMessage<Networking::Messages::ServerClientChatMessage>( connection, Networking::ChannelType::Reliable, [&]( Networking::Messages::ServerClientChatMessage& chat )
 					{
 						chat.sender = std::string{ sender };
 						chat.message = std::string{ message };
