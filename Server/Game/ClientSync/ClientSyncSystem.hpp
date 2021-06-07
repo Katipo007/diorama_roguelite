@@ -4,5 +4,7 @@
 
 namespace Game::ClientSync
 {
-	void ClientSyncSystem( ecs::Registry& registry );
+	void AttachHandlers( ecs::Registry& registry );
+	void System( ecs::Registry& registry );
+	void DetatchHandlers( ecs::Registry& registry );
 }

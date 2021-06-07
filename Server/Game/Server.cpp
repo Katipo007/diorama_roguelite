@@ -24,6 +24,8 @@ namespace Game
 		network_adapter.ServerClientDisconnected.connect( &Server::ClientDisconnectedHandler, this );
 		client_id_index_mapping.reserve( Networking::MaxServerClients );
 		client_entities.reserve( Networking::MaxServerClients );
+
+		ClientSync::AttachHandlers( registry );
 	}
 
 	Server::~Server()
@@ -52,7 +54,7 @@ namespace Game
 	{
 		Networking::IncomingSystem( server, registry, ts );
 		TickSimulation( ts );
-		ClientSync::ClientSyncSystem( registry );
+		ClientSync::System( registry );
 		Networking::OutgoingSystem( server, registry, ts );
 	}
 

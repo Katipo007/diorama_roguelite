@@ -9,6 +9,6 @@ namespace Game::ClientSync
 	/// </summary>
 	struct SyncRecordComponent final // stupid name, needs renaming
 	{
-		std::unordered_set<EntitySyncId> known_entities;
+		std::unordered_set<ecs::Entity> known_entities;
 	};
 }
