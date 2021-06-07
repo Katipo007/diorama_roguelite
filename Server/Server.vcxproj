@@ -44,7 +44,7 @@
     <ClInclude Include="Game\Player\PlayerHelpers.hpp" />
     <ClInclude Include="Game\Networking\Constants.hpp" />
     <ClInclude Include="Game\Networking\NetworkingSystem.hpp" />
-    <ClInclude Include="Game\ClientSync\ClientSyncComponent.hpp" />
+    <ClInclude Include="Game\ClientSync\Components\SyncableComponent.hpp" />
     <ClInclude Include="Logging.hpp" />
     <ClInclude Include="Game\Server.hpp" />
     <ClInclude Include="Precompiled\pch.hpp" />

@@ -7,7 +7,7 @@
 
 namespace Game::ClientSync
 {
-	struct ClientSyncComponent final
+	struct SyncableComponent final
 	{
 		EntitySyncId sync_id{ 0 };
 		std::unordered_set<ecs::Entity> select; //< Should only be serialised to a select number of clients

@@ -71,13 +71,16 @@
     <ClInclude Include="Game\Networking\Components\PendingClientComponent.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Game\ClientSync\ClientSyncComponent.hpp">
+    <ClInclude Include="Game\ClientSync\Components\SyncableComponent.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Game\ClientSync\ClientSyncSystem.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Game\ClientSync\ClientSyncHelpers.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\ClientSync\Components\SyncRecordComponent.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
