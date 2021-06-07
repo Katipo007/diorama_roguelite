@@ -1,8 +1,8 @@
 #include "Server.hpp"
 
 #include "ClientServerCommon/Game/Networking/Config.hpp"
-#include "Server/Game/Networking/ConnectionComponent.hpp"
-#include "Server/Game/Networking/PendingClientComponent.hpp"
+#include "Server/Game/Networking/Components/ConnectionComponent.hpp"
+#include "Server/Game/Networking/Components/PendingClientComponent.hpp"
 #include "Server/Game/Networking/Constants.hpp"
 #include "Server/Game/Networking/NetworkingSystem.hpp"
 #include "Server/Game/ClientSync/ClientSyncSystem.hpp"

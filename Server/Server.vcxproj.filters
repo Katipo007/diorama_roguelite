@@ -59,16 +59,16 @@
     <ClInclude Include="Game\Networking\Constants.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Networking\ConnectionComponent.hpp">
+    <ClInclude Include="Game\Networking\Components\ConnectionComponent.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Game\Networking\NetworkingSystem.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Networking\ActiveClientComponent.hpp">
+    <ClInclude Include="Game\Networking\Components\ActiveClientComponent.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Networking\PendingClientComponent.hpp">
+    <ClInclude Include="Game\Networking\Components\PendingClientComponent.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Game\ClientSync\ClientSyncComponent.hpp">

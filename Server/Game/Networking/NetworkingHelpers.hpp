@@ -5,7 +5,7 @@
 #include "ClientServerCommon/Plugins/Yojimbo/YojimboHeader.hpp"
 #include "ClientServerCommon/Game/Networking/MessageFactory.hpp"
 #include "ClientServerCommon/Game/Networking/Channels.hpp"
-#include "ConnectionComponent.hpp"
+#include "Components/ConnectionComponent.hpp"
 #include "Common/DataTypes/Bytes.hpp"
 #include "Common/Utility/MagicEnum.hpp"
 

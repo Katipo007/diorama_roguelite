@@ -34,9 +34,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\ClientSync\ClientSyncHelpers.hpp" />
-    <ClInclude Include="Game\Networking\ActiveClientComponent.hpp" />
-    <ClInclude Include="Game\Networking\PendingClientComponent.hpp" />
-    <ClInclude Include="Game\Networking\ConnectionComponent.hpp" />
+    <ClInclude Include="Game\ClientSync\Components\SyncRecordComponent.hpp" />
+    <ClInclude Include="Game\Networking\Components\ActiveClientComponent.hpp" />
+    <ClInclude Include="Game\Networking\Components\PendingClientComponent.hpp" />
+    <ClInclude Include="Game\Networking\Components\ConnectionComponent.hpp" />
     <ClInclude Include="Game\ClientSync\ClientSyncSystem.hpp" />
     <ClInclude Include="Game\Player\PlayerComponent.hpp" />
     <ClInclude Include="Game\Networking\NetworkingHelpers.hpp" />

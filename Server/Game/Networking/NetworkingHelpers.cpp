@@ -2,9 +2,9 @@
 
 #include "ClientServerCommon/Game/Name/NameHelpers.hpp"
 #include "Server/Game/ClientSync/ClientSyncHelpers.hpp"
-#include "ActiveClientComponent.hpp"
-#include "PendingClientComponent.hpp"
-#include "ConnectionComponent.hpp"
+#include "Components/ActiveClientComponent.hpp"
+#include "Components/PendingClientComponent.hpp"
+#include "Components/ConnectionComponent.hpp"
 #include "Common/Utility/StringUtility.hpp"
 
 namespace Game::Networking::Helpers

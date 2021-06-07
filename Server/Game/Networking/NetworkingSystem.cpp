@@ -3,9 +3,9 @@
 #include "ClientServerCommon/Game/Networking/Channels.hpp"
 #include "ClientServerCommon/Game/Networking/MessageFactory.hpp"
 #include "ClientServerCommon/Plugins/Yojimbo/YojimboHeader.hpp"
-#include "ConnectionComponent.hpp"
-#include "PendingClientComponent.hpp"
-#include "ActiveClientComponent.hpp"
+#include "Components/ConnectionComponent.hpp"
+#include "Components/PendingClientComponent.hpp"
+#include "Components/ActiveClientComponent.hpp"
 #include "NetworkingHelpers.hpp"
 
 #include <chrono>
