@@ -88,11 +88,14 @@ namespace Game::ClientSync::Helpers
         return true;
     }
 
-    bool HandleMessage( SyncedEntityMap_T& map, const Messages::ServerClientEntitySync& msg )
+    bool HandleMessage( SyncedEntityMap_T& map, const Messages::ServerClientEntitySync& msg, const Networking::ChannelType channel )
     {
         const auto entity_it = map.find( msg.entity_sync_id );
         if (entity_it == std::end( map ))
         {
+            if (channel == Networking::ChannelType::Unreliable)
+                return true; // safe to ignore?
+
             LOG_ERROR( LoggingChannels::Client, "Got entity sync data for an unrecognised sync id '{}'", msg.entity_sync_id );
             return false;
         }
@@ -105,14 +108,17 @@ namespace Game::ClientSync::Helpers
 
     bool HandleMessage( SyncedEntityMap_T& map, const Messages::ServerClientRemoveEntity& msg )
     {
-        const auto found_it = map.find( msg.entity_sync_id );
-        if (found_it != std::end( map ))
+        for (auto& sync_id : msg.entity_sync_ids)
         {
-            LOG_TRACE( LoggingChannels::Client, "Removing entity with sync id '{}'", msg.entity_sync_id );
-            found_it->second.destroy();
-            map.erase( found_it );
+            const auto found_it = map.find( sync_id );
+            if (found_it != std::end( map ))
+            {
+                LOG_TRACE( LoggingChannels::Client, "Removing entity with sync id '{}'", sync_id );
+                found_it->second.destroy();
+                map.erase( found_it );
+            }
+            // fine to ignore ids we didn't find
         }
-        // fine to ignore ids we didn't find
 
         return true;
     }

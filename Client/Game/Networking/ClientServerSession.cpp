@@ -103,7 +103,7 @@ namespace Game::Networking
 			while (message != NULL)
 			{
 				const auto message_type = message->GetType();
-				const bool handled = ProcessMessage( *message );
+				const bool handled = ProcessMessage( *message, channel );
 				client.ReleaseMessage( message );
 
 				if (!handled)
@@ -118,7 +118,7 @@ namespace Game::Networking
 		}
 	}
 
-	bool ClientServerSession::ProcessMessage( const yojimbo::Message& message )
+	bool ClientServerSession::ProcessMessage( const yojimbo::Message& message, const Networking::ChannelType channel )
 	{
 		//
 		// Common messages
@@ -168,7 +168,7 @@ namespace Game::Networking
 					return ClientSync::Helpers::HandleMessage( registry, synced_entities, static_cast<const ClientSync::Messages::ServerClientAddEntity&>(message) );
 
 				case MessageFactory::GetMessageType<ClientSync::Messages::ServerClientEntitySync>() :
-					return ClientSync::Helpers::HandleMessage( synced_entities, static_cast<const ClientSync::Messages::ServerClientEntitySync&>(message) );
+					return ClientSync::Helpers::HandleMessage( synced_entities, static_cast<const ClientSync::Messages::ServerClientEntitySync&>(message), channel );
 
 				case MessageFactory::GetMessageType<ClientSync::Messages::ServerClientRemoveEntity>() :
 					return ClientSync::Helpers::HandleMessage( synced_entities, static_cast<const ClientSync::Messages::ServerClientRemoveEntity&>(message) );

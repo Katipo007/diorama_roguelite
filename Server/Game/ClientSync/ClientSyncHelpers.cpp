@@ -135,7 +135,7 @@ namespace Game::ClientSync::Helpers
 			ASSERT( syncable->sync_id > 0 );
 			Networking::Helpers::SendMessage<Messages::ServerClientRemoveEntity>( client, Networking::ChannelType::Reliable, [&]( Messages::ServerClientRemoveEntity& msg )
 				{
-					msg.entity_sync_id = syncable->sync_id;
+					msg.entity_sync_ids = { syncable->sync_id };
 				} );
 		}
 	}

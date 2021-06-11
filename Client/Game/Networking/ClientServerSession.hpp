@@ -76,7 +76,7 @@ namespace Game::Networking
 
 	private:
 		void ProcessMessages();
-		bool ProcessMessage( const yojimbo::Message& message );
+		bool ProcessMessage( const yojimbo::Message& message, const Networking::ChannelType channel );
 		void TickSimulation( const PreciseTimestep& ts );
 
 		void SetSessionFlag( Flags flag, const bool value = true ) noexcept { session_flags.set( magic_enum::enum_index( flag ).value(), value ); }

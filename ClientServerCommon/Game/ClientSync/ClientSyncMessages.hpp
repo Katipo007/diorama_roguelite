@@ -34,12 +34,24 @@ namespace Game::ClientSync::Messages
 	END_BLOCK_MESSAGE();
 
 	BEGIN_MESSAGE( ServerClientRemoveEntity )
-		EntitySyncId entity_sync_id{ 0 };
+		std::vector<EntitySyncId> entity_sync_ids;
 
 		template<YojimboPlugin::Concepts::SerializeStream Stream>
 		bool Serialize( Stream& stream )
 		{
-			serialize_varint64( stream, entity_sync_id );
+			uint32_t num_entries{ 0 };
+			if (Stream::IsWriting)
+			{
+				ASSERT( std::size( entity_sync_ids ) < std::numeric_limits<uint32_t>::max() );
+				num_entries = static_cast<uint32_t>(std::size( entity_sync_ids ));
+			}
+			ASSERT( num_entries != 0 );
+			serialize_varint32( stream, num_entries );
+
+			if (Stream::IsReading)
+				entity_sync_ids.resize( num_entries );
+			serialize_bytes( stream, reinterpret_cast<uint8_t*>(entity_sync_ids.data()), static_cast<int>(sizeof( EntitySyncId ) * num_entries) );
+
 			return true;
 		}
 	END_MESSAGE();
