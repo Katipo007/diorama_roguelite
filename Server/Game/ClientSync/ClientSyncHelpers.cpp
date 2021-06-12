@@ -151,7 +151,7 @@ namespace Game::ClientSync::Helpers
 			Networking::Helpers::SendMessage<Messages::ServerClientEntityComponentRemoved>( client, Networking::ChannelType::Reliable, [&]( Messages::ServerClientEntityComponentRemoved& msg )
 				{
 					msg.entity_sync_id = syncable->sync_id;
-					msg.component_type = component_type;
+					msg.removed_components.set( component_type );
 				} );
 		}
 	}

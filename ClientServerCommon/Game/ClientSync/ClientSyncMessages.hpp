@@ -58,13 +58,19 @@ namespace Game::ClientSync::Messages
 
 	BEGIN_MESSAGE( ServerClientEntityComponentRemoved )
 		EntitySyncId entity_sync_id{ 0 };
-		ComponentTypeId component_type;
+		ComponentTypeMask removed_components;
 
 		template<YojimboPlugin::Concepts::SerializeStream Stream>
 		bool Serialize( Stream& stream )
 		{
 			serialize_varint64( stream, entity_sync_id );
-			serialize_uint32( stream, component_type ); static_assert(sizeof( component_type ) == 4);
+
+			uint64_t value{ 0 };
+			if constexpr (Stream::IsWriting)
+				value = removed_components.to_ullong();
+			serialize_uint64( stream, value );
+			if constexpr (Stream::IsReading)
+				removed_components = ComponentTypeMask{ value };
 			return true;
 		}
 	END_MESSAGE();
