@@ -44,12 +44,15 @@ namespace Game::ClientSync::Messages
 			{
 				ASSERT( std::size( entity_sync_ids ) < std::numeric_limits<uint32_t>::max() );
 				num_entries = static_cast<uint32_t>(std::size( entity_sync_ids ));
+				ASSERT( num_entries != 0 );
 			}
-			ASSERT( num_entries != 0 );
 			serialize_varint32( stream, num_entries );
 
 			if (Stream::IsReading)
+			{
+				ASSERT( num_entries != 0 );
 				entity_sync_ids.resize( num_entries );
+			}
 			serialize_bytes( stream, reinterpret_cast<uint8_t*>(entity_sync_ids.data()), static_cast<int>(sizeof( EntitySyncId ) * num_entries) );
 
 			return true;
