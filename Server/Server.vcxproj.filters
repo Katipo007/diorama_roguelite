@@ -50,9 +50,6 @@
     <ClInclude Include="Logging.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Player\PlayerComponent.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Game\Player\PlayerHelpers.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>

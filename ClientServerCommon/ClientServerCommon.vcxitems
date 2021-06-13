@@ -22,6 +22,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\Name\NameHelpers.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\Networking.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\ClientSync\ClientSyncMessages.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Game\Player\PlayerMessages.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\Sprite\CommonSpriteComponent.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Game\Transform\Components\PositionComponent.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Constants.hpp" />

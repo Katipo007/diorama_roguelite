@@ -41,7 +41,6 @@
     <ClInclude Include="Game\Networking\Components\PendingClientComponent.hpp" />
     <ClInclude Include="Game\Networking\Components\ConnectionComponent.hpp" />
     <ClInclude Include="Game\ClientSync\ClientSyncSystem.hpp" />
-    <ClInclude Include="Game\Player\PlayerComponent.hpp" />
     <ClInclude Include="Game\Networking\NetworkingHelpers.hpp" />
     <ClInclude Include="Game\Player\PlayerHelpers.hpp" />
     <ClInclude Include="Game\Networking\Constants.hpp" />
