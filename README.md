@@ -1,3 +1,11 @@
+# NOTICE
+
+This repository is going to be quite out of date for a while. I've made a separate repository with all the online multiplayer code stripped out while I foucs on getting a prototype up and running.
+I've also split all the engine code into its own repository, that can now be found [HERE](https://github.com/Katipo007/avokii)
+
+The rest of this readme is currently a bit out of date.
+
+
 # diorama roguelite
 A 3d, 3/4 view, action rogue-lite game I'm making in a dedicated C++ engine I'm writing.
 The game is being designed for up to 4 players with a server-client architecture.
